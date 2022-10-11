@@ -5,11 +5,11 @@ import Cookies from "js-cookie";
 
 
 
-const base_url = process.env.REACT_APP_BASE_URL
+// const base_url = process.env.REACT_APP_BASE_URL
 
 const validRefresh = new RegExp(".*/token/refresh/");
 // const base_url = "https://minimart-server.tranvannhan1911.dev/api"
-// const base_url = "http://localhost:8000"
+const base_url = "http://localhost:8000"
 
 const axiosApi = axios.create({
     baseURL: base_url,

@@ -28,6 +28,30 @@
   color: #61dafb;
 }
 
+.userChat{
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: black;
+  cursor: pointer;
+}
+
+.userChatInfo span{
+  font-size: 13px; font-weight: 500;
+}
+
+.userChatInfo p {
+  font-size: 10px; color: black; font-weight: 10;
+}
+
+.userChatInfo img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+} 
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
