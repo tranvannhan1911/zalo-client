@@ -7,6 +7,7 @@ import './App.css';
 
 const ForgotPassword = lazy(() => import("./pages/account/forgot"));
 const Login = lazy(() => import("./pages/account/login"));
+const Register = lazy(() => import("./pages/account/register"));
 const ChangePassword = lazy(() => import("./pages/account/change_password"));
 const HomePage = lazy(() => import("./pages/conversation/home"));
 
@@ -15,6 +16,7 @@ function App() {
     <Suspense fallback={<Loading />}>
       <Routes>
           <Route path="dang-nhap" element={<Login />} />
+          <Route path="dang-ky" element={<Register />} />
           <Route path="quen-mat-khau" element={<ForgotPassword />} />
           <Route path="doi-mat-khau" element={<ChangePassword />} />
           <Route path="" element={<HomePage />} />
