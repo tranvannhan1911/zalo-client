@@ -7,6 +7,11 @@ class AccountApi{
         return axiosApi.post(url, params)
     }
 
+    register(params){
+        const url = "/auth/register/"
+        return axiosApi.post(url, params)
+    }
+
     forgot_password(params){
         const url = "/auth/forgot_password/"
         return axiosApi.post(url, params)
@@ -30,12 +35,23 @@ class AccountApi{
     save_token(response){
         Cookies.set(
             "access",
-            response.data.data.access
+            response.data.accessToken
         );
         Cookies.set(
             "refresh",
-            response.data.data.refresh
+            response.data.refreshToken
         );
+    }
+
+    save_info(response){
+        Cookies.set("_id", response.data._id);
+        Cookies.set("phoneNumber", response.data.phoneNumber);
+        Cookies.set("avatar", response.data.avatar);
+        Cookies.set("isDeleted", response.data.isDeleted);
+        Cookies.set("isAdmin", response.data.isAdmin);
+        Cookies.set("createdAt", response.data.createdAt);
+        Cookies.set("updatedAt", response.data.updatedAt);
+        Cookies.set("__v", response.data.__v);
     }
 
     remove_token(response){

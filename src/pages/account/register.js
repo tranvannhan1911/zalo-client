@@ -13,7 +13,7 @@ import { validPhone, validPassword } from '../../utils/regexp'
 const { Title } = Typography;
 
 
-const Login = () => {
+const Register = () => {
     // const dispatch = useDispatch();
     // let history = useHistory();
     const phoneRef = useRef();
@@ -37,12 +37,10 @@ const Login = () => {
         });
     }
 
-
-
     const onFinish = async (values) => {
-        enterLoading(0)
+
         if (!validPhone.test(values.phoneNumber)) {
-            message.error('Số điện thoại không hợp lệ!');
+            message.error('Số điện thoại không hợp lệ');
             stopLoading(0);
             phoneRef.current.focus();
             return;
@@ -53,20 +51,26 @@ const Login = () => {
             passwordRef.current.focus();
             return;
         }
+        if(values.password != values.repeat_password){
+            message.error('Mật khẩu không giống nhau');
+            stopLoading(0);
+            passwordRef.current.focus();
+            return;
+        }
 
         const accountApi = new AccountApi()
         try {
-            const response = await accountApi.login(values);
+            const response = await accountApi.register(values);
             console.log(response)
-            accountApi.save_token(response)
-            accountApi.save_info(response)
-
-            // const action = setToken(response.data.data)
-            // dispatch(action)
-
-            navigate('/')
+            if (response.status == 200) {
+                message.success("Đăng ký thành công!")
+                navigate('/dang-nhap')
+            } else {
+                message.error('Có lỗi xảy ra')
+            }
         } catch (error) {
-            message.error('Sai số điện thoại hoặc mật khẩu')
+            console.log('Failed:', error)
+            message.error('Có lỗi xảy ra')
         } finally {
             stopLoading(0)
         }
@@ -75,7 +79,6 @@ const Login = () => {
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo)
         message.error('Có lỗi xảy ra')
-        stopLoading(0)
     };
 
     return (
@@ -85,7 +88,7 @@ const Login = () => {
         }}>
             <Col span={8} xs={18} sm={14} md={10} lg={8} style={{ backgroundColor: "white", padding: "50px", borderRadius: "10px" }}>
                 <Title level={2} style={{ marginBottom: '20px'}}>
-                    Đăng nhập
+                    Đăng ký
                 </Title>
                 <Form
                     name="normal_login"
@@ -128,18 +131,35 @@ const Login = () => {
                             placeholder="Mật khẩu"
                         />
                     </Form.Item>
+                    <Form.Item
+                        name="repeat_password"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Vui lòng nhập lại mật khẩu!',
+                            },
+                        ]}
+                    >
+                        <Input.Password
+                            size="large"
+                            ref={passwordRef}
+                            prefix={<LockOutlined className="site-form-item-icon" />}
+                            type="password"
+                            placeholder="Nhập lại mật khẩu"
+                        />
+                    </Form.Item>
 
                     <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button" size="large"
                             loading={loadings[0]}>
-                            Đăng nhập
+                            Đăng ký
                         </Button>
                     </Form.Item>
-                    {/* <p>Quên mật khẩu ? <Link to="/quen-mat-khau">Lấy lại mật khẩu</Link> </p> */}
+                    <p>Quên mật khẩu ? <Link to="/quen-mat-khau">Lấy lại mật khẩu</Link> </p>
                 </Form>
             </Col>
         </Row >
     )
 }
 
-export default Login;
+export default Register;
