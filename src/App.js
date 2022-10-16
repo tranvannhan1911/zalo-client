@@ -10,6 +10,8 @@ const Login = lazy(() => import("./pages/account/login"));
 const Register = lazy(() => import("./pages/account/register"));
 const ChangePassword = lazy(() => import("./pages/account/change_password"));
 const HomePage = lazy(() => import("./pages/conversation/home"));
+const FriendPage = lazy(() => import("./pages/conversation/friend"));
+const MainPage = lazy(() => import("./pages/conversation/main"));
 
 function App() {
   return (
@@ -19,8 +21,8 @@ function App() {
           <Route path="dang-ky" element={<Register />} />
           <Route path="quen-mat-khau" element={<ForgotPassword />} />
           <Route path="doi-mat-khau" element={<ChangePassword />} />
-          <Route path="" element={<HomePage />} />
-          <Route path="nhan-tin" element={<HomePage />} />
+          <Route path="" element={<MainPage />} />
+          {/* <Route path="ban-be" element={<FriendPage />} /> */}
       </Routes>
     </Suspense>
   );

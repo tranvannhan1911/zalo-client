@@ -1,9 +1,12 @@
-import { Avatar, Button, List, Skeleton, Space, Input, Divider, Typography } from 'antd';
+import { Avatar, Button, List, Skeleton, Space, Input, Divider, Typography, Popover } from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
     UserOutlined, UserAddOutlined, UsergroupAddOutlined,
-    MoreOutlined
+    MoreOutlined, UndoOutlined, DeleteOutlined, ArrowLeftOutlined,
+    ExclamationCircleOutlined
 } from '@ant-design/icons';
+import ConversationModal from './modal';
+import ActionBar from '../action';
 const { Search } = Input;
 const { Text } = Typography;
 const count = 3;
@@ -65,28 +68,15 @@ const Conversations = (props) => {
 
 
 
-    const onSearch = (value) => console.log(value);
 
     return (
         <div style={{
             backgroundColor: 'white'
         }}>
-            <div style={{
-                padding: '10px',
-            }}>
-                <Space>
-                    <Search
-                        placeholder="Tìm kiếm"
-                        onSearch={onSearch}
-                        style={{
-                            width: 200,
-                        }}
-                    />
-                    <Button type="text" icon={<UserAddOutlined />} />
-                    <Button type="text" icon={<UsergroupAddOutlined />} />
-                </Space>
-            </div>
-            <Divider />
+            <ActionBar />
+            <Divider style={{
+                marginTop: '3px'
+            }}/>
             <div 
                 style={{
                     height: "80vh", 
@@ -98,13 +88,35 @@ const Conversations = (props) => {
                     itemLayout="horizontal"
                     loadMore={loadMore}
                     dataSource={props.conversations}
-                    renderItem={(item) => (
+                    renderItem={(item) => {
+                        return (
                         <List.Item
                             style={{
                                 padding: '10px',
                                 backgroundColor: `${item._id == props.currentConv?._id ? "#f0f0f0}" : ""}`
                             }}
-                            extra={<Button type="text" icon={<MoreOutlined />} />}
+                            extra={
+                                <Popover content={
+                                    <div>
+                                        {/* <div><Button type="text" icon={<CopyOutlined />} >Sao chép tin nhắn</Button></div> */}
+                                        <div>
+                                            <Button 
+                                                type="text" 
+                                                icon={<ExclamationCircleOutlined />} 
+                                                onClick={() => {
+                                                    // setOpenModal(true)
+                                                }}>Xem chi tiết</Button>
+                                        </div>
+                                        <hr style={{
+                                            borderTop: '1px solid #ddd'
+                                        }}/>
+                                        <div><Button type="text" icon={<ArrowLeftOutlined />} danger>Rời nhóm</Button></div>
+                                        <div><Button type="text" icon={<DeleteOutlined /> } danger>Xóa phía tôi</Button></div>
+                                    </div>
+                                } trigger="click">
+                                    <Button type="text" icon={<MoreOutlined />} />
+                                </Popover>
+                            }
                             onClick={(e) => {
                                 console.log("item", item, e)
                                 props.setCurrentConv(item)
@@ -118,7 +130,7 @@ const Conversations = (props) => {
                                 />
                             </Skeleton>
                         </List.Item>
-                    )}
+                    )}}
                 />
             </div>
         </div>

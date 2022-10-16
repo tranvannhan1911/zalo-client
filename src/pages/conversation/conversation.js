@@ -17,7 +17,7 @@ const host = process.env.REACT_APP_BASE_URL;
 const { Sider } = Layout;
 
 
-const HomePage = () => {
+const ConversationPage = () => {
   //   const accountApi = new AccountApi();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
@@ -105,34 +105,6 @@ const HomePage = () => {
 
   }, [currentConv])
 
-  const handleAuthentication = async () => {
-    const access = Cookies.get("access")
-    const refresh = Cookies.get("refresh")
-    if (access == null || refresh == null) {
-      navigate('/dang-nhap')
-      return
-    }
-
-    // try{
-    //   const response = await accountApi.get_info()
-    //   console.log("account", response)
-    //   if(response.data.code!=1 || !response.data.data.is_superuser){
-    //     navigate('/dang-nhap')
-    //   }else{
-    //     setHasPerms(true)
-    //     sessionStorage.setItem("idStaff", response.data.data.id);
-    //     sessionStorage.setItem("nameStaff", response.data.data.fullname);
-    //     sessionStorage.setItem("phoneStaff", response.data.data.phone);
-    //   }
-    // }catch(error){
-    //   navigate('/dang-nhap')
-    // }
-  }
-
-  useEffect(() => {
-    handleAuthentication()
-  }, []);
-
   const sendMessage = (message) => {
     console.log("sending", message)
     socketRef.current.emit('send-message', {
@@ -146,56 +118,35 @@ const HomePage = () => {
   }
 
   return (
-    <Layout>{hasPerms == false ? null : (
-      <>
-        <Sider trigger={null} collapsed={true}
-          style={{
-            height: "100vh",
-            overflow: 'auto',
-          }}>
-          <SideNav ></SideNav>
-        </Sider>
-        <Layout className="site-layout"
-          style={{
-            height: "100vh",
-          }}>
-          <Content style={{
-            height: "90vh",
-          }}>
-            <Row style={{ height: "90vh" }}>
-              <Col span={6} style={{
-                borderRight: '1px solid #ddd',
-                height: "90vh"
-              }}>
-                <Conversations
-                  style={{
-                    width: '300px',
-                  }}
-                  conversations={conversations}
-                  currentConv={currentConv}
-                  setCurrentConv={setCurrentConv} />
-              </Col>
-              <Col span={18} style={{
-                height: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}>
-                <div>
-                  <Header />
-                  <Messages
-                    messages={messages}
-                    setMessages={setMessages} />
-                </div>
-                <MessageSection sendMessage={sendMessage} />
-              </Col>
-            </Row>
-          </Content>
-        </Layout>
-      </>
-    )}
-    </Layout>
+    <Row style={{ height: "90vh" }}>
+        <Col span={6} style={{
+        borderRight: '1px solid #ddd',
+        height: "90vh"
+        }}>
+        <Conversations
+            style={{
+            width: '300px',
+            }}
+            conversations={conversations}
+            currentConv={currentConv}
+            setCurrentConv={setCurrentConv} />
+        </Col>
+        <Col span={18} style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        }}>
+        <div>
+            <Header />
+            <Messages
+            messages={messages}
+            setMessages={setMessages} />
+        </div>
+        <MessageSection sendMessage={sendMessage} />
+        </Col>
+    </Row>
   );
 };
 
-export default HomePage;
+export default ConversationPage;

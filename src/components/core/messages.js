@@ -1,4 +1,9 @@
-import { Avatar, List } from 'antd';
+
+import {
+    MoreOutlined, UndoOutlined, DeleteOutlined, CopyOutlined,
+    ExclamationCircleOutlined, HeartOutlined
+} from '@ant-design/icons';
+import { Avatar, Button, Divider, List, Popover, Space } from 'antd';
 import Cookies from 'js-cookie';
 import React, { useEffect, useRef } from 'react';
 const data = [
@@ -26,6 +31,7 @@ const Messages = (props) => {
 
     const userId = Cookies.get("_id")
     const refMessages = useRef()
+    const ref = useRef()
     
     useEffect(() => {
         // console.log("props.messages", props.messages)
@@ -55,11 +61,13 @@ const Messages = (props) => {
                     }else{
                         const direction = item.userId == userId ? 'row-reverse' : 'row'
                         return (
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: `${direction}`,
-                                marginBottom: '10px'
-                            }}>
+                            <div 
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: `${direction}`,
+                                    marginBottom: '10px'
+                                }}
+                            >
                                 {item.userId == userId ? null :
                                     <Avatar src="https://joeschmoe.io/api/v1/random" />
                                 }
@@ -67,8 +75,52 @@ const Messages = (props) => {
                                     backgroundColor: 'white',
                                     padding: '10px 20px',
                                     borderRadius: '5px',
+                                    position: 'relative',
                                     margin: '0 10px'
-                                }}>{item.content}</div>
+                                }}
+                                onMouseEnter={(e) => {
+                                    // console.log(ref)
+                                    // ref.current.style.display = 'block'
+                                }}><span>{item.content}</span>
+                                    <div
+                                        style={{
+                                            position: 'absolute',
+                                            marginTop: '10px',
+                                            marginTop: '-8px',
+                                            right: '-15px'
+                                        }}>
+                                        {/* <Popover content={
+                                            <div>
+                                                aa
+                                            </div>
+                                        } trigger="click" placement="right"> */}
+                                            <Button type="text" icon={<HeartOutlined />}
+                                                style={{
+                                                    display: 'none'
+                                                }}/>
+                                        {/* </Popover> */}
+                                    </div>
+                                </div>
+                                <Space 
+                                    ref={ref}
+                                    // style={{
+                                    //     display: 'none'
+                                    // }}
+                                    >
+                                    <Popover content={
+                                        <div>
+                                            <div><Button type="text" icon={<CopyOutlined />} >Sao chép tin nhắn</Button></div>
+                                            <div><Button type="text" icon={<ExclamationCircleOutlined />} >Xem chi tiết</Button></div>
+                                            <hr style={{
+                                                borderTop: '1px solid #ddd'
+                                            }}/>
+                                            <div><Button type="text" icon={<UndoOutlined />} danger>Thu hồi</Button></div>
+                                            <div><Button type="text" icon={<DeleteOutlined /> } danger>Xóa phía tôi</Button></div>
+                                        </div>
+                                    } trigger="click" placement="bottom">
+                                        <Button type="text" icon={<MoreOutlined />}/>
+                                    </Popover>
+                                </Space>
                             </div>
                         )
                     }
