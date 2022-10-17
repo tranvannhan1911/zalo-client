@@ -65,9 +65,7 @@ const ConversationPage = () => {
       if (conv._id == data.message.conversationId) {
         console.log("add")
         conv.messages.push(data.message)
-        conv.lastMessage = {
-          _doc: data.message
-        }
+        conv.lastMessageId = data.message;
       }
     })
     setConversations(_convs)

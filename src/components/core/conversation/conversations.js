@@ -126,7 +126,7 @@ const Conversations = (props) => {
                                 <List.Item.Meta
                                     avatar={<Avatar src={item.avatar ? item.avatar :  "https://joeschmoe.io/api/v1/random"} />}
                                     title={<Text>{item.name ? item.name : "Không có tên"}</Text>}
-                                    description={item.lastMessage ? item.lastMessage._doc.content : ""}
+                                    description={item.lastMessageId ? item.lastMessageId.content : ""}
                                 />
                             </Skeleton>
                         </List.Item>

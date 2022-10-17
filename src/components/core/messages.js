@@ -37,7 +37,6 @@ const Messages = (props) => {
         // console.log("props.messages", props.messages)
         // refMessages.current?.scrollToBottom({ behavior: 'smooth' })
     }, [props.messages])
-
     return (
         <div style={{
                 padding: '10px',
@@ -59,7 +58,9 @@ const Messages = (props) => {
                                 }}>{item.content}</div>
                         )
                     }else{
-                        const direction = item.userId == userId ? 'row-reverse' : 'row'
+                        const direction = item.senderId == userId ? 'row-reverse' : 'row'
+                        const createAtTime = item.createdAt.slice(11, 19)
+                        
                         return (
                             <div 
                                 style={{
@@ -68,7 +69,7 @@ const Messages = (props) => {
                                     marginBottom: '10px'
                                 }}
                             >
-                                {item.userId == userId ? null :
+                                {item.senderId == userId ? null :
                                     <Avatar src="https://joeschmoe.io/api/v1/random" />
                                 }
                                 <div style={{
@@ -81,7 +82,16 @@ const Messages = (props) => {
                                 onMouseEnter={(e) => {
                                     // console.log(ref)
                                     // ref.current.style.display = 'block'
-                                }}><span>{item.content}</span>
+                                }}>
+                                <span style={{
+                                    color:'black',
+                                    fontSize:15
+                                }}>{item.content}</span>
+                                <br></br>
+                                <span style={{
+                                    color:'blue',
+                                    fontSize:10
+                                }}>{createAtTime}</span>
                                     <div
                                         style={{
                                             position: 'absolute',
