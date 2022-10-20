@@ -10,6 +10,9 @@ import { AccountApi } from "../../utils/apis"
 // import { setToken } from '../../store/store'
 import { validPhone, validPassword } from '../../utils/regexp'
 
+import { authentication } from '../../firebase/firebaseConfig'
+import { RecaptchaVerifier,signInWithPhoneNumber } from "firebase/auth";
+
 const { Title } = Typography;
 
 
@@ -20,6 +23,11 @@ const Register = () => {
     const passwordRef = useRef();
     const navigate = useNavigate();
     const [loadings, setLoadings] = useState([]);
+
+    const countryCode = '+84';
+    const [phoneNumber,setPhoneNumber] = useState(countryCode);
+    const [OTP,setOTP] = useState('');
+    const [expandForm,setExpandForm] = useState(true);
 
     const enterLoading = (index) => {
         setLoadings((prevLoadings) => {
@@ -81,6 +89,49 @@ const Register = () => {
         message.error('Có lỗi xảy ra')
     };
 
+    const generateRecaptcha = ()=>{
+        window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
+            'callback': (response) => {
+              // reCAPTCHA solved, allow signInWithPhoneNumber.
+              
+            }
+          }, authentication);
+    }
+
+    const requestOTP = (e)=>{
+        e.preventDefault();
+        generateRecaptcha();
+        let appVerifier = window.recaptchaVerifier;
+        signInWithPhoneNumber(authentication,phoneNumber,appVerifier)
+        .then((confirmationResult) => {
+            // SMS sent. Prompt user to type the code from the message, then sign the
+            // user in with confirmationResult.confirm(code).
+            window.confirmationResult = confirmationResult;
+            
+          }).catch((error) => {
+            // Error; SMS not sent
+            console.log(error);
+          });
+    }
+
+    const verifyOTP = (e)=>{
+        let otp = e.target.value;
+        setOTP(otp);
+        if(otp.length === 6){
+            console.log(otp);
+            let confirmationResult = window.confirmationResult;
+            confirmationResult.confirm(otp).then((result) => {
+                // User signed in successfully.
+                const user = result.user;
+                // ...
+              }).catch((error) => {
+                // User couldn't sign in (bad verification code?)
+                console.log(error);
+              });
+        }
+    }
+
     return (
         <Row justify="space-around" align="middle" style={{
             height: '100vh',
@@ -90,7 +141,8 @@ const Register = () => {
                 <Title level={2} style={{ marginBottom: '20px'}}>
                     Đăng ký
                 </Title>
-                <Form
+                <form 
+                    onSubmit={requestOTP}
                     name="normal_login"
                     className="login-form"
                     initialValues={{
@@ -112,7 +164,11 @@ const Register = () => {
                             ref={phoneRef}
                             prefix={<PhoneOutlined className="site-form-item-icon" />}
                             placeholder="Số điện thoại"
-                            autoFocus />
+                            autoFocus 
+                            id='phoneNumberInput'
+                            value={phoneNumber}
+                            onChange = {(e)=>setPhoneNumber(e.target.value)}
+                            />
                     </Form.Item>
                     <Form.Item
                         name="password"
@@ -155,8 +211,20 @@ const Register = () => {
                             Đăng ký
                         </Button>
                     </Form.Item>
+                    {expandForm === true?
+                        <>
+                        <div>
+                            <label htmlFor='OTPinput' className='form-label'>OTP</label>
+                            <input type='number' className='form-control' id = 'inputOTP' value={OTP} onChange ={verifyOTP}/>
+                        </div>
+                        </>
+                        :
+                        null
+                    }                                    
+
                     <p>Quên mật khẩu ? <Link to="/quen-mat-khau">Lấy lại mật khẩu</Link> </p>
-                </Form>
+                </form>
+                <div id='recaptcha-container'></div>
             </Col>
         </Row >
     )
