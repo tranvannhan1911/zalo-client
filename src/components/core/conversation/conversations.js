@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import ConversationModal from './modal';
 import ActionBar from '../action';
+import { truncate } from '../../../utils/utils';
 const { Search } = Input;
 const { Text } = Typography;
 const count = 3;
@@ -73,7 +74,7 @@ const Conversations = (props) => {
         <div style={{
             backgroundColor: 'white'
         }}>
-            <ActionBar />
+            <ActionBar {...props}/>
             <Divider style={{
                 marginTop: '3px'
             }}/>
@@ -93,7 +94,8 @@ const Conversations = (props) => {
                         <List.Item
                             style={{
                                 padding: '10px',
-                                backgroundColor: `${item._id == props.currentConv?._id ? "#f0f0f0}" : ""}`
+                                backgroundColor: `${item._id == props.currentConv?._id ? "#f0f0f0" : ""}`,
+                                cursor: 'pointer'
                             }}
                             extra={
                                 <Popover content={
@@ -125,7 +127,7 @@ const Conversations = (props) => {
                             <Skeleton avatar title={false} loading={item.loading} active>
                                 <List.Item.Meta
                                     avatar={<Avatar src={item.avatar ? item.avatar :  "https://joeschmoe.io/api/v1/random"} />}
-                                    title={<Text>{item.name ? item.name : "Không có tên"}</Text>}
+                                    title={<Text >{item.name ? (truncate(item.name)) : "Không có tên"}</Text>}
                                     description={item.lastMessageId ? item.lastMessageId.content : ""}
                                 />
                             </Skeleton>

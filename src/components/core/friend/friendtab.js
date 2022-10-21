@@ -13,6 +13,10 @@ const { Text } = Typography;
 const count = 3;
 
 const FriendTab = (props) => {
+    const [initLoading, setInitLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+    const [data, setData] = useState([]);
 
     const onSearch = (value) => console.log(value);
 
@@ -20,7 +24,7 @@ const FriendTab = (props) => {
         <div style={{
             backgroundColor: 'white'
         }}>
-            <ActionBar />
+            <ActionBar {...props}/>
             <Divider style={{
                 marginTop: '3px'
             }}/>

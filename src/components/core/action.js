@@ -1,7 +1,7 @@
 import { Button, Space, Input, Typography} from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
-    UserAddOutlined, UsergroupAddOutlined
+    CloseOutlined, UsergroupAddOutlined
 } from '@ant-design/icons';
 import ConversationModal from './conversation/modal';
 const { Search } = Input;
@@ -11,6 +11,10 @@ const ActionBar = (props) => {
 
     const onSearch = (value) => console.log(value);
     
+    useEffect(() => {
+        console.log("ActionBar", props)
+    }, [props])
+
     return (
         <div style={{
             padding: '10px',
@@ -24,14 +28,25 @@ const ActionBar = (props) => {
                     flex: 1,
                     marginRight: '10px'
                 }}
+                onClick={
+                    () => props.setShowSearchingList(true)
+                }
             />
             <Space>
-                <Button type="text" icon={<UsergroupAddOutlined />} 
-                    onClick={() => {
-                        setOpenModal(true)
-                    }}/>
+                {
+                    props.showSearchingList ? 
+                        <Button type="text" icon={<CloseOutlined />} 
+                        onClick={() => {
+                            props.setShowSearchingList(false)
+                        }}/> :
+                        <Button type="text" icon={<UsergroupAddOutlined />} 
+                        onClick={() => {
+                            setOpenModal(true)
+                        }}/>
+                }
+                
             </Space>
-            <ConversationModal open={openModal} setOpen={setOpenModal}/>
+            <ConversationModal {...props} open={openModal} setOpen={setOpenModal}/>
         </div>
     )
 }

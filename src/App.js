@@ -9,9 +9,9 @@ const ForgotPassword = lazy(() => import("./pages/account/forgot"));
 const Login = lazy(() => import("./pages/account/login"));
 const Register = lazy(() => import("./pages/account/register"));
 const ChangePassword = lazy(() => import("./pages/account/change_password"));
-const HomePage = lazy(() => import("./pages/conversation/home"));
+const HomePage = lazy(() => import("./pages/home"));
 const FriendPage = lazy(() => import("./pages/conversation/friend"));
-const MainPage = lazy(() => import("./pages/conversation/main"));
+const MainPage = lazy(() => import("./pages/main"));
 
 function App() {
   return (

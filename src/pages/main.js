@@ -1,14 +1,14 @@
 import { Col, Layout, Row } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import SideNav from '../../components/core/sidenav';
+import SideNav from '../components/core/sidenav';
 import { Content } from 'antd/lib/layout/layout';
 import Cookies from 'js-cookie';
 import { lazy } from "react";
-import UserModal from '../../components/basics/user/user_modal';
+import UserModal from '../components/basics/user/user_modal';
 
-const ConversationPage = lazy(() => import("./conversation"));
-const FriendPage = lazy(() => import("./friend"));
+const ConversationPage = lazy(() => import("./conversation/conversation"));
+const FriendPage = lazy(() => import("./conversation/friend"));
 
 const { Sider } = Layout;
 
@@ -17,6 +17,7 @@ const MainPage = () => {
   const [hasPerms, setHasPerms] = useState(true);
   const [openUserModal, setOpenUserModal] = useState(false);
   const [page, setPage] = useState("conversation");
+  const [showSearchingList, setShowSearchingList] = useState(false);
 
   const handleAuthentication = async () => {
     const access = Cookies.get("access")
@@ -35,7 +36,9 @@ const MainPage = () => {
     page: page,
     setPage: setPage,
     openUserModal: openUserModal,
-    setOpenUserModal: setOpenUserModal
+    setOpenUserModal: setOpenUserModal,
+    showSearchingList: showSearchingList,
+    setShowSearchingList: setShowSearchingList
   }
 
   const content = () => {

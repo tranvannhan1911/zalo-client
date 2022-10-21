@@ -12,12 +12,13 @@ import MessageSection from '../../components/core/message_section';
 import socketIOClient from "socket.io-client";
 
 import Cookies from "js-cookie"
+import NavSearch from '../../components/core/navsearch.js/navsearch';
 
 const host = process.env.REACT_APP_BASE_URL;
 const { Sider } = Layout;
 
 
-const ConversationPage = () => {
+const ConversationPage = (props) => {
   //   const accountApi = new AccountApi();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
@@ -43,7 +44,7 @@ const ConversationPage = () => {
         console.log("socketRef.current", socketRef.current, socketRef.current.id)
 
         // listen response all
-        socketRef.current.on(socketRef.current.id, data => {
+        socketRef.current.on(userId, data => {
           console.log("response", data)
 
           if (data.conversations) {
@@ -116,18 +117,26 @@ const ConversationPage = () => {
   }
 
   return (
-    <Row style={{ height: "90vh" }}>
+    <Row style={{ height: "100vh" }}>
         <Col span={6} style={{
         borderRight: '1px solid #ddd',
-        height: "90vh"
+        height: "100vh"
         }}>
-        <Conversations
-            style={{
-            width: '300px',
-            }}
-            conversations={conversations}
-            currentConv={currentConv}
-            setCurrentConv={setCurrentConv} />
+        {
+          props.showSearchingList 
+          ? 
+            <NavSearch {...props}/>
+          :
+            <Conversations
+              style={{
+                width: '300px',
+              }}
+              {...props}
+              conversations={conversations}
+              currentConv={currentConv}
+              setCurrentConv={setCurrentConv} /> 
+        }
+        
         </Col>
         <Col span={18} style={{
         height: '100vh',
@@ -136,10 +145,10 @@ const ConversationPage = () => {
         justifyContent: 'space-between',
         }}>
         <div>
-            <Header />
+            <Header currentConv={currentConv}/>
             <Messages
-            messages={messages}
-            setMessages={setMessages} />
+              messages={messages}
+              setMessages={setMessages} />
         </div>
         <MessageSection sendMessage={sendMessage} />
         </Col>

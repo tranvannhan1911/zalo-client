@@ -1,28 +1,49 @@
 import { Select } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import api from '../../../utils/apis';
 const { Option } = Select;
-const initialData = ["Trần Văn Nhân", "Thái Thị Hiền", "Lê Đình Bút", "Phan Đình Phương"];
-const children = [];
 
-for (let i = 0; i < initialData.length; i++) {
-  children.push(<Option key={i}>{initialData[i]}</Option>);
-}
 
-const handleChange = (value) => {
-  console.log(`selected ${value}`);
+const UserSelect = ({placeholder, value, setValue}) => {
+  const [data, setdata] = useState([])
+  const [dataOption, setdataOption] = useState([])
+
+  useEffect(() => {
+    console.log("value", value);
+  }, [value])
+
+  const handleData = async () => {
+     
+    const res = await api.user.list()
+    console.log(res)
+    if(res.status == 200){
+      setdata(res.data)
+      
+      const _children = []
+      for (let i = 0; i < res.data.length; i++) {
+        _children.push(<Option {...res.data[i]} key={res.data[i]._id}>{res.data[i].name}</Option>);
+      }
+
+      setdataOption(_children)
+    }
+  }
+
+  useEffect(() => {
+    handleData()
+  }, [])
+
+  return (
+    <Select
+      mode="tags"
+      style={{
+        width: '100%',
+      }}
+      placeholder={placeholder ? placeholder : "Chọn bạn bè"}
+      onChange={setValue}
+      value={value}
+    >
+      {dataOption}
+    </Select>
+  )
 };
-
-const UserSelect = ({placeholder}) => (
-  <Select
-    mode="tags"
-    style={{
-      width: '100%',
-    }}
-    placeholder={placeholder ? placeholder : "Chọn bạn bè"}
-    onChange={handleChange}
-    
-  >
-    {children}
-  </Select>
-);
 export default UserSelect;
