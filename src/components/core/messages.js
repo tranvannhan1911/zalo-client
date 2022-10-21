@@ -3,9 +3,10 @@ import {
     MoreOutlined, UndoOutlined, DeleteOutlined, CopyOutlined,
     ExclamationCircleOutlined, HeartOutlined
 } from '@ant-design/icons';
-import { Avatar, Button, Divider, List, Popover, Space } from 'antd';
+import { Avatar, Button, Divider, List, message, Popover, Space } from 'antd';
 import Cookies from 'js-cookie';
 import React, { useEffect, useRef } from 'react';
+import { deleteMessage } from '../../controller/message';
 const data = [
     {
         title: 'Ant Design Title 1',
@@ -48,6 +49,7 @@ const Messages = (props) => {
                 itemLayout="horizontal"
                 dataSource={props.messages}
                 renderItem={(item) => {
+                    console.log("message item", item)
                     if(item.type == "NOTIFY"){
                         return (
                             <div
@@ -125,7 +127,12 @@ const Messages = (props) => {
                                                 borderTop: '1px solid #ddd'
                                             }}/>
                                             <div><Button type="text" icon={<UndoOutlined />} danger>Thu hồi</Button></div>
-                                            <div><Button type="text" icon={<DeleteOutlined /> } danger>Xóa phía tôi</Button></div>
+                                            <div>
+                                                <Button type="text" icon={<DeleteOutlined /> } danger
+                                                    onClick={() => deleteMessage(item._id, () => {
+                                                        message.success("Xóa thành công")
+                                                    })}>Xóa phía tôi</Button>
+                                            </div>
                                         </div>
                                     } trigger="click" placement="bottom">
                                         <Button type="text" icon={<MoreOutlined />}/>

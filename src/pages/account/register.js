@@ -47,12 +47,12 @@ const Register = () => {
 
     const onFinish = async (values) => {
 
-        if (!validPhone.test(values.phoneNumber)) {
-            message.error('Số điện thoại không hợp lệ');
-            stopLoading(0);
-            phoneRef.current.focus();
-            return;
-        }
+        // if (!validPhone.test(values.phoneNumber)) {
+        //     message.error('Số điện thoại không hợp lệ');
+        //     stopLoading(0);
+        //     phoneRef.current.focus();
+        //     return;
+        // }
         if (!validPassword.test(values.password)) {
             message.error('Mật khẩu ít nhất 6 ký tự');
             stopLoading(0);

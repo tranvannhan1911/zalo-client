@@ -34,7 +34,7 @@ const axiosApi = axios.create({
 axiosApi.interceptors.request.use(async (config) => {
     let token = Cookies.get("access");
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.token = `Bearer ${token}`;
     }
     return config;
 });

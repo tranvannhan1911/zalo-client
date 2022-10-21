@@ -21,7 +21,8 @@ function getItem(label, key, icon, children, type) {
 
 const items = [
   getItem('Nhắn tin', 'conversation', <MessageOutlined />),
-  getItem('Danh sách bạn bè', 'friend-list', <UserOutlined />)
+  getItem('Danh sách bạn bè', 'friend-list', <UserOutlined />),
+  getItem('Cài đặt', 'setting', <UserOutlined />)
 ];
 
 const rootSubmenuKeys = ['', 'ban-be'];

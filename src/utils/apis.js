@@ -67,8 +67,9 @@ class AccountApi{
     }
 }
 
-const getApi = (resource) => {
+const getApi = (resource, extras) => {
     return {
+        ...extras,
         list: (params) => {
             const url = `/${resource}/`
             return axiosApi.get(url, params)
@@ -93,7 +94,44 @@ const getApi = (resource) => {
 }
 
 const api = {
-    customer: getApi("customer"),
+    user: getApi("user"),
+
+    friend: getApi("friends", {
+        invite: (user_id, params) => {
+            const url = `/friends/invites/me/${user_id}`
+            return axiosApi.post(url, params)
+        },
+        get_invites: (params) => {
+            const url = `/friends/invites`
+            return axiosApi.get(url, params)
+        },
+        accept: (sender_id, params) => {
+            const url = `/friends/${sender_id}`
+            return axiosApi.post(url, params)
+        },
+        decline: (sender_id, params) => {
+            const url = `/friends/${sender_id}`
+            return axiosApi.delete(url, params)
+        }
+    }),
+
+    conversation: getApi("conversation", {
+        create_group: (params) => {
+            const url = `/conversation/groups`
+            return axiosApi.post(url, params)
+        }
+    }),
+
+    message: getApi("message", {
+        removeMessage: (message_id, params) => {
+            const url = `/message/${message_id}`
+            return axiosApi.delete(url, params)
+        },
+        deleteMessage: (message_id, params) => {
+            const url = `/message/${message_id}/only`
+            return axiosApi.delete(url, params)
+        }
+    })
 }
 
 export {AccountApi};

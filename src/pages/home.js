@@ -2,12 +2,12 @@ import { Col, Layout, Row } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { Typography } from 'antd';
-import Header from '../../components/core/header';
-import SideNav from '../../components/core/sidenav';
-import Conversations from '../../components/core/conversation/conversations';
+import Header from '../components/core/header';
+import SideNav from '../components/core/sidenav';
+import Conversations from '../components/core/conversation/conversations';
 import { Content } from 'antd/lib/layout/layout';
-import Messages from '../../components/core/messages';
-import MessageSection from '../../components/core/message_section';
+import Messages from '../components/core/messages';
+import MessageSection from '../components/core/message_section';
 
 import socketIOClient from "socket.io-client";
 

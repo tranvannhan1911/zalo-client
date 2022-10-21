@@ -6,6 +6,7 @@ import { Typography } from 'antd'
 import React, { useState, useRef } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import store, { setUser } from '../../store/store'
 import { AccountApi } from "../../utils/apis"
 // import { setToken } from '../../store/store'
 import { validPhone, validPassword } from '../../utils/regexp'
@@ -57,12 +58,14 @@ const Login = () => {
         const accountApi = new AccountApi()
         try {
             const response = await accountApi.login(values);
-            console.log(response)
+            console.log("login", response)
             accountApi.save_token(response)
             accountApi.save_info(response)
 
-            // const action = setToken(response.data.data)
-            // dispatch(action)
+            const action = setUser(response.data)
+            store.dispatch(action)
+            console.log("action", action)
+            
 
             navigate('/')
         } catch (error) {

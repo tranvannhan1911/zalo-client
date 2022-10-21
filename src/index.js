@@ -6,15 +6,18 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import vi_VN from 'antd/es/locale/vi_VN';
+import store from './store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-        <ConfigProvider locale={vi_VN}>
-          <App />
-        </ConfigProvider>
-      </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+          <ConfigProvider locale={vi_VN}>
+            <App />
+          </ConfigProvider>
+        </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
 

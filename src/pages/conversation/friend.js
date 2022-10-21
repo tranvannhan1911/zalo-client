@@ -13,6 +13,7 @@ import FriendTab from '../../components/core/friend/friendtab';
 import FriendList from '../../components/core/friend/friend-list';
 import AddFriend from '../../components/core/friend/add-friend';
 import Group from '../../components/core/friend/group';
+import NavSearch from '../../components/core/navsearch.js/navsearch';
 const { Sider } = Layout;
 
 const FriendPage = (props) => {
@@ -52,11 +53,18 @@ const FriendPage = (props) => {
         borderRight: '1px solid #ddd',
         height: "90vh"
       }}>
-        <FriendTab
-          style={{
-            width: '300px',
-          }} 
-          {...props}/>
+        
+      {
+        props.showSearchingList 
+        ? 
+          <NavSearch {...props}/>
+        : 
+          <FriendTab
+            style={{
+              width: '300px',
+            }} 
+            {...props}/>
+      }
       </Col>
       <Col span={18} style={{
         height: '100vh',

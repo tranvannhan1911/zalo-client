@@ -6,6 +6,7 @@ import {
 import { PageHeader, Button, Menu, Dropdown, Input, Space, Avatar, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { truncate } from '../../utils/utils';
 const { Search } = Input;
 
 
@@ -52,7 +53,12 @@ const Header = (props) => {
           <Avatar
             src="https://joeschmoe.io/api/v1/random"
           />
-          <Typography.Text>Trần Văn Nhân</Typography.Text>
+          <Typography.Text  numberOfLines={1} style={{
+            maxWidth: '250px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>{props.currentConv ? truncate(props.currentConv.name, 50) : ""}</Typography.Text>
         </Space>
       }
       extra={[

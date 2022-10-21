@@ -145,7 +145,7 @@ const UserCard = ({item, type}) => {
                         <div>
                             <Typography.Title style={{
                                 fontWeight: '500'
-                            }} level={5}>{item.title}</Typography.Title>
+                            }} level={5}>{item.name}</Typography.Title>
                         </div>
                         {description()}
                     </div>
