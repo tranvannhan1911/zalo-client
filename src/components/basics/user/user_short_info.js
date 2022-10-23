@@ -6,17 +6,20 @@ import {
 } from '@ant-design/icons';
 import AddFriend from '../../core/friend/add-friend';
 import api from '../../../utils/apis';
+import Cookies from 'js-cookie';
+import { deleteFriend } from '../../../controller/friend';
 const { Text, Title } = Typography;
 
 const UserShortInfo = ({item, type}) => {
 
+    const userId = Cookies.get("_id")
     // const [userInfo]
 
     const description = () => {
         if(type == "user"){
             return (
                 <>
-                    {/* <p>{item.friends.include()}</p> */}
+                    <p>{item.friends.includes(userId) ? "Đã kết bạn!" : "Hãy gửi lời mời kết bạn để trò chuyện!"}</p>
                     {/* <Space>
                         <Button type="primary" icon={<MessageOutlined />} >Nhắn tin</Button>
                     </Space> */}
@@ -66,14 +69,26 @@ const UserShortInfo = ({item, type}) => {
                                     // setOpenModal(true)
                                 }}>Xem chi tiết</Button>
                         </div>
-                        <div>
-                            <Button type="text" icon={<UserAddOutlined />} 
-                                onClick={AddFriend}>Gửi lời mời kết bạn</Button>
-                        </div>
-                        <hr style={{
-                            borderTop: '1px solid #ddd'
-                        }}/>
-                        <div><Button type="text" icon={<CloseOutlined />} danger>Hủy kết bạn</Button></div>
+                        { !item.friends.includes(userId) ?
+                            <div>
+                                <Button type="text" icon={<UserAddOutlined />} 
+                                    onClick={AddFriend}>Gửi lời mời kết bạn</Button>
+                            </div>
+                            : null}
+                        { item.friends.includes(userId) ?
+                            <>
+                                <hr style={{
+                                    borderTop: '1px solid #ddd'
+                                }}/>
+                                <div>
+                                    <Button type="text" icon={<CloseOutlined />} danger
+                                        onClick={
+                                            deleteFriend(item._id, (data) => {
+                                                message.success("Xóa bạn bè thành công")
+                                            })
+                                        }>Hủy kết bạn</Button></div>
+                            </>
+                            : null}
                     </div>
                 </>
             )

@@ -4,7 +4,7 @@ import {
     MessageOutlined, ExclamationCircleOutlined, ArrowLeftOutlined,
     MoreOutlined, CheckOutlined, CloseOutlined,
 } from '@ant-design/icons';
-import { acceptInvite } from '../../../controller/friend';
+import { acceptInvite, declineInvite } from '../../../controller/friend';
 const { Text, Title } = Typography;
 
 const FriendInviteCard = ({item}) => {
@@ -12,7 +12,14 @@ const FriendInviteCard = ({item}) => {
 
     const onAcceptInvite = () => {
         acceptInvite(item.senderId._id, (res) => {
-            message.success("Chấp nhận lời mời kết bạn thành công")
+            message.success("Đã chấp nhận lời mời kết bạn!")
+            setAcepted(true)
+        })
+    }
+
+    const onDeclineInvite = () => {
+        declineInvite(item.senderId._id, (res) => {
+            message.success("Đã từ chối lời mời kết bạn!")
             setAcepted(true)
         })
     }
@@ -62,7 +69,7 @@ const FriendInviteCard = ({item}) => {
                                 </> :
                                 <>
                                     <Button type="primary" icon={<CheckOutlined />} onClick={onAcceptInvite}>Chấp nhận</Button>
-                                    <Button type="danger" icon={<CloseOutlined />} >Từ chối</Button>
+                                    <Button type="danger" icon={<CloseOutlined />} onClick={onDeclineInvite}>Từ chối</Button>
                                 </>   
                             }
                             

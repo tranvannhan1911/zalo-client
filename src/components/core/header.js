@@ -29,6 +29,7 @@ const Header = (props) => {
           ),
         },
         {
+          key: 'divider',
           type: 'divider',
         },
         {
@@ -53,7 +54,7 @@ const Header = (props) => {
           <Avatar
             src="https://joeschmoe.io/api/v1/random"
           />
-          <Typography.Text  numberOfLines={1} style={{
+          <Typography.Text style={{
             maxWidth: '250px',
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -63,8 +64,8 @@ const Header = (props) => {
       }
       extra={[
 
-        <Dropdown overlay={menu} placement="bottomRight">
-          <Button key="1" type="text" icon={<MoreOutlined />} />
+        <Dropdown overlay={menu} placement="bottomRight" key="dropdown">
+          <Button key="btn" type="text" icon={<MoreOutlined />} />
         </Dropdown>
       ]}
     ></PageHeader>

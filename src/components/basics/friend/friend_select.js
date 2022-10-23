@@ -4,7 +4,7 @@ import api from '../../../utils/apis';
 const { Option } = Select;
 
 
-const UserSelect = ({placeholder, value, setValue}) => {
+const FriendSelect = ({placeholder, value, setValue, open}) => {
   const [data, setdata] = useState([])
   const [dataOption, setdataOption] = useState([])
 
@@ -14,7 +14,7 @@ const UserSelect = ({placeholder, value, setValue}) => {
 
   const handleData = async () => {
      
-    const res = await api.user.list()
+    const res = await api.friend.list()
     console.log(res)
     if(res.status == 200){
       setdata(res.data)
@@ -32,18 +32,24 @@ const UserSelect = ({placeholder, value, setValue}) => {
     handleData()
   }, [])
 
+  useEffect(() => {
+    console.log("open", open)
+  }, [open])
+
   return (
     <Select
-      mode="tags"
+      mode="multiple"
+      allowClear
       style={{
         width: '100%',
       }}
-      placeholder={placeholder ? placeholder : "Chọn người dùng"}
+      placeholder={placeholder ? placeholder : "Chọn bạn bè"}
       onChange={setValue}
       value={value}
+      fil
     >
       {dataOption}
     </Select>
   )
 };
-export default UserSelect;
+export default FriendSelect;

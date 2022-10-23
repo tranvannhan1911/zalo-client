@@ -11,9 +11,6 @@ const ActionBar = (props) => {
 
     const onSearch = (value) => console.log(value);
     
-    useEffect(() => {
-        console.log("ActionBar", props)
-    }, [props])
 
     return (
         <div style={{
@@ -23,7 +20,6 @@ const ActionBar = (props) => {
         }}>
             <Input
                 placeholder="Tìm kiếm"
-                onSearch={onSearch}
                 style={{
                     flex: 1,
                     marginRight: '10px'

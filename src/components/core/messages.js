@@ -6,7 +6,7 @@ import {
 import { Avatar, Button, Divider, List, message, Popover, Space } from 'antd';
 import Cookies from 'js-cookie';
 import React, { useEffect, useRef } from 'react';
-import { deleteMessage } from '../../controller/message';
+import { deleteMessage, removeMessageFromAll } from '../../controller/message';
 const data = [
     {
         title: 'Ant Design Title 1',
@@ -33,24 +33,24 @@ const Messages = (props) => {
     const userId = Cookies.get("_id")
     const refMessages = useRef()
     const ref = useRef()
-    
+
     useEffect(() => {
         // console.log("props.messages", props.messages)
         // refMessages.current?.scrollToBottom({ behavior: 'smooth' })
     }, [props.messages])
     return (
         <div style={{
-                padding: '10px',
-                overflow: 'auto',
-                height: '490px'
-            }}
+            padding: '10px',
+            overflow: 'auto',
+            height: '490px'
+        }}
             ref={refMessages}>
             <List
                 itemLayout="horizontal"
                 dataSource={props.messages}
                 renderItem={(item) => {
-                    console.log("message item", item)
-                    if(item.type == "NOTIFY"){
+                    // console.log("message item", item, userId, item.deletedWithUserIds.includes(userId))
+                    if (item.type == "NOTIFY") {
                         return (
                             <div
                                 style={{
@@ -59,12 +59,14 @@ const Messages = (props) => {
                                     color: '#a3a3a3'
                                 }}>{item.content}</div>
                         )
-                    }else{
+                    } else {
                         const direction = item.senderId == userId ? 'row-reverse' : 'row'
                         const createAtTime = item.createdAt.slice(11, 19)
-                        
+                        if(item.deletedWithUserIds.includes(userId)){
+                            return null
+                        }
                         return (
-                            <div 
+                            <div
                                 style={{
                                     display: 'flex',
                                     flexDirection: `${direction}`,
@@ -75,25 +77,25 @@ const Messages = (props) => {
                                     <Avatar src="https://joeschmoe.io/api/v1/random" />
                                 }
                                 <div style={{
-                                    backgroundColor: 'white',
-                                    padding: '10px 20px',
-                                    borderRadius: '5px',
-                                    position: 'relative',
-                                    margin: '0 10px'
-                                }}
-                                onMouseEnter={(e) => {
-                                    // console.log(ref)
-                                    // ref.current.style.display = 'block'
-                                }}>
-                                <span style={{
-                                    color:'black',
-                                    fontSize:15
-                                }}>{item.content}</span>
-                                <br></br>
-                                <span style={{
-                                    color:'blue',
-                                    fontSize:10
-                                }}>{createAtTime}</span>
+                                        backgroundColor: 'white',
+                                        padding: '10px 20px',
+                                        borderRadius: '5px',
+                                        position: 'relative',
+                                        margin: '0 10px'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        // console.log(ref)
+                                        // ref.current.style.display = 'block'
+                                    }}>
+                                    <span style={{
+                                        color: `${item.isDeleted ? '#939393' : 'black'}`,
+                                        fontSize: 15
+                                    }}>{item.isDeleted ? "Tin nhắn đã bị thu hồi" : item.content}</span>
+                                    <br></br>
+                                    <span style={{
+                                        color: 'blue',
+                                        fontSize: 10
+                                    }}>{createAtTime}</span>
                                     <div
                                         style={{
                                             position: 'absolute',
@@ -106,43 +108,54 @@ const Messages = (props) => {
                                                 aa
                                             </div>
                                         } trigger="click" placement="right"> */}
-                                            <Button type="text" icon={<HeartOutlined />}
-                                                style={{
-                                                    display: 'none'
-                                                }}/>
+                                        <Button type="text" icon={<HeartOutlined />}
+                                            style={{
+                                                display: 'none'
+                                            }} />
                                         {/* </Popover> */}
                                     </div>
                                 </div>
-                                <Space 
-                                    ref={ref}
-                                    // style={{
-                                    //     display: 'none'
-                                    // }}
-                                    >
+                                {item.isDeleted ? null :
+                                <Space
+                                // ref={ref}
+                                // style={{
+                                //     display: 'none'
+                                // }}
+                                >
                                     <Popover content={
                                         <div>
                                             <div><Button type="text" icon={<CopyOutlined />} >Sao chép tin nhắn</Button></div>
                                             <div><Button type="text" icon={<ExclamationCircleOutlined />} >Xem chi tiết</Button></div>
                                             <hr style={{
                                                 borderTop: '1px solid #ddd'
-                                            }}/>
-                                            <div><Button type="text" icon={<UndoOutlined />} danger>Thu hồi</Button></div>
+                                            }} />
+                                            {item.senderId == userId ? 
                                             <div>
-                                                <Button type="text" icon={<DeleteOutlined /> } danger
+                                                <Button type="text" icon={<UndoOutlined />} danger
+                                                    onClick={() => removeMessageFromAll(item._id, () => {
+
+                                                        message.success("Thu hồi thành công")
+                                                    })}>Thu hồi</Button>
+                                            </div>
+                                            : null}
+                                            <div>
+                                                <Button type="text" icon={<DeleteOutlined />} danger
                                                     onClick={() => deleteMessage(item._id, () => {
+
                                                         message.success("Xóa thành công")
                                                     })}>Xóa phía tôi</Button>
                                             </div>
                                         </div>
                                     } trigger="click" placement="bottom">
-                                        <Button type="text" icon={<MoreOutlined />}/>
+                                        <Button type="text" icon={<MoreOutlined />} />
                                     </Popover>
                                 </Space>
+                                }
                             </div>
                         )
                     }
-                    
-                    
+
+
                 }}
             />
             <AlwaysScrollToBottom />

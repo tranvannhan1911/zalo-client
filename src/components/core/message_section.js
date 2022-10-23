@@ -36,11 +36,13 @@ const MessageSection = (props) => {
             }}>
                 <Space>
                     
-                    <Button key="1" type="text" icon={<FileImageOutlined />} />
-                    <Button key="1" type="text" icon={<SendOutlined />} 
+                    <Button key="image" type="text" icon={<FileImageOutlined />} />
+                    <Button key="text" type="text" icon={<SendOutlined />} 
                         onClick={() => {
-                            props.sendMessage(value)
-                            setValue("")
+                            if(value != "" && value != "\n"){
+                                props.sendMessage(value)
+                                setValue("")
+                            }
                         }}/>
                 </Space>
             </div>

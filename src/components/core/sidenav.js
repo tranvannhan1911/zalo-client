@@ -1,5 +1,5 @@
 import {
-  MessageOutlined, UserOutlined
+  MessageOutlined, UserOutlined, SettingOutlined, LogoutOutlined
 } from '@ant-design/icons';
 import { Avatar, Menu } from 'antd';
 import Sider from 'antd/lib/layout/Sider';
@@ -22,10 +22,14 @@ function getItem(label, key, icon, children, type) {
 const items = [
   getItem('Nhắn tin', 'conversation', <MessageOutlined />),
   getItem('Danh sách bạn bè', 'friend-list', <UserOutlined />),
-  getItem('Cài đặt', 'setting', <UserOutlined />)
 ];
 
-const rootSubmenuKeys = ['', 'ban-be'];
+const itemsSetting = [
+  getItem('Cài đặt', 'setting', <SettingOutlined />),
+  getItem('Đăng xuất', 'logout', <LogoutOutlined />),
+];
+
+const rootSubmenuKeys = ['conversation', 'friend-list', 'setting', 'logout'];
 
 const SideNav = ({setPage, setOpenUserModal}) => {
   const [openKeys, setOpenKeys] = useState();
@@ -42,16 +46,21 @@ const SideNav = ({setPage, setOpenUserModal}) => {
   };
 
   const onSelect = (selected) => {
-    // navigate(`/${selected.key}`)
-    setPage(selected.key)
-  }
-
-  const onClick = (selected) => {
+    //
+    if(selected.key == "logout"){
+      navigate(`/dang-nhap`)
+      return;
+    }
     setPage(selected.key)
   }
 
   return (
     <div
+      style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
     >
       <div style={{
         padding: '20px',
@@ -68,6 +77,12 @@ const SideNav = ({setPage, setOpenUserModal}) => {
           }}
         />
       </div>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        flex: '1'
+      }}>
       <Menu
         mode="inline"
         theme="dark"
@@ -75,8 +90,18 @@ const SideNav = ({setPage, setOpenUserModal}) => {
         onOpenChange={onOpenChange}
         items={items}
         onSelect={onSelect}
-        onClick={onClick}
+        onClick={onSelect}
       />
+      <Menu
+        mode="inline"
+        theme="dark"
+        openKeys={openKeys}
+        onOpenChange={onOpenChange}
+        items={itemsSetting}
+        onSelect={onSelect}
+        onClick={onSelect}
+      />
+      </div>
     </div>
   );
 };

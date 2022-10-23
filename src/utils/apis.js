@@ -119,6 +119,10 @@ const api = {
         create_group: (params) => {
             const url = `/conversation/groups`
             return axiosApi.post(url, params)
+        },
+        get_last_view: (id, params) => {
+            const url = `/conversation/${id}/last-view`
+            return axiosApi.post(url, params)
         }
     }),
 

@@ -1,4 +1,4 @@
-import { Avatar, Button, List, Skeleton, Space, Input, Divider, Typography, Popover } from 'antd';
+import { Avatar, Button, List, Skeleton, Space, Input, Divider, Typography, Popover, Badge } from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
     UserOutlined, UserAddOutlined, UsergroupAddOutlined,
@@ -120,15 +120,24 @@ const Conversations = (props) => {
                                 </Popover>
                             }
                             onClick={(e) => {
-                                console.log("item", item, e)
+                                console.log("onclick", item, e)
                                 props.setCurrentConv(item)
                             }}
                         >
                             <Skeleton avatar title={false} loading={item.loading} active>
                                 <List.Item.Meta
-                                    avatar={<Avatar src={item.avatar ? item.avatar :  "https://joeschmoe.io/api/v1/random"} />}
+                                    avatar={
+                                        <Badge count={item.count_seen} showZero={false}>
+                                            <Avatar src={item.avatar ? item.avatar :  "https://joeschmoe.io/api/v1/random"} />
+                                        </Badge>
+                                    }
                                     title={<Text >{item.name ? (truncate(item.name)) : "Không có tên"}</Text>}
-                                    description={item.lastMessageId ? item.lastMessageId.content : ""}
+                                    description={
+                                        <Text style={{
+                                            fontWeight: `${item.count_seen != 0 ? '600' : '400'}`
+                                        }}>
+                                            {item.lastMessageId ? item.lastMessageId.content : ""}</Text>
+                                    }
                                 />
                             </Skeleton>
                         </List.Item>

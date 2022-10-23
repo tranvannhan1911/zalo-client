@@ -49,3 +49,15 @@ export const declineInvite = async (sender_id, on_success, on_error, on_fail) =>
         return false
     }
 }
+
+export const deleteFriend = async (user_id, on_success, on_error, on_fail) => {
+    try {
+        const res = await api.friend.delete(user_id)
+        if(on_success)on_success(res)
+        return true
+    } catch (err) {
+        console.log("Failed, ", err)
+        if(on_error)on_error(err)
+        return false
+    }
+}

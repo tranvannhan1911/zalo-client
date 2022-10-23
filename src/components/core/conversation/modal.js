@@ -1,13 +1,15 @@
 import { Avatar, Button, Form, Image, Input, message, Modal } from 'antd';
 import React, { useState } from 'react';
 import api from '../../../utils/apis';
+import FriendSelect from '../../basics/friend/friend_select';
 import UserMember from '../../basics/user/user_searching';
 import UserSelect from '../../basics/user/user_select';
 
-const ConversationModal = ({open, setOpen}) => {
+const ConversationModal = ({open, setOpen}, props) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [form] = Form.useForm();
+  var friendSelectKey = 0;
 
   const showModal = () => {
     setOpen(true);
@@ -84,7 +86,7 @@ const ConversationModal = ({open, setOpen}) => {
                 </div>
             </Form.Item>
             <Form.Item label="Thêm thành viên vào nhóm" name="users">
-                <UserSelect value={users} setValue={setUsers}/>
+                <FriendSelect key={++friendSelectKey} {...props} open={open} value={users} setValue={setUsers}/>
             </Form.Item>
             {/* <div>
                 <UserSelect />
