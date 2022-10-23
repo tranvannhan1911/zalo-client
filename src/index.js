@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import vi_VN from 'antd/es/locale/vi_VN';
+import { Provider } from 'react-redux'
 import store from './store/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
