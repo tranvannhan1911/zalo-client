@@ -14,6 +14,7 @@ import socketIOClient from "socket.io-client";
 import Cookies from "js-cookie"
 import NavSearch from '../../components/core/navsearch.js/navsearch';
 import api from '../../utils/apis';
+import { deleteMessage } from '../../controller/message';
 
 const host = process.env.REACT_APP_BASE_URL;
 const { Sider } = Layout;
@@ -66,12 +67,31 @@ const ConversationPage = (props) => {
           }
         })
 
+        // listen delete message
+        // socketRef.current.on("delete-message", data => {
+        //   console.log("delete-message", data)
+        //   deleteMessage(data);
+        // })
 
+        
 
         // socketRef.current.emit('get-conversations')
       });
+      // return () => {
+      //   socketRef.current.close();
+      //  }
     }
   }, []);
+
+  useEffect(() => {
+    if(socketRef.current){
+      
+      socketRef.current.on("delete-message", data => {
+        console.log("delete-message", data)
+        deleteMessage(data);
+      })
+    }
+  }, socketRef)
 
   const sort = (_convs, next) => {
     console.log("moveToTop", _convs)
@@ -156,24 +176,29 @@ const ConversationPage = (props) => {
         plusCountSeen(data.message.conversationId)
   }
 
-  // const deleteMessage = async (data) => {
-  //   // if(data.message.userId == info.user)
-  //   console.log("newMessage", data, userId, data.message.senderId != userId)
-  //   console.log("conversations", conversations)
+  const deleteMessage = (data) => {
+    // if(data.message.userId == info.user)
+    console.log("deleteMessage", data, userId)
+    console.log("conversations", conversations)
 
-  //   var _convs = [...conversations]
-  //   _convs.map(conv => {
-  //     if (conv._id == data.message.conversationId) {
-  //       conv.messages.push(data.message)
-  //       conv.lastMessageId = data.message;
-  //       conv.updatedAt = data.message.updatedAt
-  //     }
-  //   })
-  //   sort(_convs)
-  //   setConversations(_convs)
-  //   if(data.message.senderId != userId)
-  //       plusCountSeen(data.message.conversationId)
-  // }
+    var _convs = [...conversations]
+    _convs.map(conv => {
+      if (conv._id == data.message.conversationId) {
+        conv.messages.map(msg => {
+          if(msg._id == data.message._id){
+            msg.isDeleted = true;
+          }
+          return msg
+        })
+        conv.lastMessageId = data.message;
+        conv.updatedAt = data.message.updatedAt
+      }
+    })
+    sort(_convs)
+    setConversations(_convs)
+    if(data.message.senderId != userId)
+        plusCountSeen(data.message.conversationId)
+  }
 
   useEffect(() => {
     if (conversations) {
@@ -190,6 +215,10 @@ const ConversationPage = (props) => {
               newMessage(data)
             }
           })
+
+          // socketRef.current.on("delete-message", data => {
+          //   console.log("delete-message", data)
+          // })
         }
       })
       setHasListen(_hasListen)
