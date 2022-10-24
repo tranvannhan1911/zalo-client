@@ -34,64 +34,61 @@ const ConversationPage = (props) => {
   var oneTime = true;
 
   const socketRef = useRef();
+  socketRef.current = socketIOClient.connect(host, { query: `access=${Cookies.get("access")}` })
 
   useEffect(() => {
     console.log("info", userId)
-    if (oneTime) {
-      oneTime = false
-      socketRef.current = socketIOClient.connect(host, { query: `access=${Cookies.get("access")}` })
-      // 
 
-      socketRef.current.on('connect', function () {
-        console.log("socketRef.current", socketRef.current, socketRef.current.id)
-
-        // socketRef.current.join(userId)
-        socketRef.current.on("create-group-conversation", conversationId => {
-          console.log("create-group-conversation", conversationId)
-          console.log("conversations", conversations)
-          handleDataOneConversation(conversationId)
-        })
-
-        // listen response all
-        socketRef.current.on(userId, data => {
-          console.log("socketRef.current.on userId", data)
-
-          if (data.conversations) {
-            const _convs = [...data.conversations]
-            _convs.map(conv => {
-              conv.key = conv._id
-              conv.count_seen = 0; // tmp
-              return conv;
-            })
-            setConversations(_convs)
-          }
-        })
-
-        // listen delete message
-        // socketRef.current.on("delete-message", data => {
-        //   console.log("delete-message", data)
-        //   deleteMessage(data);
-        // })
-
-        
-
-        // socketRef.current.emit('get-conversations')
-      });
+    // socketRef.current.on('connect', function () {
+    //   console.log("socketRef.current", socketRef.current, socketRef.current.id)
+    //   // listen delete message
+    //   // socketRef.current.on("delete-message", data => {
+    //   //   console.log("delete-message", data)
+    //   //   deleteMessage(data);
+    //   // })
+    // });
       // return () => {
       //   socketRef.current.close();
       //  }
-    }
+
+    socketRef.current.on("create-group-conversation", conversationId => {
+      console.log("create-group-conversation", conversationId)
+      console.log("conversations", conversations)
+      handleDataOneConversation(conversationId)
+      socketRef.current.off("create-group-conversation")
+    })
+
+    // listen response all
+    socketRef.current.on(userId, data => {
+      console.log("socketRef.current.on userId", data)
+
+      if (data.conversations) {
+        const _convs = [...data.conversations]
+        _convs.map(conv => {
+          conv.key = conv._id
+          conv.count_seen = 0; // tmp
+          return conv;
+        })
+        setConversations(_convs)
+      }
+      socketRef.current.off(userId)
+    })
+
+    socketRef.current.on("new-message", data => {
+      newMessage(data)
+      socketRef.current.off("new-message")
+    })
   }, []);
 
-  useEffect(() => {
-    if(socketRef.current){
+  // useEffect(() => {
+  //   if(socketRef.current){
       
-      socketRef.current.on("delete-message", data => {
-        console.log("delete-message", data)
-        deleteMessage(data);
-      })
-    }
-  }, socketRef)
+  //     socketRef.current.on("delete-message", data => {
+  //       console.log("delete-message", data)
+  //       deleteMessage(data);
+  //     })
+  //   }
+  // }, socketRef)
 
   const sort = (_convs, next) => {
     console.log("moveToTop", _convs)
@@ -204,24 +201,24 @@ const ConversationPage = (props) => {
     if (conversations) {
       
       console.log("conversations change", conversations)
-      const _hasListen = { ...hasListen }
-      conversations.forEach(conv => {
-        if (!_hasListen[conv._id]) {
-          _hasListen[conv._id] = true
-          console.log("listen conversation", conv._id, conv.name)
-          console.log(conversations)
-          socketRef.current.on(conv._id, data => {
-            if (data.type == "new-message") {
-              newMessage(data)
-            }
-          })
+      // const _hasListen = { ...hasListen }
+      // conversations.forEach(conv => {
+      //   if (!_hasListen[conv._id]) {
+      //     _hasListen[conv._id] = true
+      //     console.log("listen conversation", conv._id, conv.name)
+      //     console.log(conversations)
+      //     socketRef.current.on(conv._id, data => {
+      //       if (data.type == "new-message") {
+      //         newMessage(data)
+      //       }
+      //     })
 
-          // socketRef.current.on("delete-message", data => {
-          //   console.log("delete-message", data)
-          // })
-        }
-      })
-      setHasListen(_hasListen)
+      //     // socketRef.current.on("delete-message", data => {
+      //     //   console.log("delete-message", data)
+      //     // })
+      //   }
+      // })
+      // setHasListen(_hasListen)
     }
   }, [conversations])
 
