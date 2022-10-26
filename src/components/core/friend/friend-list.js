@@ -1,5 +1,5 @@
 import { Avatar, Button, Card, Image, List, Popover, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     MessageOutlined, ExclamationCircleOutlined, ArrowLeftOutlined,
     MoreOutlined
@@ -7,14 +7,33 @@ import {
 import UserCard from '../../basics/user/user_card';
 import FriendTitle from '../../basics/user/friend_title';
 import api from '../../../utils/apis';
+import socket from '../../../socket/socket';
 const { Text, Title } = Typography;
 
 const FriendList = () => {
     const [data, setData] = useState([])
+    var oneTime = true;
+    const dataRef = useRef(data)
+    
+    useEffect(() => {
+        dataRef.current = data
+    })
 
     useEffect(() => {
-        handleData()
+        if(oneTime){
+            oneTime = false
+            handleData()
+      
+            socket.on("accept-friend", (data) => {
+              console.log("accept-friend.............", data)
+              newFriend(dataRef.current, setData, data)
+            })
+        }
     }, [])
+
+    const newFriend = (data, setData, friend) => {
+        console.log("list friend", data)
+    }
 
     const handleData = async () => {
      

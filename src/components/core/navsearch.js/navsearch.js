@@ -5,7 +5,7 @@ import {
     MoreOutlined, UndoOutlined, DeleteOutlined, ArrowLeftOutlined,
     ExclamationCircleOutlined, TeamOutlined
 } from '@ant-design/icons';
-import ConversationModal from '../conversation/modal';
+import ConversationModal from '../../basics/conversation/create_group_modal';
 import ActionBar from '../action';
 import { Link } from 'react-router-dom';
 import UserShortInfo from '../../basics/user/user_short_info';

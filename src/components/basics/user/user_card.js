@@ -1,12 +1,30 @@
-import { Avatar, Button, Card, Image, List, Popover, Space, Typography } from 'antd';
-import React from 'react';
+import { Avatar, Button, Card, Image, List, message, Popover, Space, Typography } from 'antd';
+import React, { useEffect } from 'react';
 import {
     MessageOutlined, ExclamationCircleOutlined, ArrowLeftOutlined,
     MoreOutlined, CheckOutlined, CloseOutlined,
 } from '@ant-design/icons';
+import api from '../../../utils/apis';
+import store, { setStoreCurentConv, setPage } from '../../../store/store';
+import { deleteFriend } from '../../../controller/friend';
 const { Text, Title } = Typography;
 
 const UserCard = ({item, type}) => {
+
+    const createConversation1vs1 = async () => {
+        const res = await api.conversation.create_1vs1({userId: item._id})
+        console.log("createConversation1vs1", res)
+        if(res.data.isExists){
+            const res2 = await api.conversation.get(res.data._id)
+            console.log("createConversation1vs1 2222222222222", res2.data)
+
+            store.dispatch(setPage("conversation"))
+            store.dispatch(setStoreCurentConv(res2.data))
+        }else{
+            store.dispatch(setPage("conversation"))
+            store.dispatch(setStoreCurentConv(res.data))
+        }
+    }
 
     const description = () => {
         if(type == "friend"){
@@ -14,7 +32,8 @@ const UserCard = ({item, type}) => {
                 <>
                     <p>Thích màu tím và ghét sự giả dối</p>
                     <Space>
-                        <Button type="primary" icon={<MessageOutlined />} >Nhắn tin</Button>
+                        <Button type="primary" icon={<MessageOutlined />} 
+                            onClick={createConversation1vs1}>Nhắn tin</Button>
                     </Space>
                 </>
             )
@@ -59,7 +78,12 @@ const UserCard = ({item, type}) => {
                         <hr style={{
                             borderTop: '1px solid #ddd'
                         }}/>
-                        <div><Button type="text" icon={<CloseOutlined />} danger>Hủy kết bạn</Button></div>
+                        <div><Button type="text" icon={<CloseOutlined />} danger
+                            onClick={
+                                deleteFriend(item._id, (data) => {
+                                    message.success("Xóa bạn bè thành công")
+                                })
+                            }>Hủy kết bạn</Button></div>
                     </div>
                 </>
             )

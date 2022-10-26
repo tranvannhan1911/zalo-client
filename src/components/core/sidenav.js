@@ -6,6 +6,7 @@ import Sider from 'antd/lib/layout/Sider';
 import { useNavigate } from 'react-router-dom'
 import { Typography } from 'antd';
 import React, { useState } from 'react';
+import store, { setPage } from '../../store/store';
 //   import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const { Title } = Typography;
 
@@ -31,7 +32,7 @@ const itemsSetting = [
 
 const rootSubmenuKeys = ['conversation', 'friend-list', 'setting', 'logout'];
 
-const SideNav = ({setPage, setOpenUserModal}) => {
+const SideNav = ({setOpenUserModal}) => {
   const [openKeys, setOpenKeys] = useState();
   const navigate = useNavigate();
 
@@ -51,7 +52,7 @@ const SideNav = ({setPage, setOpenUserModal}) => {
       navigate(`/dang-nhap`)
       return;
     }
-    setPage(selected.key)
+    store.dispatch(setPage(selected.key))
   }
 
   return (

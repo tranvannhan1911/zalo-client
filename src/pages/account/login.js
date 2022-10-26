@@ -64,8 +64,10 @@ const Login = () => {
 
             const action = setUser(response.data)
             store.dispatch(action)
-            console.log("action", action)
-            
+            // console.log("action", action)
+            // store.subscribe(() => {
+            //     console.log("store.subscribe", store.getState())
+            // })
 
             navigate('/')
         } catch (error) {
