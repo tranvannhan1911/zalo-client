@@ -1,11 +1,12 @@
-import { Avatar, Button, Form, Image, Input, message, Modal } from 'antd';
+import { Avatar, Button, Drawer, Form, Image, Input, message, Modal } from 'antd';
 import React, { useState } from 'react';
 import api from '../../../utils/apis';
-import FriendSelect from '../../basics/friend/friend_select';
-import UserMember from '../../basics/user/user_searching';
-import UserSelect from '../../basics/user/user_select';
+import FriendSelect from '../friend/friend_select';
+import UserMember from '../user/user_searching';
+import UserSelect from '../user/user_select';
+import MemberGroupTab from './member_group_tab';
 
-const ConversationModal = ({open, setOpen}, props) => {
+const ConversationInfoModal = ({open, setOpen}, props) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [form] = Form.useForm();
@@ -27,42 +28,41 @@ const ConversationModal = ({open, setOpen}, props) => {
     setOpen(false);
   };
 
-  const createConversation = async () => {
-    try{
-      const values = form.getFieldsValue()
-      values.userIds = users
-      const res = await api.conversation.create_group(values)
-      console.log("createConversation", res)
-      if(res.status == 201){
-        message.success("Tạo nhóm thành công")
-        setOpen(false)
-        // props.setCurrentConv()
-      }
-    }catch(err){
-      console.log("Failed, ", err)
-    }
+  const editConversation = async () => {
+    // try{
+    //   const values = form.getFieldsValue()
+    //   values.userIds = users
+    //   const res = await api.conversation.create_group(values)
+    //   console.log("createConversation", res)
+    //   if(res.status == 201){
+    //     message.success("Tạo nhóm thành công")
+    //     setOpen(false)
+    //     // props.setCurrentConv()
+    //   }
+    // }catch(err){
+    //   console.log("Failed, ", err)
+    // }
     
   }
 
   return (
     <>
-      <Modal
+      <Drawer
+        placement="right"
         open={open}
-        title="Tạo cuộc trò chuyện"
+        title="Thông tin cuộc hội thoại"
         onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Hủy
-          </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={createConversation}>
-            Tạo nhóm
+        onClose={handleCancel}
+        width="500px"
+        extra={[
+          <Button key="submit" type="primary" loading={loading} onClick={editConversation}>
+            Lưu
           </Button>
         ]}
       >
         <Form
             form={form}
-            onFinish={createConversation}
+            onFinish={editConversation}
             layout="vertical">
                 
             <Form.Item name="name">
@@ -88,12 +88,10 @@ const ConversationModal = ({open, setOpen}, props) => {
             <Form.Item label="Thêm thành viên vào nhóm" name="users">
                 <FriendSelect key={++friendSelectKey} {...props} open={open} value={users} setValue={setUsers}/>
             </Form.Item>
-            {/* <div>
-                <UserSelect />
-            </div> */}
+            <MemberGroupTab />
         </Form>
-      </Modal>
+      </Drawer>
     </>
   );
 };
-export default ConversationModal;
+export default ConversationInfoModal;

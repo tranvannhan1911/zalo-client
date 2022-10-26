@@ -5,7 +5,10 @@ import SideNav from '../components/core/sidenav';
 import { Content } from 'antd/lib/layout/layout';
 import Cookies from 'js-cookie';
 import { lazy } from "react";
-import UserModal from '../components/basics/user/user_modal';
+import socket from '../socket/socket'
+import store, { setPage, setUser } from '../store/store';
+import api from '../utils/apis';
+import UserViewModal from '../components/basics/user/user_view_modal';
 
 const ConversationPage = lazy(() => import("./conversation/conversation"));
 const FriendPage = lazy(() => import("./conversation/friend"));
@@ -16,16 +19,48 @@ const MainPage = () => {
   const navigate = useNavigate();
   const [hasPerms, setHasPerms] = useState(true);
   const [openUserModal, setOpenUserModal] = useState(false);
-  const [page, setPage] = useState("conversation");
+  const [page, setLocalPage] = useState("conversation");
   const [showSearchingList, setShowSearchingList] = useState(false);
+
+  useEffect(() => {
+    store.subscribe(() => {
+      console.log("set page", store.getState().page.info)
+      setLocalPage(store.getState().page.info)
+    })
+  }, [])
+
+  const setStorePage = (_page) => {
+    store.dispatch(setPage(_page))
+
+  }
+
+  // const socketRef = useRef();
+  // socketRef.current = socketIOClient.connect(host, { query: `access=${Cookies.get("access")}` })
 
   const handleAuthentication = async () => {
     const access = Cookies.get("access")
     const refresh = Cookies.get("refresh")
+
     if (access == null || refresh == null) {
       navigate('/dang-nhap')
       return
     }
+
+    try {
+      const res = await api.user.get_info()
+      if (res.status == 200) {
+        console.log("Authenticated", res.data)
+        const action = setUser(res.data)
+        store.dispatch(action)
+      } else {
+        navigate('/dang-nhap')
+        return
+      }
+    } catch {
+      navigate('/dang-nhap')
+      return
+    }
+
   }
 
   useEffect(() => {
@@ -34,7 +69,6 @@ const MainPage = () => {
 
   const _props = {
     page: page,
-    setPage: setPage,
     openUserModal: openUserModal,
     setOpenUserModal: setOpenUserModal,
     showSearchingList: showSearchingList,
@@ -42,15 +76,15 @@ const MainPage = () => {
   }
 
   const content = () => {
-    if(page == "conversation"){
+    if (page == "conversation") {
       return (
-        <ConversationPage {..._props}/>
+        <ConversationPage {..._props} />
       )
     }
 
-    if(page == "friend" || page == "friend-list" || page == "add-friend" || page == "group" ){
+    if (page == "friend" || page == "friend-list" || page == "add-friend" || page == "group") {
       return (
-        <FriendPage {..._props}/>
+        <FriendPage {..._props} />
       )
     }
   }
@@ -74,7 +108,7 @@ const MainPage = () => {
             height: "90vh",
           }}>
             {content()}
-            <UserModal {..._props}/>
+            <UserViewModal {..._props}/>
           </Content>
         </Layout>
       </>

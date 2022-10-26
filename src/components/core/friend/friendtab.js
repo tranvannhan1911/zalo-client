@@ -5,9 +5,10 @@ import {
     MoreOutlined, UndoOutlined, DeleteOutlined, ArrowLeftOutlined,
     ExclamationCircleOutlined, TeamOutlined
 } from '@ant-design/icons';
-import ConversationModal from '../conversation/modal';
+import ConversationModal from '../../basics/conversation/create_group_modal';
 import ActionBar from '../action';
 import { Link } from 'react-router-dom';
+import store, { setPage } from '../../../store/store';
 const { Search } = Input;
 const { Text } = Typography;
 const count = 3;
@@ -44,7 +45,7 @@ const FriendTab = (props) => {
                         
                     }}
                     onClick={() => {
-                        props.setPage("friend-list")
+                        store.dispatch(setPage("friend-list"))
                     }}>
                         <TeamOutlined /> Danh sách bạn bè
                 </div>
@@ -59,7 +60,7 @@ const FriendTab = (props) => {
                         
                     }}
                     onClick={() => {
-                        props.setPage("add-friend")
+                        store.dispatch(setPage("add-friend"))
                     }}>
                         <UserAddOutlined /> Danh sách kết bạn
                 </div>
@@ -74,7 +75,7 @@ const FriendTab = (props) => {
                         
                     }}
                     onClick={() => {
-                        props.setPage("group")
+                        store.dispatch(setPage("group"))
                     }}>
                         <UsergroupAddOutlined /> Danh sách nhóm
                 </div>

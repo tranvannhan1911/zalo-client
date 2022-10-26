@@ -45,6 +45,7 @@ class AccountApi{
 
     save_info(response){
         Cookies.set("_id", response.data._id);
+        Cookies.set("name", response.data.name);
         Cookies.set("phoneNumber", response.data.phoneNumber);
         Cookies.set("avatar", response.data.avatar);
         Cookies.set("isDeleted", response.data.isDeleted);
@@ -94,7 +95,12 @@ const getApi = (resource, extras) => {
 }
 
 const api = {
-    user: getApi("user"),
+    user: getApi("user", {
+        get_info: (params) => {
+            const url = `/user/`
+            return axiosApi.get(url, params)
+        }
+    }),
 
     friend: getApi("friends", {
         invite: (user_id, params) => {
@@ -116,6 +122,10 @@ const api = {
     }),
 
     conversation: getApi("conversation", {
+        create_1vs1: (params) => {
+            const url = `/conversation`
+            return axiosApi.post(url, params)
+        },
         create_group: (params) => {
             const url = `/conversation/groups`
             return axiosApi.post(url, params)
@@ -123,10 +133,18 @@ const api = {
         get_last_view: (id, params) => {
             const url = `/conversation/${id}/last-view`
             return axiosApi.post(url, params)
+        },
+        leave_group: (id, params) => {
+            const url = `/conversation/${id}/members/leave`
+            return axiosApi.delete(url, params)
         }
     }),
 
     message: getApi("message", {
+        addMessageText: (params) => {
+            const url = `/message/text`
+            return axiosApi.post(url, params)
+        },
         removeMessage: (message_id, params) => {
             const url = `/message/${message_id}`
             return axiosApi.delete(url, params)

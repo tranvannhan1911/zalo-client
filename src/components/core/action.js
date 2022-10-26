@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {
     CloseOutlined, UsergroupAddOutlined
 } from '@ant-design/icons';
-import ConversationModal from './conversation/modal';
+import ConversationModal from '../basics/conversation/create_group_modal';
 const { Search } = Input;
 const { Text } = Typography;
 const ActionBar = (props) => {
