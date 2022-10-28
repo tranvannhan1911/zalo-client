@@ -221,7 +221,7 @@ const ConversationPage = (props) => {
           setMessages(conv.messages)
         }
       })
-      // updateCountSeen(convRef.current, setConversations, currentConv._id, 0)
+      updateCountSeen(convRef.current, setConversations, currentConv._id, 0)
     }else{
       setMessages([])
     }
@@ -316,7 +316,7 @@ const ConversationPage = (props) => {
               messages={messages}
               setMessages={setMessages} />
         </div>
-        <MessageSection sendMessage={sendMessage} />
+        <MessageSection sendMessage={sendMessage} currentConv={currentConv}/>
         </Col>
         <ConversationInfoModal open={openConvInfoModal} setOpen={setOpenConvInfoModal}/>
     </Row>

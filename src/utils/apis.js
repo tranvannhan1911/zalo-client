@@ -94,6 +94,10 @@ const getApi = (resource, extras) => {
     }
 }
 
+// const addMessageMedia = async () => {
+
+// }
+
 const api = {
     user: getApi("user", {
         get_info: (params) => {
@@ -143,6 +147,10 @@ const api = {
     message: getApi("message", {
         addMessageText: (params) => {
             const url = `/message/text`
+            return axiosApi.post(url, params)
+        },
+        addMessageMedia: (type, conversationId, params) => {
+            const url = `/message/file/${type}/${conversationId}`
             return axiosApi.post(url, params)
         },
         removeMessage: (message_id, params) => {
