@@ -19,7 +19,6 @@ const axiosApi = axios.create({
     paramsSerializer: (params) => queryString.stringify(params),
 });
 
-
 // axiosRetry(axiosApi, {
 //     retries: 2, // number of retries
 //     retryDelay: (retryCount) => {

@@ -91,7 +91,18 @@ const Messages = (props) => {
                     <Button type="text"  href={item.content} target='blank' icon={<DownloadOutlined />}> Tải xuống</Button>
                 </div>
             )
-        }else {
+        }else if(item.type == "VIDEO"){
+            return (
+                
+                <div style={{
+                    margin: '0 10px'
+                }}>
+                    <video style={{
+                        width: '600px'
+                    }} controls src={item.content}></video>
+                </div>
+            )
+        }else{
             return card(item)
         }
     }
@@ -100,7 +111,7 @@ const Messages = (props) => {
         <div style={{
             padding: '10px',
             overflow: 'auto',
-            height: '490px'
+            height: '465px'
         }}>
             <List
                 itemLayout="horizontal"
