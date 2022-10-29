@@ -149,9 +149,11 @@ const api = {
             const url = `/message/text`
             return axiosApi.post(url, params)
         },
-        addMessageMedia: (type, conversationId, params) => {
+        addMessageMedia: (type, conversationId, params, onUploadProgress) => {
             const url = `/message/file/${type}/${conversationId}`
-            return axiosApi.post(url, params)
+            return axiosApi.post(url, params, {
+                onUploadProgress: onUploadProgress
+            })
         },
         removeMessage: (message_id, params) => {
             const url = `/message/${message_id}`

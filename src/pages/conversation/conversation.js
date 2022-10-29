@@ -15,7 +15,7 @@ import NavSearch from '../../components/core/navsearch.js/navsearch';
 import api from '../../utils/apis';
 import { deleteMessage } from '../../controller/message';
 import socket from '../../socket/socket'
-import {newMessageHandler} from '../../socket/conversation_handler'
+import { newMessageHandler } from '../../socket/conversation_handler'
 import store, { setStoreCurentConv } from '../../store/store';
 import ConversationInfoModal from '../../components/basics/conversation/info_group_modal';
 
@@ -41,7 +41,7 @@ const ConversationPage = (props) => {
   })
 
   useEffect(() => {
-    if(oneTime){
+    if (oneTime) {
       oneTime = false
       getListConversation()
 
@@ -59,10 +59,10 @@ const ConversationPage = (props) => {
         deleteMessage(convRef.current, setConversations, data);
       })
     }
-    
+
     store.subscribe(() => {
       console.log("store.subscribe asaasdasad", store.getState().currentConv.info)
-      const _info = {...store.getState().currentConv.info}
+      const _info = { ...store.getState().currentConv.info }
       console.log("_info", _info)
       setCurrentConv(_info)
     })
@@ -84,7 +84,7 @@ const ConversationPage = (props) => {
 
   // useEffect(() => {
   //   if(socketRef.current){
-      
+
   //     socketRef.current.on("delete-message", data => {
   //       console.log("delete-message", data)
   //       deleteMessage(data);
@@ -93,17 +93,17 @@ const ConversationPage = (props) => {
   // }, socketRef)
 
   const sort = (_convs, next) => {
-    _convs.sort(function(x,y){ 
+    _convs.sort(function (x, y) {
       var dx = Date.parse(x.updatedAt)
       var dy = Date.parse(y.updatedAt)
-      return dy-dx
+      return dy - dx
     });
     return _convs
   }
 
   const getConv = (conversations, conversationId) => {
-    for(var i = 0; i<conversations.length; i++){
-      if(conversations[i]._id == conversationId)
+    for (var i = 0; i < conversations.length; i++) {
+      if (conversations[i]._id == conversationId)
         return conversations[i];
     }
     return null;
@@ -112,8 +112,8 @@ const ConversationPage = (props) => {
   const countNotSeen = (conversationId) => {
     const conv = getConv(conversationId);
     var count = 0;
-    for(var i=conv.messages; i>=0; i--){
-      if(conv.messages[i]._id == conv.lastMessageId._id){
+    for (var i = conv.messages; i >= 0; i--) {
+      if (conv.messages[i]._id == conv.lastMessageId._id) {
         break;
       }
       count++;
@@ -121,14 +121,14 @@ const ConversationPage = (props) => {
   }
 
   const newConversation = async (conversations, setConversations, conversationId) => {
-    try{
+    try {
       const res = await api.conversation.get(conversationId)
       // console.log("new conversation", res)
       const conv = res.data
       conv.key = conv._id
       conv.count_seen = 1
       conv.messages.forEach(msg => {
-        if(msg._id == conv.lastMessageId){
+        if (msg._id == conv.lastMessageId) {
           conv.lastMessageId = msg
         }
       })
@@ -139,8 +139,8 @@ const ConversationPage = (props) => {
       _convs = sort(_convs)
       setConversations(_convs)
 
-      socket.emit("join-conversation", {conversationId})
-    }catch{
+      socket.emit("join-conversation", { conversationId })
+    } catch {
 
     }
   }
@@ -161,8 +161,8 @@ const ConversationPage = (props) => {
     sort(_convs)
     console.log("after sort", _convs)
     setConversations(_convs)
-    if(data.message.senderId != userId)
-        plusCountSeen(_convs, setConversations, data.message.conversationId)
+    if (data.message.senderId != userId)
+      plusCountSeen(_convs, setConversations, data.message.conversationId)
   }
 
   const deleteMessage = (conversations, setConversations, data) => {
@@ -174,7 +174,7 @@ const ConversationPage = (props) => {
     _convs.map(conv => {
       if (conv._id == data.message.conversationId) {
         conv.messages.map(msg => {
-          if(msg._id == data.message._id){
+          if (msg._id == data.message._id) {
             msg.isDeleted = true;
           }
           return msg
@@ -189,7 +189,7 @@ const ConversationPage = (props) => {
 
   useEffect(() => {
     if (conversations) {
-      
+
       console.log("conversations change", conversations)
       // const _hasListen = { ...hasListen }
       // conversations.forEach(conv => {
@@ -214,7 +214,7 @@ const ConversationPage = (props) => {
 
   useEffect(() => {
     console.log("currentConv", currentConv)
-    
+
     if (currentConv) {
       conversations.forEach(conv => {
         if (conv._id == currentConv._id) {
@@ -222,7 +222,7 @@ const ConversationPage = (props) => {
         }
       })
       updateCountSeen(convRef.current, setConversations, currentConv._id, 0)
-    }else{
+    } else {
       setMessages([])
     }
 
@@ -246,17 +246,17 @@ const ConversationPage = (props) => {
     // // )
   }
 
-  
+
   const plusCountSeen = (conversations, setConversations, conversationId) => {
     const conv = getConv(conversations, conversationId)
     console.log("plusCountSeen", conv, conversations)
-    updateCountSeen(conversations, setConversations, conversationId, conv.count_seen+1)
+    updateCountSeen(conversations, setConversations, conversationId, conv.count_seen + 1)
   }
 
   const updateCountSeen = (conversations, setConversations, conversationId, count) => {
     const convs = [...conversations];
     convs.map(conv => {
-      if(conv._id == conversationId){
+      if (conv._id == conversationId) {
         conv.count_seen = count
       }
       return conv
@@ -268,8 +268,8 @@ const ConversationPage = (props) => {
     const _convs = [...convRef.current]
     var idx;
     console.log("onLeaveGroup", _convs)
-    for(var i=0; i<_convs.length; i++){
-      if(_convs[i]._id == conv._id){
+    for (var i = 0; i < _convs.length; i++) {
+      if (_convs[i]._id == conv._id) {
         idx = i
         break
       }
@@ -281,15 +281,15 @@ const ConversationPage = (props) => {
 
   return (
     <Row style={{ height: "100vh" }}>
-        <Col span={6} style={{
+      <Col span={6} style={{
         borderRight: '1px solid #ddd',
         height: "100vh"
-        }}>
+      }}>
         {
-          props.showSearchingList 
-          ? 
-            <NavSearch {...props}/>
-          :
+          props.showSearchingList
+            ?
+            <NavSearch {...props} />
+            :
             <Conversations
               style={{
                 width: '300px',
@@ -300,25 +300,25 @@ const ConversationPage = (props) => {
               setCurrentConv={setCurrentConv}
               updateCountSeen={updateCountSeen}
               onLeaveGroup={onLeaveGroup}
-              setOpenConvInfoModal={setOpenConvInfoModal} /> 
+              setOpenConvInfoModal={setOpenConvInfoModal} />
         }
-        
-        </Col>
-        <Col span={18} style={{
+
+      </Col>
+      <Col span={18} style={{
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        }}>
+      }}>
         <div>
-            <Header currentConv={currentConv}/>
-            <Messages
-              messages={messages}
-              setMessages={setMessages} />
+          <Header currentConv={currentConv} />
+          <Messages
+            messages={messages}
+            setMessages={setMessages} />
         </div>
-        <MessageSection sendMessage={sendMessage} currentConv={currentConv}/>
-        </Col>
-        <ConversationInfoModal open={openConvInfoModal} setOpen={setOpenConvInfoModal}/>
+        <MessageSection sendMessage={sendMessage} currentConv={currentConv} />
+      </Col>
+      <ConversationInfoModal open={openConvInfoModal} setOpen={setOpenConvInfoModal} />
     </Row>
   );
 };
