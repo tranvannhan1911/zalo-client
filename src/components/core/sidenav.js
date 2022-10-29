@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { Typography } from 'antd';
 import React, { useState } from 'react';
 import store, { setPage } from '../../store/store';
+import Cookies from 'js-cookie';
 //   import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const { Title } = Typography;
 
@@ -68,7 +69,7 @@ const SideNav = ({setOpenUserModal}) => {
         color: 'white'
       }}>
         <Avatar
-          src="https://joeschmoe.io/api/v1/random"
+          src={Cookies.get("avatar")}
           onClick={() => {
             console.log("click")
             setOpenUserModal(true)

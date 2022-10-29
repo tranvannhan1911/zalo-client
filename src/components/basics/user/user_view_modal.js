@@ -1,17 +1,21 @@
-import { Button, Modal, Image, Avatar, Typography, Space } from 'antd';
+import { Button, Modal, Image, Avatar, Typography, Space, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
-    MessageOutlined, CheckOutlined, CloseOutlined,
+    MessageOutlined, CheckOutlined, CloseOutlined, CameraOutlined
 } from '@ant-design/icons';
 import store from '../../../store/store'
 import { get_info_from_cookie } from '../../../utils/utils';
 import Cookies from 'js-cookie';
 import UserEditModal from './user_edit_modal';
+import UserUpdateAvatarModal from './user_update_avatar_modal';
+import ImgCrop from 'antd-img-crop';
 
 const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({});
     const [openEditModal, setOpenEditModal] = useState(false);
+    const [openUpdateAvatarModal, setOpenUpdateAvatarModal] = useState(false);
+    const [file, setFile] = useState();
 
     const showModal = () => {
         setOpenUserModal(true);
@@ -76,9 +80,13 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
         </>
     )
 
-    const handleUpdate = () => {
-
-    }
+    const handleChangeUploadAvatar = async (info) => {
+        if (info.file.status === 'done') {
+            console.log("handleChangeUploadAvatar", info)
+            setFile(info)
+            setOpenUpdateAvatarModal(true)
+        }
+    };
 
     return (
         <>
@@ -103,17 +111,43 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
                 <div style={{
                     display: 'flex'
                 }}>
-                    <Avatar
-                        size={70}
-                        src={
-                            <Image
-                                src={user.avatar ? user.avatar : "https://i.imgur.com/TV0vz0r.png"}
-                            // style={{
-                            //     width: 32,
-                            // }}
-                            />
-                        }
-                    />
+                    <div>
+                        <Avatar
+                            size={70}
+                            src={
+                                <>
+                                    <Image
+                                        src={user.avatar ? user.avatar : "https://i.imgur.com/TV0vz0r.png"}
+                                    // style={{
+                                    //     width: 32,
+                                    // }}
+                                    />
+                                </>
+                            }
+                        />
+                        <ImgCrop rotate>
+                            <Upload
+                                name="avatar"
+                                accept='image/jpeg,image/png'
+                                showUploadList={false}
+                                customRequest={(options) => {
+                                    console.log(options)
+                                    options.onSuccess(options)
+                                }}
+                                style={{
+                                    position: 'absolute',
+                                    marginLeft: '-24px',
+                                    marginTop: '50px'
+                                }}
+                                // beforeUpload={beforeUpload}
+                                onChange={handleChangeUploadAvatar}
+                            >
+                                <Button 
+                                    type='text' 
+                                    icon={<CameraOutlined />}></Button>
+                            </Upload>
+                        </ImgCrop>
+                    </div>
                     <div style={{
                         marginLeft: '20px'
                     }}>
@@ -127,6 +161,10 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
 
             </Modal>
             <UserEditModal openEditModal={openEditModal} setOpenEditModal={setOpenEditModal}/>
+            <UserUpdateAvatarModal  
+                openUpdateAvatarModal={openUpdateAvatarModal} 
+                setOpenUpdateAvatarModal={setOpenUpdateAvatarModal}
+                file={file}/>
         </>
     );
 };

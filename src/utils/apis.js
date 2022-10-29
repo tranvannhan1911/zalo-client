@@ -47,6 +47,8 @@ class AccountApi{
         Cookies.set("_id", response.data._id);
         Cookies.set("name", response.data.name);
         Cookies.set("phoneNumber", response.data.phoneNumber);
+        Cookies.set("dateOfBirth", response.data.dateOfBirth);
+        Cookies.set("gender", response.data.gender);
         Cookies.set("avatar", response.data.avatar);
         Cookies.set("isDeleted", response.data.isDeleted);
         Cookies.set("isAdmin", response.data.isAdmin);
@@ -103,6 +105,14 @@ const api = {
         get_info: (params) => {
             const url = `/user/`
             return axiosApi.get(url, params)
+        },
+        update_avatar: (params) => {
+            const url = `/me/avatar`
+            return axiosApi.patch(url, params)
+        },
+        update_info: (params) => {
+            const url = `/me/profile`
+            return axiosApi.put(url, params)
         }
     }),
 
