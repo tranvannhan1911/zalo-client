@@ -117,7 +117,7 @@ const Messages = (props) => {
                 itemLayout="horizontal"
                 dataSource={props.messages}
                 renderItem={(item) => {
-                    // console.log("message item", item, userId, item.deletedWithUserIds.includes(userId))
+                    console.log("message item", item, userId, item.deletedWithUserIds.includes(userId))
                     if (item.type == "NOTIFY") {
                         return (
                             <div
@@ -142,7 +142,7 @@ const Messages = (props) => {
                                 }}
                             >
                                 {item.senderId == userId ? null :
-                                    <Avatar src="https://joeschmoe.io/api/v1/random" />
+                                    <Avatar src={item.avatar} />
                                 }
                                 {content(item)}
                                 {item.isDeleted ? null :

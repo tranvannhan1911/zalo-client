@@ -80,7 +80,7 @@ const UserCard = ({item, type}) => {
                         }}/>
                         <div><Button type="text" icon={<CloseOutlined />} danger
                             onClick={
-                                deleteFriend(item._id, (data) => {
+                                () => deleteFriend(item._id, (data) => {
                                     message.success("Xóa bạn bè thành công")
                                 })
                             }>Hủy kết bạn</Button></div>
