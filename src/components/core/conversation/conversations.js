@@ -196,7 +196,7 @@ const Conversations = (props) => {
                         }}
                       >
                         {" "}
-                        {item.lastMessageId.senderId == userId ? "Bạn: " : ""}
+                        {item.lastMessageId?.senderId == userId ? "Bạn: " : ""}
                         {item.lastMessageId
                           ? item.lastMessageId.isDeleted
                             ? "Tin nhắn đã bị thu hồi"
