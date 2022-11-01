@@ -11,12 +11,14 @@ import { get_info_from_cookie } from "../../../utils/utils";
 import Cookies from "js-cookie";
 import UserEditModal from "./user_edit_modal";
 import UserUpdateAvatarModal from "./user_update_avatar_modal";
+import UserUpdatePassword from "./user_update_password_modal";
 import ImgCrop from "antd-img-crop";
 
 const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({});
   const [openEditModal, setOpenEditModal] = useState(false);
+  const [openChangePassModal, setOpenChangePassModal] = useState(false);
   const [openUpdateAvatarModal, setOpenUpdateAvatarModal] = useState(false);
   const [file, setFile] = useState();
 
@@ -112,7 +114,9 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
         title="Xem thông tin"
         onCancel={handleCancel}
         footer={[
-          <Button key="back">Đổi mật khẩu</Button>,
+          <Button key="back" onClick={() => {
+            setOpenChangePassModal(true);
+          }}>Đổi mật khẩu</Button>,
           <Button
             key="back"
             onClick={() => {
@@ -246,6 +250,10 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
       <UserEditModal
         openEditModal={openEditModal}
         setOpenEditModal={setOpenEditModal}
+      />
+      <UserUpdatePassword
+        openEditModal={openChangePassModal}
+        setOpenEditModal={setOpenChangePassModal}
       />
       <UserUpdateAvatarModal
         openUpdateAvatarModal={openUpdateAvatarModal}
