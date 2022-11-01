@@ -28,6 +28,7 @@ import { truncate } from "../../../utils/utils";
 import store, { getUser, setStoreCurentConv } from "../../../store/store";
 import Cookies from "js-cookie";
 import api from "../../../utils/apis";
+import ConversationInfoModal from "../../basics/conversation/info_group_modal";
 const { Search } = Input;
 const { Text } = Typography;
 const count = 3;
@@ -38,7 +39,8 @@ const Conversations = (props) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const userId = Cookies.get("_id");
-
+  const [openConvInfoModal, setOpenConvInfoModal] = useState(false);
+  
   // useEffect(() => {
   //     console.log("getUser", getUser())
   //     store.subscribe(() => {
@@ -131,7 +133,7 @@ const Conversations = (props) => {
                             type="text"
                             icon={<ExclamationCircleOutlined />}
                             onClick={() => {
-                              props.setOpenConvInfoModal(true);
+                              setOpenConvInfoModal(true);
                             }}
                           >
                             Xem chi tiết
@@ -221,6 +223,7 @@ const Conversations = (props) => {
           }}
         />
       </div>
+      <ConversationInfoModal open={openConvInfoModal} setOpen={setOpenConvInfoModal} data={props.currentConv}/>
     </div>
   );
 };

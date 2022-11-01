@@ -43,7 +43,7 @@ const MemberGroupTab = () => {
           dataSource={dataUser}
           renderItem={(item) => (
               <List.Item>
-                  <MemberItem item={item} type="member" />
+                  <MemberItem item={item} type="admin" />
               </List.Item>
           )}
       />

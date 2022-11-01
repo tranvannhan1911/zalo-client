@@ -113,7 +113,11 @@ const api = {
         update_info: (params) => {
             const url = `/me/profile`
             return axiosApi.put(url, params)
-        }
+        },
+        get_profile: (params) => {
+            const url = `/me/profile`
+            return axiosApi.get(url, params)
+        },
     }),
 
     friend: getApi("friends", {
@@ -151,7 +155,11 @@ const api = {
         leave_group: (id, params) => {
             const url = `/conversation/${id}/members/leave`
             return axiosApi.delete(url, params)
-        }
+        },
+        rename: (id, params) => {
+            const url = `/conversation/${id}/name`
+            return axiosApi.patch(url, params)
+        },
     }),
 
     message: getApi("message", {

@@ -31,7 +31,6 @@ const ConversationPage = (props) => {
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
   const [currentConv, setCurrentConv] = useState();
-  const [openConvInfoModal, setOpenConvInfoModal] = useState(false);
   const userId = Cookies.get("_id")
   var oneTime = true;
   const convRef = useRef(conversations)
@@ -57,6 +56,11 @@ const ConversationPage = (props) => {
       socket.on("delete-message", data => {
         // console.log("delete-message", data)
         deleteMessage(convRef.current, setConversations, data);
+      })
+
+      socket.on("rename-conversation", (id, name, saveMessage) => {
+        // console.log("delete-message", data)
+        renameConversation(convRef.current, setConversations, id, name, saveMessage);
       })
     }
 
@@ -187,6 +191,16 @@ const ConversationPage = (props) => {
     //     plusCountSeen(_convs, setConversations, data.message.conversationId)
   }
 
+  const renameConversation = async (conversations, setConversations, id, name, saveMessage) => {
+    const _conversations = [...conversations]
+    _conversations.map(conv => {
+      if(conv._id == id){
+        conv.name = name
+      }
+    })
+    setConversations(_conversations)
+  }
+
   useEffect(() => {
     if (conversations) {
 
@@ -300,7 +314,7 @@ const ConversationPage = (props) => {
               setCurrentConv={setCurrentConv}
               updateCountSeen={updateCountSeen}
               onLeaveGroup={onLeaveGroup}
-              setOpenConvInfoModal={setOpenConvInfoModal} />
+              />
         }
 
       </Col>
@@ -318,7 +332,6 @@ const ConversationPage = (props) => {
         </div>
         <MessageSection sendMessage={sendMessage} currentConv={currentConv} />
       </Col>
-      <ConversationInfoModal open={openConvInfoModal} setOpen={setOpenConvInfoModal} />
     </Row>
   );
 };

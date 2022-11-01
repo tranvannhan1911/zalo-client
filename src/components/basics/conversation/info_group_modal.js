@@ -1,15 +1,67 @@
-import { Avatar, Button, Drawer, Form, Image, Input, message, Modal } from 'antd';
-import React, { useState } from 'react';
+import { Avatar, Button, Collapse, Drawer, Form, Image, Input, message, Modal, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
 import api from '../../../utils/apis';
 import FriendSelect from '../friend/friend_select';
 import UserMember from '../user/user_searching';
 import UserSelect from '../user/user_select';
 import MemberGroupTab from './member_group_tab';
+import {
+  EditOutlined,
+} from "@ant-design/icons";
+const { Panel } = Collapse;
 
-const ConversationInfoModal = ({open, setOpen}, props) => {
+const RenameConversationModal = ({isModalOpen, setIsModalOpen, data}, props) => {
+  const [newName, setNewName] = useState("");
+
+  useEffect(() => {
+    if(data && (newName == "" || !newName)){
+      setNewName(data?.name)
+    }
+  }, [data])
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = async () => {
+    if (newName.trim() == ""){
+      message.error("Tên không được để trống!")
+      return
+    }
+    try{
+      const res = await api.conversation.rename(data._id, {
+        name: newName
+      })
+      if (res.status == 200){
+        message.success("Đổi tên thành công")
+        setNewName("")
+        setIsModalOpen(false);
+      }
+    }catch{
+      message.error("Có lỗi xảy ra!")
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <>
+      <Modal title="Đổi tên cuộc hội thoại" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Input placeholder="Tên nhóm" style={{
+          marginLeft: '10px'
+        }} value={newName} onChange={e => setNewName(e.target.value)}/>
+      </Modal>
+    </>
+  );
+};
+
+const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
   const [form] = Form.useForm();
+  const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
   var friendSelectKey = 0;
 
   const showModal = () => {
@@ -42,8 +94,12 @@ const ConversationInfoModal = ({open, setOpen}, props) => {
     // }catch(err){
     //   console.log("Failed, ", err)
     // }
-    
+
   }
+
+  useEffect(() => {
+    console.log("props.data", data)
+  }, [data])
 
   return (
     <>
@@ -61,36 +117,53 @@ const ConversationInfoModal = ({open, setOpen}, props) => {
         ]}
       >
         <Form
-            form={form}
-            onFinish={editConversation}
-            layout="vertical">
-                
-            <Form.Item name="name">
-                <div style={{
-                    display: 'flex'
-                }}>
-                    <Avatar
-                        src={
-                            <Image
-                                src="https://joeschmoe.io/api/v1/random"
-                                style={{
-                                    width: 32,
-                                }}
-                            />
-                        }
+          form={form}
+          onFinish={editConversation}
+          layout="vertical">
+
+          <Form.Item name="name">
+            <div style={{
+              textAlign: 'center'
+            }}>
+              <Avatar
+                size={70}
+                src={
+                  <>
+                    <Image
+                      src={"https://joeschmoe.io/api/v1/random"}
+                    // style={{
+                    //     width: 32,
+                    // }}
                     />
-                    <Input placeholder="Tên nhóm" style={{
-                        marginLeft: '10px'
-                    }} />
-                    
-                </div>
-            </Form.Item>
-            <Form.Item label="Thêm thành viên vào nhóm" name="users">
-                <FriendSelect key={++friendSelectKey} {...props} open={open} value={users} setValue={setUsers}/>
-            </Form.Item>
-            <MemberGroupTab />
+                  </>
+                }
+                style={{
+                  marginBottom: '10px'
+                }}
+              />
+              {/* <Input placeholder="Tên nhóm" style={{
+                marginLeft: '10px'
+              }} /> */}
+              <div>
+                <Typography.Title level={4}>
+                  {data?.name} 
+                  <Button type='text' icon={<EditOutlined />} onClick={() => setIsRenameModalOpen(true)}/>
+                </Typography.Title>
+              </div>
+            </div>
+          </Form.Item>
+
+          <Collapse defaultActiveKey={['member']} >
+            <Panel header="Thành viên nhóm" key="member">
+              <Form.Item label="Thêm bạn bè vào nhóm" name="users">
+                <FriendSelect key={++friendSelectKey} {...props} open={open} value={users} setValue={setUsers} />
+              </Form.Item>
+              <MemberGroupTab />
+            </Panel>
+          </Collapse>
         </Form>
       </Drawer>
+      <RenameConversationModal setIsModalOpen={setIsRenameModalOpen} isModalOpen={isRenameModalOpen} data={data}/>
     </>
   );
 };

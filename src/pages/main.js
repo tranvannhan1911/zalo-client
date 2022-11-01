@@ -47,7 +47,7 @@ const MainPage = () => {
     }
 
     try {
-      const res = await api.user.get_info()
+      const res = await api.user.get_profile()
       if (res.status == 200) {
         console.log("Authenticated", res.data)
         const action = setUser(res.data)
