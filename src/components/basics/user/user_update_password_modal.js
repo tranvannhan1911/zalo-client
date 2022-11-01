@@ -34,9 +34,7 @@ const UserEditModal = ({ openEditModal, setOpenEditModal, type, info }) => {
 
     useEffect(() => {
         const initData = {
-            name: Cookies.get("name"),
-            dateOfBirth: moment(Cookies.get("dateOfBirth")),
-            gender: Cookies.get("gender") == "true"
+            password: Cookies.get("password"),
         }
         console.log("initData", initData)
         form.setFieldsValue(initData)
@@ -53,10 +51,9 @@ const UserEditModal = ({ openEditModal, setOpenEditModal, type, info }) => {
     const updateUserInfo = async () => {
         try{
             const res = await api.user.update_info(form.getFieldsValue())
-            message.success("Cập nhật thông tin thành công!")
+            message.success("Đổi mật khẩu thành công!")
             Cookies.set("name", form.getFieldValue("name"))
-            Cookies.set("dateOfBirth", form.getFieldValue("dateOfBirth"))
-            Cookies.set("gender", form.getFieldValue("gender"))
+
         }catch{
             message.error("Có lỗi xảy ra!")
         }
@@ -66,7 +63,7 @@ const UserEditModal = ({ openEditModal, setOpenEditModal, type, info }) => {
         <>
             <Modal
                 open={openEditModal}
-                title="Cập nhập thông tin cá nhân"
+                title="Đổi mật khẩu"
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={null}
@@ -94,15 +91,6 @@ const UserEditModal = ({ openEditModal, setOpenEditModal, type, info }) => {
                         required
                         name="dateOfBirth">
                         <DatePicker name='dateOfBirth'/>
-                    </Form.Item>
-                    <Form.Item
-                        name="gender"
-                        label="Giới tính"
-                    >
-                        <Radio.Group name='gender'>
-                            <Radio value={true}>Nam</Radio>
-                            <Radio value={false}>Nữ</Radio>
-                        </Radio.Group>
                     </Form.Item>
                     <Space>
                         <Button key="submit" type="primary" loading={loading} onClick={updateUserInfo}>
