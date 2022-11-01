@@ -24,7 +24,7 @@ import {
 } from "@ant-design/icons";
 import ConversationModal from "../../basics/conversation/create_group_modal";
 import ActionBar from "../action";
-import { truncate } from "../../../utils/utils";
+import { truncate, toTimeLastMessage} from "../../../utils/utils";
 import store, { getUser, setStoreCurentConv } from "../../../store/store";
 import Cookies from "js-cookie";
 import api from "../../../utils/apis";
@@ -85,7 +85,6 @@ const Conversations = (props) => {
       message.error("Có lỗi xảy ra!");
     }
   };
-
   return (
     <div
       style={{
@@ -111,7 +110,6 @@ const Conversations = (props) => {
           // loadMore={loadMore}
           dataSource={props.conversations}
           renderItem={(item) => {
-            const senderName = api.user.get_info().name;
             return (
               <List.Item
                 style={{
@@ -196,7 +194,9 @@ const Conversations = (props) => {
                         }}
                       >
                         {" "}
-                        {item.lastMessageId?.senderId == userId ? "Bạn: " : ""}
+                        {item.lastMessageId.senderId._id == userId
+                          ? "Bạn: "
+                          : item.lastMessageId.senderId.name + ": "}
                         {item.lastMessageId
                           ? item.lastMessageId.isDeleted
                             ? "Tin nhắn đã bị thu hồi"
