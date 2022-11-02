@@ -29,6 +29,11 @@ import store, { getUser, setStoreCurentConv } from "../../../store/store";
 import Cookies from "js-cookie";
 import api from "../../../utils/apis";
 import ConversationInfoModal from "../../basics/conversation/info_group_modal";
+import moment from 'moment';
+import 'moment/locale/vi';
+moment.locale('vi');
+
+
 const { Search } = Input;
 const { Text } = Typography;
 const count = 3;
@@ -193,7 +198,7 @@ const Conversations = (props) => {
                           marginLeft:'20px'
                         }}
                       >
-                      {item.lastMessageId.createdAt}
+                      {moment(item.lastMessageId.createdAt).fromNow()}
                       </span>
                        
                       </Text>

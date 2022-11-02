@@ -19,7 +19,9 @@ import {
 import Cookies from "js-cookie";
 import React, { useEffect, useRef } from "react";
 import { deleteMessage, removeMessageFromAll } from "../../controller/message";
-
+import moment from 'moment';
+import 'moment/locale/vi';
+moment.locale('vi');
 const AlwaysScrollToBottom = () => {
   const elementRef = useRef();
   useEffect(() => elementRef.current.scrollIntoView());
@@ -35,7 +37,8 @@ const Messages = (props) => {
   }, [props.messages]);
 
   const card = (item) => {
-    var createAtTime = item.createdAt;
+    var dateString = moment(item.createdAt).format("HH:mm");
+    var createAtTime = dateString;
     return (
       <div
         style={{

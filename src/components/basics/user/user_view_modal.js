@@ -13,6 +13,9 @@ import UserEditModal from "./user_edit_modal";
 import UserUpdateAvatarModal from "./user_update_avatar_modal";
 import UserUpdatePassword from "./user_update_password_modal";
 import ImgCrop from "antd-img-crop";
+import moment from 'moment';
+import 'moment/locale/vi';
+moment.locale('vi');
 
 const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
   const [loading, setLoading] = useState(false);
@@ -230,7 +233,7 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
             >
               Ngày sinh
             </span>{" "}
-            <span style={{marginLeft:15}}>{user?.dateOfBirth}</span>
+            <span style={{marginLeft:15}}>{user?.dateOfBirth ? moment(user?.dateOfBirth).format("DD-MM-YYYY") : ''}</span>
             <br></br>
             <span
               style={{
