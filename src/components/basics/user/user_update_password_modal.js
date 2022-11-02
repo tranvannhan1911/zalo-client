@@ -98,7 +98,6 @@ const UserUpdatePassword = ({
     try {
       const res = await api.user.change_password(form.getFieldsValue());
       message.success("Đổi mật khẩu thành công!");
-      Cookies.set("name", form.getFieldValue("name"));
     } catch {
       message.error("Mật khẩu cũ không đúng!");
     }
