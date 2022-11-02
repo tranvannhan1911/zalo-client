@@ -186,8 +186,20 @@ const Conversations = (props) => {
                     }
                     title={
                       <Text>
-                        {item.name ? truncate(item.name) : "Không có tên"}
+                        {item.name ? truncate(item.name) : "Không có tên"} <span
+                        style={{
+                          color: "blue",
+                          fontSize: 10,
+                          marginLeft:'20px'
+                        }}
+                      >
+                      {item.lastMessageId.createdAt}
+                      </span>
+                       
                       </Text>
+                      
+                      
+                      
                     }
                     description={
                       <Text
