@@ -66,7 +66,7 @@ const UserEditModal = ({ openEditModal, setOpenEditModal, type, info }) => {
         <>
             <Modal
                 open={openEditModal}
-                title="Sửa thông tin cá nhân"
+                title="Cập nhập thông tin cá nhân"
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={null}

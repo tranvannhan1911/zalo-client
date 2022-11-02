@@ -172,7 +172,7 @@ const ConversationPage = (props) => {
     sort(_convs)
     console.log("after sort", _convs)
     setConversations(_convs)
-    if (data.message.senderId != userId)
+    if (data.message.senderId._id != userId)
       plusCountSeen(_convs, setConversations, data.message.conversationId)
   }
 

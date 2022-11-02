@@ -15,6 +15,8 @@ export const get_info_from_cookie = () => {
     createdAt: Cookies.get("createdAt"),
     updatedAt: Cookies.get("updatedAt"),
     __v: Cookies.get("__v"),
+    dateOfBirth: Cookies.get("dateOfBirth"),
+    gender: Cookies.get("gender")
   };
 };
 

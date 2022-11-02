@@ -29,6 +29,11 @@ import store, { getUser, setOpenInfoConversationModal, setStoreCurentConv } from
 import Cookies from "js-cookie";
 import api from "../../../utils/apis";
 import ConversationInfoModal from "../../basics/conversation/info_conversation_modal";
+import moment from 'moment';
+import 'moment/locale/vi';
+moment.locale('vi');
+
+
 const { Search } = Input;
 const { Text } = Typography;
 const count = 3;
@@ -191,8 +196,20 @@ const Conversations = (props) => {
                     }
                     title={
                       <Text>
-                        {item.name ? truncate(item.name) : "Không có tên"}
+                        {item.name ? truncate(item.name) : "Không có tên"} <span
+                        style={{
+                          color: "blue",
+                          fontSize: 10,
+                          marginLeft:'20px'
+                        }}
+                      >
+                      {moment(item.lastMessageId.createdAt).fromNow()}
+                      </span>
+                       
                       </Text>
+                      
+                      
+                      
                     }
                     description={
                       <Text

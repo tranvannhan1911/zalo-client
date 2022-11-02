@@ -118,6 +118,10 @@ const api = {
             const url = `/me/profile`
             return axiosApi.get(url, params)
         },
+        change_password:(params)=>{
+            const url = `/me/password`
+            return axiosApi.patch(url, params)
+        }
     }),
 
     friend: getApi("friends", {
