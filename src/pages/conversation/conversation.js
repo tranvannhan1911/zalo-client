@@ -17,7 +17,7 @@ import { deleteMessage } from '../../controller/message';
 import socket from '../../socket/socket'
 import { newMessageHandler } from '../../socket/conversation_handler'
 import store, { setStoreCurentConv } from '../../store/store';
-import ConversationInfoModal from '../../components/basics/conversation/info_group_modal';
+import ConversationInfoModal from '../../components/basics/conversation/info_conversation_modal';
 
 const { Sider } = Layout;
 
@@ -61,6 +61,13 @@ const ConversationPage = (props) => {
       socket.on("rename-conversation", (id, name, saveMessage) => {
         // console.log("delete-message", data)
         renameConversation(convRef.current, setConversations, id, name, saveMessage);
+      })
+
+      
+
+      socket.on("update-avatar-conversation", (id, avatarUrl, saveMessage) => {
+        // console.log("delete-message", data)
+        updateAvatarConversation(convRef.current, setConversations, id, avatarUrl, saveMessage);
       })
     }
 
@@ -196,6 +203,16 @@ const ConversationPage = (props) => {
     _conversations.map(conv => {
       if(conv._id == id){
         conv.name = name
+      }
+    })
+    setConversations(_conversations)
+  }
+
+  const updateAvatarConversation = async (conversations, setConversations, id, avatarUrl, saveMessage) => {
+    const _conversations = [...conversations]
+    _conversations.map(conv => {
+      if(conv._id == id){
+        conv.avatar = avatarUrl
       }
     })
     setConversations(_conversations)

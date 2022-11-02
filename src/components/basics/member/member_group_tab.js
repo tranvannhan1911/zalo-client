@@ -1,16 +1,17 @@
 import { List, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import api from '../../../utils/apis';
-import MemberItem from '../member/meber_item';
+import MemberItem from './meber_item';
 const onChange = (key) => {
   console.log(key);
 };
-const MemberGroupTab = () => {
+const MemberGroupTab = ({data}) => {
   const [dataUser, setDataUser] = useState([]);
+  const [dataAdmin, setDataAdmin] = useState([]);
 
 
   const handleData = async () => {
-      const res = await api.user.list()
+      const res = await api.conversation.list_member(data._id)
       console.log(res)
       if (res.status == 200) {
           setDataUser(res.data)

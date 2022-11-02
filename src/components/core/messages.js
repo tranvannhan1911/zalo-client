@@ -34,7 +34,7 @@ const Messages = (props) => {
     // refMessages.current?.scrollToBottom({ behavior: 'smooth' })
   }, [props.messages]);
 
-  const card = (item) => {
+  const card = (item, content) => {
     var createAtTime = item.createdAt;
     return (
       <div
@@ -51,26 +51,23 @@ const Messages = (props) => {
           // ref.current.style.display = 'block'
         }}
       >
-      <span
-          style={{
-            color: "#262626",   
+        {item.senderId._id == userId ? null :
+          <div style={{
+            color: "#8b8b8b",
             fontSize: 15,
-            fontWeight:'bolder'
-
-          }}
-        >
-          {item.senderId._id == userId ? null : item.senderId.name}
-        </span>
-        <br></br>
+          }}>
+            {item.senderId.name}
+          </div>
+        }
         <span
           style={{
-            marginTop:5,
+            marginTop: 5,
             color: `${item.isDeleted ? "#" : "black"}`,
             fontSize: 15,
-            fontWeight:'initial'
+            fontWeight: 'initial'
           }}
         >
-          {item.isDeleted ? "Tin nhắn đã bị thu hồi" : item.content}
+          {item.isDeleted ? "Tin nhắn đã bị thu hồi" : content}
         </span>
         <br></br>
         <span
@@ -103,7 +100,7 @@ const Messages = (props) => {
           />
           {/* </Popover> */}
         </div>
-      </div>
+      </div >
     );
   };
 
@@ -115,16 +112,17 @@ const Messages = (props) => {
             margin: "0 20px",
           }}
         >
-        <span
-          style={{
-            color: "#262626",   
-            fontSize: 15,
-            fontWeight:'bolder'
-          }}
-        >
-          {item.senderId._id == userId ? null : item.senderId.name}
-        </span>
-        <br></br>
+          {item.senderId._id == userId ? null :
+            <span
+              style={{
+                color: "#8b8b8b",
+                fontSize: 15
+              }}
+            >
+              {item.senderId.name}
+            </span>
+          }
+          <br></br>
           <Image
             src={item.content}
             style={{
@@ -134,51 +132,28 @@ const Messages = (props) => {
         </div>
       );
     } else if (item.type == "FILE") {
-      return (
-        <div
-          style={{
-            margin: "0 10px",
-          }}
+      return card(item,
+        <Button
+          type="text"
+          href={item.content}
+          target="blank"
+          icon={<DownloadOutlined />}
         >
-        <span
-        style={{
-          color: "#262626",   
-          fontSize: 15,
-          fontWeight:'bolder'
-        }}
-      >
-        {item.senderId._id == userId ? null : item.senderId.name}
-      </span>
-      <br></br>
-          <Button
-            type="text"
-            href={item.content}
-            target="blank"
-            icon={<DownloadOutlined />}
-          >
-            {" "}
-            Tải xuống
-          </Button>
-        </div>
-      );
+          {" "}
+          Tải xuống
+        </Button>)
     } else if (item.type == "VIDEO") {
-      return (
-        <div
+      return card(item,
+        <video
           style={{
-            margin: "0 10px",
+            width: "600px",
           }}
-        >
-          <video
-            style={{
-              width: "600px",
-            }}
-            controls
-            src={item.content}
-          ></video>
-        </div>
-      );
+          controls
+          src={item.content}
+        ></video>
+      )
     } else {
-      return card(item);
+      return card(item, item.content);
     }
   };
 
@@ -194,12 +169,12 @@ const Messages = (props) => {
         itemLayout="horizontal"
         dataSource={props.messages}
         renderItem={(item) => {
-          console.log(
-            "message item",
-            item,
-            userId,
-            item.deletedWithUserIds.includes(userId)
-          );
+          // console.log(
+          //   "message item",
+          //   item,
+          //   userId,
+          //   item.deletedWithUserIds.includes(userId)
+          // );
           if (item.type == "NOTIFY") {
             return (
               <div

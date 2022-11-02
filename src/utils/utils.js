@@ -26,6 +26,10 @@ export const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
+export const datetime_formater = (date) => {
+    return (new Date(Date.parse(date))).toLocaleString("vi-VI")
+}
+
 export const toTimeLastMessage = async (dateMess) => {
   const date = new Date(dateMess).getFullYear();
 //   const nowTempt = new Date();

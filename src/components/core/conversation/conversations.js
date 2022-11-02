@@ -24,11 +24,11 @@ import {
 } from "@ant-design/icons";
 import ConversationModal from "../../basics/conversation/create_group_modal";
 import ActionBar from "../action";
-import { truncate, toTimeLastMessage} from "../../../utils/utils";
-import store, { getUser, setStoreCurentConv } from "../../../store/store";
+import { truncate, toTimeLastMessage } from "../../../utils/utils";
+import store, { getUser, setOpenInfoConversationModal, setStoreCurentConv } from "../../../store/store";
 import Cookies from "js-cookie";
 import api from "../../../utils/apis";
-import ConversationInfoModal from "../../basics/conversation/info_group_modal";
+import ConversationInfoModal from "../../basics/conversation/info_conversation_modal";
 const { Search } = Input;
 const { Text } = Typography;
 const count = 3;
@@ -40,7 +40,7 @@ const Conversations = (props) => {
   const [data, setData] = useState([]);
   const userId = Cookies.get("_id");
   const [openConvInfoModal, setOpenConvInfoModal] = useState(false);
-  
+
   // useEffect(() => {
   //     console.log("getUser", getUser())
   //     store.subscribe(() => {
@@ -116,9 +116,8 @@ const Conversations = (props) => {
               <List.Item
                 style={{
                   padding: "10px",
-                  backgroundColor: `${
-                    item._id == props.currentConv?._id ? "#f0f0f0" : ""
-                  }`,
+                  backgroundColor: `${item._id == props.currentConv?._id ? "#f0f0f0" : ""
+                    }`,
                   cursor: "pointer",
                 }}
                 extra={
@@ -132,28 +131,34 @@ const Conversations = (props) => {
                             icon={<ExclamationCircleOutlined />}
                             onClick={() => {
                               setOpenConvInfoModal(true);
+                              console.log("setOpenInfoConversationModal(true)", setOpenInfoConversationModal("true"))
+                              // store.dispatch(setOpenInfoConversationModal(true))
                             }}
                           >
                             Xem chi tiết
                           </Button>
                         </div>
-                        <hr
-                          style={{
-                            borderTop: "1px solid #ddd",
-                          }}
-                        />
-                        <div>
-                          {item.type ? (
-                            <Button
-                              type="text"
-                              icon={<ArrowLeftOutlined />}
-                              danger
-                              onClick={() => leaveGroup(item)}
-                            >
-                              Rời nhóm
-                            </Button>
-                          ) : null}
-                        </div>
+
+                        {item.type ? (
+                          <>
+                            <hr
+                              style={{
+                                borderTop: "1px solid #ddd",
+                              }}
+                            />
+                            <div>
+                              <Button
+                                type="text"
+                                icon={<ArrowLeftOutlined />}
+                                danger
+                                onClick={() => leaveGroup(item)}
+                              >
+                                Rời nhóm
+                              </Button>
+
+                            </div>
+                          </>
+                        ) : null}
                         {/* <div>
                                                 <Button type="text" icon={<DeleteOutlined />} danger>Xóa phía tôi</Button>
                                             </div> */}
@@ -179,7 +184,7 @@ const Conversations = (props) => {
                           src={
                             item.avatar
                               ? item.avatar
-                              : "https://joeschmoe.io/api/v1/random"
+                              : "https://cdn-icons-png.flaticon.com/512/119/119591.png"
                           }
                         />
                       </Badge>
@@ -203,16 +208,16 @@ const Conversations = (props) => {
                           ? item.lastMessageId.isDeleted
                             ? "Tin nhắn đã bị thu hồi"
                             : item.lastMessageId.deletedWithUserIds.includes(
-                                userId
-                              )
-                            ? "Tin nhắn đã bị xóa"
-                            : item.lastMessageId.type == "IMAGE"
-                            ? "Đã gửi một ảnh"
-                            : item.lastMessageId.type == "FILE"
-                            ? "Đã gửi một tập tin"
-                            : item.lastMessageId.type == "VIDEO"
-                            ? "Đã gửi một video"
-                            : item.lastMessageId.content
+                              userId
+                            )
+                              ? "Tin nhắn đã bị xóa"
+                              : item.lastMessageId.type == "IMAGE"
+                                ? "Đã gửi một ảnh"
+                                : item.lastMessageId.type == "FILE"
+                                  ? "Đã gửi một tập tin"
+                                  : item.lastMessageId.type == "VIDEO"
+                                    ? "Đã gửi một video"
+                                    : item.lastMessageId.content
                           : ""}
                       </Text>
                     }
@@ -223,7 +228,7 @@ const Conversations = (props) => {
           }}
         />
       </div>
-      <ConversationInfoModal open={openConvInfoModal} setOpen={setOpenConvInfoModal} data={props.currentConv}/>
+      <ConversationInfoModal open={openConvInfoModal} setOpen={setOpenConvInfoModal} data={props.currentConv} />
     </div>
   );
 };

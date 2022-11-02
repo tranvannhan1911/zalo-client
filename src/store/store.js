@@ -33,9 +33,18 @@ const currentConvSlice = createSlice({
   initialState: {},
   reducers: {
     setStoreCurentConv: (state, value) => {
-      // if(!state)
-      //   state = {}
       state.info = value.payload
+    }
+  }
+})
+
+const infoConversationModalSlice = createSlice({
+  name: 'isOpenInfoConversationModal',
+  initialState: "false",
+  reducers: {
+    setOpenInfoConversationModal: (state, value) => {
+      console.log("setOpenInfoConversationModal", state, value)
+      state = value.payload
     }
   }
 })
@@ -43,7 +52,8 @@ const currentConvSlice = createSlice({
 const rootReducer = combineReducers({
   user: userSlice.reducer,
   page: pageSlice.reducer,
-  currentConv: currentConvSlice.reducer
+  currentConv: currentConvSlice.reducer,
+  isOpenInfoConversationModal: infoConversationModalSlice.reducer
 });
 
 const persistConfig = {
@@ -61,3 +71,4 @@ export default store;
 export const { setUser, getUser } = userSlice.actions
 export const { setPage, getPage } = pageSlice.actions
 export const { setStoreCurentConv } = currentConvSlice.actions
+export const { setOpenInfoConversationModal } = infoConversationModalSlice.actions

@@ -52,7 +52,7 @@ const Header = (props) => {
       title={
         <Space>
           <Avatar
-            src="https://joeschmoe.io/api/v1/random"
+            src={props.currentConv?.avatar ? props.currentConv.avatar : "https://cdn-icons-png.flaticon.com/512/119/119591.png"}
           />
           <Typography.Text style={{
             maxWidth: '250px',

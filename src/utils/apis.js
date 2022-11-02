@@ -160,6 +160,14 @@ const api = {
             const url = `/conversation/${id}/name`
             return axiosApi.patch(url, params)
         },
+        list_member: (id, params) => {
+            const url = `/conversation/${id}/members`
+            return axiosApi.get(url, params)
+        },
+        update_avatar: (id, params) => {
+            const url = `/conversation/${id}/avatar`
+            return axiosApi.patch(url, params)
+        },
     }),
 
     message: getApi("message", {

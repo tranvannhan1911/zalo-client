@@ -7,6 +7,7 @@ import {
 import api from '../../../utils/apis';
 import store, { setStoreCurentConv, setPage } from '../../../store/store';
 import { deleteFriend } from '../../../controller/friend';
+import { mess } from '../../../utils/actions';
 const { Text, Title } = Typography;
 
 const UserCard = ({item, type}) => {
@@ -66,7 +67,10 @@ const UserCard = ({item, type}) => {
             return (
                 <>
                     <div>
-                        <div><Button type="text" icon={<MessageOutlined />} >Nhắn tin</Button></div>
+                        <div><Button type="text" icon={<MessageOutlined />} 
+                        onClick={
+                            () => mess(item._id)
+                        }>Nhắn tin</Button></div>
                         <div>
                             <Button 
                                 type="text" 

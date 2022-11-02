@@ -43,7 +43,7 @@ const FriendSelect = ({placeholder, value, setValue, open}) => {
       style={{
         width: '100%',
       }}
-      placeholder={placeholder ? placeholder : "Chọn bạn bè"}
+      placeholder={placeholder ? placeholder : "Thêm bạn bè vào cuộc hội thoại"}
       onChange={setValue}
       value={value}
       fil

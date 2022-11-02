@@ -1,5 +1,5 @@
 import { Avatar, Button, Card, Image, List, message, Popover, Space, Typography } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     MessageOutlined, ExclamationCircleOutlined, ArrowLeftOutlined,
     MoreOutlined, UserAddOutlined, CloseOutlined,
@@ -8,115 +8,85 @@ import AddFriend from '../../core/friend/add-friend';
 import api from '../../../utils/apis';
 import Cookies from 'js-cookie';
 import { deleteFriend } from '../../../controller/friend';
+import { mess } from '../../../utils/actions';
 const { Text, Title } = Typography;
 
-const MemberItem = ({item, type}) => {
+const MemberItem = ({ item, type }) => {
 
     const userId = Cookies.get("_id")
     // const [userInfo]
 
+    useEffect(() => {
+        console.log("Member item", item)
+    }, [item])
+
     const description = () => {
-        if(type == "user"){
+        if (type == "member") {
             return (
-                <>
-                    <p>{item.friends.includes(userId) ? "Đã kết bạn!" : "Hãy gửi lời mời kết bạn để trò chuyện!"}</p>
-                    {/* <Space>
-                        <Button type="primary" icon={<MessageOutlined />} >Nhắn tin</Button>
-                    </Space> */}
-                </>
+                <></>
             )
         }
-        
-        if(type == "message"){
+
+        if (type == "admin") {
             return (
                 <>
-                    <p>Message!</p>
-                    {/* <Space>
-                        <Button type="primary" icon={<CheckOutlined />} >Chấp nhận</Button>
-                        <Button type="danger" icon={<CloseOutlined />} >Từ chối</Button>
-                    </Space> */}
+                    Trưởng nhóm
                 </>
             )
         }
     }
 
     const AddFriend = async () => {
-        try{
-            const res = await api.friend.invite(item._id)
+        try {
+            const res = await api.friend.invite(item.userId._id)
             console.log("AddFriend", item, res)
-            if(res.status == 201){
+            if (res.status == 201) {
                 message.success("Gửi lời mời kết bạn thành công!")
             }
-        }catch(err){
+        } catch (err) {
             console.log("Failed, ", err)
-            if(err.response.status == 400){
+            if (err.response.status == 400) {
                 message.error("Không thể gửi lại lời mời kết bạn!")
             }
         }
     }
 
-    const action = () => {
-        if(type == "user"){
-            return (
-                <>
+    const general_action = () => {
+        return (
+            <>
+                <div><Button type="text" icon={<MessageOutlined />}
+                    onClick={() => {
+                        mess(item.userId._id)
+                    }}>Nhắn tin</Button></div>
+                <div>
+                    <Button
+                        type="text"
+                        icon={<ExclamationCircleOutlined />}
+                        onClick={() => {
+                            // setOpenModal(true)
+                        }}>Xem chi tiết</Button>
+                </div>
+                {!item.userId.friends.includes(userId) ?
                     <div>
-                        <div><Button type="text" icon={<MessageOutlined />} >Nhắn tin</Button></div>
-                        <div>
-                            <Button 
-                                type="text" 
-                                icon={<ExclamationCircleOutlined />} 
-                                onClick={() => {
-                                    // setOpenModal(true)
-                                }}>Xem chi tiết</Button>
-                        </div>
-                        { !item.friends.includes(userId) ?
-                            <div>
-                                <Button type="text" icon={<UserAddOutlined />} 
-                                    onClick={AddFriend}>Gửi lời mời kết bạn</Button>
-                            </div>
-                            : null}
-                        { item.friends.includes(userId) ?
-                            <>
-                                <hr style={{
-                                    borderTop: '1px solid #ddd'
-                                }}/>
-                                <div>
-                                    <Button type="text" icon={<CloseOutlined />} danger
-                                        onClick={
-                                            deleteFriend(item._id, (data) => {
-                                                message.success("Xóa bạn bè thành công")
-                                            })
-                                        }>Hủy kết bạn</Button></div>
-                            </>
-                            : null}
+                        <Button type="text" icon={<UserAddOutlined />}
+                            onClick={AddFriend}>Gửi lời mời kết bạn</Button>
                     </div>
-                </>
-            )
-        }
-
-        if(type == "message"){
-            return (
-                <>
-                    <div>
-                        {/* <div><Button type="text" icon={<MessageOutlined />} >Nhắn tin</Button></div> */}
-                        {/* <div>
-                            <Button 
-                                type="text" 
-                                icon={<ExclamationCircleOutlined />} 
-                                onClick={() => {
-                                    // setOpenModal(true)
-                                }}>Xem chi tiết</Button>
-                        </div> */}
-                        {/* <hr style={{
+                    :
+                    <>
+                        <hr style={{
                             borderTop: '1px solid #ddd'
-                        }}/>
-                        <div><Button type="text" icon={<CloseOutlined />} danger>Hủy kết bạn</Button></div> */}
-                    </div>
-                </>
-            )
-        }
-
-        
+                        }} />
+                        <div>
+                            <Button type="text" icon={<CloseOutlined />} danger
+                                onClick={
+                                    () => deleteFriend(item.userId._id, (data) => {
+                                        message.success("Xóa bạn bè thành công")
+                                    })
+                                }>Hủy kết bạn</Button></div>
+                    </>
+                }
+            </>
+        )
     }
 
     return (
@@ -128,14 +98,14 @@ const MemberItem = ({item, type}) => {
                 <Avatar
                     src={
                         <Image
-                        src="https://joeschmoe.io/api/v1/random"
-                        style={{
-                            width: 32,
-                        }}
+                            src={item.userId.avatar ? item.userId.avatar : "https://i.imgur.com/TV0vz0r.png"}
+                            style={{
+                                width: 32,
+                            }}
                         />
                     }
                 />
-                
+
             </div>
             <div style={{
                 display: 'flex',
@@ -151,9 +121,15 @@ const MemberItem = ({item, type}) => {
                     </div>
                     {description()}
                 </div>
-                <Popover content={action} trigger="click">
-                    <Button type="text" icon={<MoreOutlined />} />
-                </Popover>
+                {item.userId._id == userId ? null :
+                    <Popover content={(
+                        <>
+                            {general_action()}
+                        </>
+                    )} trigger="click">
+                        <Button type="text" icon={<MoreOutlined />} />
+                    </Popover>
+                }
             </div>
         </div>
     )
