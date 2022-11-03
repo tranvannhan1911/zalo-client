@@ -19,9 +19,9 @@ import {
 import Cookies from "js-cookie";
 import React, { useEffect, useRef } from "react";
 import { deleteMessage, removeMessageFromAll } from "../../controller/message";
-import moment from 'moment';
-import 'moment/locale/vi';
-moment.locale('vi');
+import moment from "moment";
+import "moment/locale/vi";
+moment.locale("vi");
 const AlwaysScrollToBottom = () => {
   const elementRef = useRef();
   useEffect(() => elementRef.current.scrollIntoView());
@@ -36,7 +36,7 @@ const Messages = (props) => {
     // refMessages.current?.scrollToBottom({ behavior: 'smooth' })
   }, [props.messages]);
 
-  const card = (item) => {
+  const card = (item, content) => {
     var dateString = moment(item.createdAt).format("HH:mm");
     var createAtTime = dateString;
     return (
@@ -54,20 +54,22 @@ const Messages = (props) => {
           // ref.current.style.display = 'block'
         }}
       >
-        {item.senderId._id == userId ? null :
-          <div style={{
-            color: "#8b8b8b",
-            fontSize: 15,
-          }}>
+        {item.senderId._id == userId ? null : (
+          <div
+            style={{
+              color: "#8b8b8b",
+              fontSize: 15,
+            }}
+          >
             {item.senderId.name}
           </div>
-        }
+        )}
         <span
           style={{
             marginTop: 5,
             color: `${item.isDeleted ? "#" : "black"}`,
             fontSize: 15,
-            fontWeight: 'initial'
+            fontWeight: "initial",
           }}
         >
           {item.isDeleted ? "Tin nhắn đã bị thu hồi" : content}
@@ -103,39 +105,70 @@ const Messages = (props) => {
           />
           {/* </Popover> */}
         </div>
-      </div >
+      </div>
     );
   };
 
   const content = (item) => {
+    var dateString = moment(item.createdAt).format("HH:mm");
+    var createAtTime = dateString;
     if (item.type == "IMAGE") {
       return (
         <div
           style={{
             margin: "0 20px",
+            backgroundColor: "white",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            position: "relative",
+            // margin: "0 20px",
+            maxWidth: "600px",
           }}
         >
-          {item.senderId._id == userId ? null :
+          {item.senderId._id == userId ? null : (
             <span
               style={{
                 color: "#8b8b8b",
-                fontSize: 15
+                fontSize: 15,
               }}
             >
               {item.senderId.name}
             </span>
-          }
+          )}
           <br></br>
-          <Image
-            src={item.content}
+          <span
             style={{
-              maxWidth: "600px",
+              marginTop: 5,
+              color: `${item.isDeleted ? "#" : "black"}`,
+              fontSize: 15,
+              fontWeight: "initial",
             }}
-          />
+          >
+            {item.isDeleted ? (
+              "Tin nhắn đã bị thu hồi"
+            ) : (
+              <Image
+                src={item.content}
+                style={{
+                  maxWidth: "600px",
+                }}
+              />
+            )}
+          </span>
+          <br></br>
+        <span
+          style={{
+            color: "blue",
+            fontSize: 10,
+          }}
+        >
+          {createAtTime}
+        </span>
         </div>
       );
     } else if (item.type == "FILE") {
-      return card(item,
+      return card(
+        item,
         <Button
           type="text"
           href={item.content}
@@ -144,9 +177,11 @@ const Messages = (props) => {
         >
           {" "}
           Tải xuống
-        </Button>)
-    } else if (item.type == "VIDEO") {
-      return card(item,
+        </Button>
+      );
+    } else if (item.type == "VIDEO") {  
+      return card(
+        item,
         <video
           style={{
             width: "600px",
@@ -154,7 +189,7 @@ const Messages = (props) => {
           controls
           src={item.content}
         ></video>
-      )
+      );
     } else {
       return card(item, item.content);
     }
@@ -193,7 +228,6 @@ const Messages = (props) => {
           } else {
             const direction =
               item.senderId._id == userId ? "row-reverse" : "row";
-            const createAtTime = item.createdAt.slice(11, 19);
             if (item.deletedWithUserIds.includes(userId)) {
               return null;
             }
