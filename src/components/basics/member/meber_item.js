@@ -117,7 +117,7 @@ const MemberItem = ({ item, type }) => {
                     <div>
                         <Typography.Title style={{
                             fontWeight: '500'
-                        }} level={5}>{item.name}</Typography.Title>
+                        }} level={5}>{item.userId.name}</Typography.Title>
                     </div>
                     {description()}
                 </div>
