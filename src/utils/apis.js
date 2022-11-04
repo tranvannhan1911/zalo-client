@@ -172,6 +172,14 @@ const api = {
             const url = `/conversation/${id}/avatar`
             return axiosApi.patch(url, params)
         },
+        delete_all_message: (id, params) => {
+            const url = `/conversation/${id}/messages`
+            return axiosApi.delete(url, params)
+        },
+        delete_group: (id, params) => {
+            const url = `/conversation/${id}`
+            return axiosApi.delete(url, params)
+        }
     }),
 
     message: getApi("message", {

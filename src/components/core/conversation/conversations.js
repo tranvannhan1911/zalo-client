@@ -92,6 +92,11 @@ const Conversations = (props) => {
       message.error("Có lỗi xảy ra!");
     }
   };
+
+  const onDeleteConversation = (id) => {
+    props.setCurrentConv(null)
+  }
+
   return (
     <div
       style={{
@@ -117,6 +122,16 @@ const Conversations = (props) => {
           // loadMore={loadMore}
           dataSource={props.conversations}
           renderItem={(item) => {
+            var conversation_name = item.name
+            if (!conversation_name) {
+              const other_members = []
+              item.members.forEach((mem) => {
+                if (mem != userId) {
+                  other_members.push(mem)
+                }
+              })
+              conversation_name = other_members[other_members.length - 1].name
+            }
             return (
               <List.Item
                 style={{
@@ -196,46 +211,53 @@ const Conversations = (props) => {
                     }
                     title={
                       <Text>
-                        {item.name ? truncate(item.name) : "Không có tên"} <span
-                        style={{
-                          color: "blue",
-                          fontSize: 10,
-                          marginLeft:'20px'
-                        }}
-                      >
-                      {moment(item.lastMessageId.createdAt).fromNow()}
-                      </span>
-                       
+                        {conversation_name ? truncate(conversation_name) : "Không có tên"} <span
+                          style={{
+                            color: "blue",
+                            fontSize: 10,
+                            marginLeft: '20px'
+                          }}
+                        >
+                          {item.lastMessageId ? moment(item.lastMessageId.createdAt).fromNow() : null}
+                        </span>
+
                       </Text>
-                      
-                      
-                      
+
+
+
                     }
                     description={
+
                       <Text
                         style={{
                           fontWeight: `${item.count_seen != 0 ? "600" : "400"}`,
                         }}
                       >
-                        {" "}
-                        {item.lastMessageId.senderId._id == userId
-                          ? "Bạn: "
-                          : item.lastMessageId.senderId.name + ": "}
-                        {item.lastMessageId
-                          ? item.lastMessageId.isDeleted
-                            ? "Tin nhắn đã bị thu hồi"
-                            : item.lastMessageId.deletedWithUserIds.includes(
-                              userId
-                            )
-                              ? "Tin nhắn đã bị xóa"
-                              : item.lastMessageId.type == "IMAGE"
-                                ? "Đã gửi một ảnh"
-                                : item.lastMessageId.type == "FILE"
-                                  ? "Đã gửi một tập tin"
-                                  : item.lastMessageId.type == "VIDEO"
-                                    ? "Đã gửi một video"
-                                    : item.lastMessageId.content
-                          : ""}
+                        {item.lastMessageId ?
+                          <span>
+                            {" "}
+                            {item.lastMessageId.senderId._id == userId
+                              ? "Bạn: "
+                              : item.lastMessageId.senderId.name + ": "}
+                            {item.lastMessageId
+                              ? item.lastMessageId.isDeleted
+                                ? "Tin nhắn đã bị thu hồi"
+                                : item.lastMessageId.deletedWithUserIds.includes(
+                                  userId
+                                )
+                                  ? "Tin nhắn đã bị xóa"
+                                  : item.lastMessageId.type == "IMAGE"
+                                    ? "Đã gửi một ảnh"
+                                    : item.lastMessageId.type == "FILE"
+                                      ? "Đã gửi một tập tin"
+                                      : item.lastMessageId.type == "VIDEO"
+                                        ? "Đã gửi một video"
+                                        : item.lastMessageId.content
+                              : ""}
+
+                          </span>
+                          : null
+                        }
                       </Text>
                     }
                   />
@@ -245,7 +267,8 @@ const Conversations = (props) => {
           }}
         />
       </div>
-      <ConversationInfoModal open={openConvInfoModal} setOpen={setOpenConvInfoModal} data={props.currentConv} />
+      <ConversationInfoModal open={openConvInfoModal} setOpen={setOpenConvInfoModal} data={props.currentConv} 
+        onDeleteConversation={onDeleteConversation}/>
     </div>
   );
 };

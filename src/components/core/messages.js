@@ -157,22 +157,22 @@ const Messages = (props) => {
             )}
           </span>
           <br></br>
-        <span
-          style={{
-            color: "blue",
-            fontSize: 10,
-          }}
-        >
-          {createAtTime}
-        </span>
+          <span
+            style={{
+              color: "blue",
+              fontSize: 10,
+            }}
+          >
+            {createAtTime}
+          </span>
         </div>
       );
     } else if (item.type == "FILE") {
       return card(
         item,
-        <FileItem item={item}/>
+        <FileItem item={item} />
       );
-    } else if (item.type == "VIDEO") {  
+    } else if (item.type == "VIDEO") {
       return card(
         item,
         <video
@@ -207,6 +207,9 @@ const Messages = (props) => {
           //   item.deletedWithUserIds.includes(userId)
           // );
           if (item.type == "NOTIFY") {
+            if (item.deletedWithUserIds.includes(userId)) {
+              return null;
+            }
             return (
               <div
                 style={{
@@ -252,24 +255,28 @@ const Messages = (props) => {
                     <Popover
                       content={
                         <div>
-                          <div>
-                            <Button
-                              type="text"
-                              icon={<CopyOutlined />}
-                              onClick={() => {
-                                navigator.clipboard.writeText(item.content);
-                                message.success("Sao chép thành công!");
-                              }}
-                            >
-                              Sao chép tin nhắn
-                            </Button>
-                          </div>
+                          {item.type == "TEXT" ?
+                            <div>
+                              <Button
+                                type="text"
+                                icon={<CopyOutlined />}
+                                onClick={() => {
+                                  navigator.clipboard.writeText(item.content);
+                                  message.success("Sao chép thành công!");
+                                }}
+                              >
+                                Sao chép tin nhắn
+                              </Button>
+                              <hr
+                                style={{
+                                  borderTop: "1px solid #ddd",
+                                }}
+                              />
+                            </div>
+                            : null
+                          }
                           {/* <div><Button type="text" icon={<ExclamationCircleOutlined />} >Xem chi tiết</Button></div> */}
-                          <hr
-                            style={{
-                              borderTop: "1px solid #ddd",
-                            }}
-                          />
+                          
                           {item.senderId._id == userId ? (
                             <div>
                               <Button

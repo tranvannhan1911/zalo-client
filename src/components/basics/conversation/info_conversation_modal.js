@@ -1,4 +1,4 @@
-import { Avatar, Button, Collapse, Drawer, Form, Image, Input, List, message, Modal, Space, Typography, Upload } from 'antd';
+import { Avatar, Button, Collapse, Drawer, Form, Image, Input, List, message, Modal, Popconfirm, Space, Typography, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import api from '../../../utils/apis';
 import FriendSelect from '../friend/friend_select';
@@ -6,7 +6,8 @@ import UserMember from '../user/user_searching';
 import UserSelect from '../user/user_select';
 import MemberGroupTab from '../member/member_group_tab';
 import {
-  EditOutlined, CameraOutlined, ArrowLeftOutlined, DeleteOutlined
+  EditOutlined, CameraOutlined, ArrowLeftOutlined, DeleteOutlined,
+  CloseOutlined
 } from "@ant-design/icons";
 import ImgCrop from 'antd-img-crop';
 import ConversationUpdateAvatarModal from './conversation_update_avatar_modal';
@@ -14,6 +15,7 @@ import MemberConversation from '../member/members_conversations';
 import store from '../../../store/store';
 import Video_modal from './video_modal';
 import FileItem from './file_item';
+import Cookies from 'js-cookie';
 const { Panel } = Collapse;
 
 const RenameConversationModal = ({ isModalOpen, setIsModalOpen, data }, props) => {
@@ -55,28 +57,13 @@ const RenameConversationModal = ({ isModalOpen, setIsModalOpen, data }, props) =
   return (
     <>
       <Modal title="Đổi tên cuộc hội thoại" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <Input placeholder="Tên nhóm" style={{
+        <Input placeholder="Tên cuộc hội thoại" style={{
           marginLeft: '10px'
         }} value={newName} onChange={e => setNewName(e.target.value)} />
       </Modal>
     </>
   );
 };
-
-const _data = [
-  {
-    title: 'Title 1',
-  },
-  {
-    title: 'Title 2',
-  },
-  {
-    title: 'Title 3',
-  },
-  {
-    title: 'Title 4',
-  },
-];
 
 const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   const [loading, setLoading] = useState(false);
@@ -90,6 +77,8 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   const [files, setFiles] = useState([]);
   const [visibleVideoModal, setVisibleVideoModal] = useState(false);
   const [currentItem, setCurrentItem] = useState();
+  const [conversationName, setConversationName] = useState("")
+  const userId = Cookies.get("_id");
   var friendSelectKey = 0;
 
   useEffect(() => {
@@ -138,6 +127,20 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
       setVideos(_videos)
       setFiles(_files)
     }
+
+    if (data) {
+      var _conversation_name = data.name
+      if (!_conversation_name && data?.members) {
+        const other_members = []
+        data.members.forEach((mem) => {
+          if (mem != userId) {
+            other_members.push(mem)
+          }
+        })
+        _conversation_name = other_members[other_members.length - 1].name
+      }
+      setConversationName(_conversation_name)
+    }
   }, [data])
 
   const editConversation = async () => {
@@ -168,6 +171,40 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   useEffect(() => {
     console.log("props.data", data)
   }, [data])
+
+  const deleteConversation = async () => {
+    try {
+      const res = await api.conversation.delete_all_message(data._id);
+      console.log("deleteConversation", res);
+      message.success("Xóa tất cả tin nhắn thành công!");
+      props.onDeleteConversation()
+    } catch {
+      message.error("Có lỗi xảy ra!");
+    }
+  }
+
+  const leaveGroup = async () => {
+    try {
+      const res = await api.conversation.leave_group(data._id);
+      console.log("leaveGroup", res);
+      if (res.status == 204) {
+        message.success("Rời nhóm thành công!");
+        // props.onLeaveGroup(data);
+      }
+    } catch {
+      message.error("Có lỗi xảy ra!");
+    }
+  };
+
+  const deleteGroup = async () => {
+    try {
+      const res = await api.conversation.delete_group(data._id);
+      console.log("deleteGroup", res);
+      message.success("Xóa nhóm thành công!");
+    } catch {
+      message.error("Có lỗi xảy ra!");
+    }
+  };
 
   return (
     <>
@@ -228,7 +265,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
             </ImgCrop>
             <div>
               <Typography.Title level={4}>
-                {data?.name}
+                {conversationName}
                 <Button type='text' icon={<EditOutlined />} onClick={() => setIsRenameModalOpen(true)} />
               </Typography.Title>
             </div>
@@ -262,7 +299,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
                 dataSource={videos}
                 renderItem={(item) => (
                   <List.Item>
-                    <Button 
+                    <Button
                       onClick={() => {
                         setCurrentItem(item)
                         setVisibleVideoModal(true)
@@ -281,23 +318,39 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
               />
             </Panel>
             <Panel header="File" key="file">
-            <List
+              <List
                 dataSource={files}
                 renderItem={(item) => (
                   <List.Item>
-                    <FileItem item={item}/>
+                    <FileItem item={item} />
                   </List.Item>
                 )}
               />
             </Panel>
             <Panel header="Bảo mật" key="security">
               <Space direction='vertical' style={{ width: '100%' }}>
-                <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}>
-                  <DeleteOutlined /> Xóa lịch sử trò chuyện
+                <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}
+                  onClick={deleteConversation}>
+                  <DeleteOutlined /> Xóa lịch sử trò chuyện phía tôi
                 </Button>
-                <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}>
+                <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}
+                  onClick={leaveGroup}>
                   <ArrowLeftOutlined /> Rời nhóm
                 </Button>
+                {data?.leaderId == userId ?
+                  <Popconfirm
+                    title="Bạn đã chắc chắn muốn xóa nhóm?"
+                    onConfirm={deleteGroup}
+                    okText="Đồng ý"
+                    okType='danger'
+                    cancelText="Hủy bỏ"
+                  >
+                    <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}>
+                      <CloseOutlined /> Xóa nhóm
+                    </Button>
+                  </Popconfirm>
+                  : null
+                }
               </Space>
             </Panel>
             {/* : null

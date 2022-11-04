@@ -63,12 +63,22 @@ const ConversationPage = (props) => {
         renameConversation(convRef.current, setConversations, id, name, saveMessage);
       })
 
-      
-
       socket.on("update-avatar-conversation", (id, avatarUrl, saveMessage) => {
         // console.log("delete-message", data)
         updateAvatarConversation(convRef.current, setConversations, id, avatarUrl, saveMessage);
       })
+
+      socket.on("delete-all-message", (id) => {
+        // console.log("delete-message", data)
+        deleteAllMessage(convRef.current, setConversations, id);
+      })
+
+
+      socket.on("delete-conversation", (id) => {
+        // console.log("delete-message", data)
+        deleteConversation(convRef.current, setConversations, id);
+      })
+      
     }
 
     store.subscribe(() => {
@@ -176,6 +186,33 @@ const ConversationPage = (props) => {
       plusCountSeen(_convs, setConversations, data.message.conversationId)
   }
 
+  const deleteAllMessage = (conversations, setConversations, id) => {
+    console.log("deleteAllMessage", id)
+
+    var _convs = [...conversations]
+    _convs.map(conv => {
+      if (conv._id == id) {
+        conv.messages = []
+      }
+    })
+    sort(_convs)
+    setConversations(_convs)
+  }
+
+  const deleteConversation = (conversations, setConversations, id) => {
+    console.log("deleteAllMessage", id)
+
+    var _convs = [...conversations]
+    for(var i=0; i<_convs.length; i++){
+      if (_convs[i]._id == id) {
+        _convs.splice(i, 1)
+        break
+      }
+    }
+    sort(_convs)
+    setConversations(_convs)
+  }
+
   const deleteMessage = (conversations, setConversations, data) => {
     // if(data.message.userId == info.user)
     console.log("deleteMessage", data, userId)
@@ -201,7 +238,7 @@ const ConversationPage = (props) => {
   const renameConversation = async (conversations, setConversations, id, name, saveMessage) => {
     const _conversations = [...conversations]
     _conversations.map(conv => {
-      if(conv._id == id){
+      if (conv._id == id) {
         conv.name = name
       }
     })
@@ -211,7 +248,7 @@ const ConversationPage = (props) => {
   const updateAvatarConversation = async (conversations, setConversations, id, avatarUrl, saveMessage) => {
     const _conversations = [...conversations]
     _conversations.map(conv => {
-      if(conv._id == id){
+      if (conv._id == id) {
         conv.avatar = avatarUrl
       }
     })
@@ -219,9 +256,19 @@ const ConversationPage = (props) => {
   }
 
   useEffect(() => {
-    if (conversations) {
+    if (conversations && currentConv) {
 
       console.log("conversations change", conversations)
+      conversations.forEach(conv => {
+        if (conv._id == currentConv._id) {
+          // const _currentConv = {...currentConv}
+          // _currentConv.messages = []
+          // console.log("_currentConv", _currentConv)
+
+          // setCurrentConv(_currentConv)
+          setMessages(conv.messages)
+        }
+      })
       // const _hasListen = { ...hasListen }
       // conversations.forEach(conv => {
       //   if (!_hasListen[conv._id]) {
@@ -327,11 +374,12 @@ const ConversationPage = (props) => {
               }}
               {...props}
               conversations={conversations}
+              setConversations={setConversations}
               currentConv={currentConv}
               setCurrentConv={setCurrentConv}
               updateCountSeen={updateCountSeen}
               onLeaveGroup={onLeaveGroup}
-              />
+            />
         }
 
       </Col>
