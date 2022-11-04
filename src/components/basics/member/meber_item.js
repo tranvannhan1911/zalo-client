@@ -9,6 +9,7 @@ import api from '../../../utils/apis';
 import Cookies from 'js-cookie';
 import { deleteFriend } from '../../../controller/friend';
 import { mess } from '../../../utils/actions';
+import store, { setOpenInfoConversationModal } from '../../../store/store';
 const { Text, Title } = Typography;
 
 const MemberItem = ({ item, type }) => {
@@ -57,6 +58,7 @@ const MemberItem = ({ item, type }) => {
                 <div><Button type="text" icon={<MessageOutlined />}
                     onClick={() => {
                         mess(item.userId._id)
+                        store.dispatch(setOpenInfoConversationModal(false))
                     }}>Nhắn tin</Button></div>
                 <div>
                     <Button

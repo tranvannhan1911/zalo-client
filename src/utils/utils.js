@@ -4,6 +4,11 @@ export const truncate = (str, num = 20) => {
   return str && str.length > num ? str.substr(0, num) + "..." : str;
 };
 
+
+export const truncate_middle = (str, start = 20, end=10) => {
+  return str && str.length > start+end ? str.substr(0, start) + "..." + str.substr(-end, str.length) : str;
+};
+
 export const get_info_from_cookie = () => {
   return {
     _id: Cookies.get("_id"),

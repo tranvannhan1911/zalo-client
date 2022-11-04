@@ -21,6 +21,7 @@ import React, { useEffect, useRef } from "react";
 import { deleteMessage, removeMessageFromAll } from "../../controller/message";
 import moment from "moment";
 import "moment/locale/vi";
+import FileItem from "../basics/conversation/file_item";
 moment.locale("vi");
 const AlwaysScrollToBottom = () => {
   const elementRef = useRef();
@@ -169,15 +170,7 @@ const Messages = (props) => {
     } else if (item.type == "FILE") {
       return card(
         item,
-        <Button
-          type="text"
-          href={item.content}
-          target="blank"
-          icon={<DownloadOutlined />}
-        >
-          {" "}
-          Tải xuống
-        </Button>
+        <FileItem item={item}/>
       );
     } else if (item.type == "VIDEO") {  
       return card(

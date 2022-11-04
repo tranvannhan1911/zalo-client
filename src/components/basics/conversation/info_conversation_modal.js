@@ -1,4 +1,4 @@
-import { Avatar, Button, Collapse, Drawer, Form, Image, Input, message, Modal, Typography, Upload } from 'antd';
+import { Avatar, Button, Collapse, Drawer, Form, Image, Input, List, message, Modal, Space, Typography, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import api from '../../../utils/apis';
 import FriendSelect from '../friend/friend_select';
@@ -6,12 +6,14 @@ import UserMember from '../user/user_searching';
 import UserSelect from '../user/user_select';
 import MemberGroupTab from '../member/member_group_tab';
 import {
-  EditOutlined, CameraOutlined
+  EditOutlined, CameraOutlined, ArrowLeftOutlined, DeleteOutlined
 } from "@ant-design/icons";
 import ImgCrop from 'antd-img-crop';
 import ConversationUpdateAvatarModal from './conversation_update_avatar_modal';
 import MemberConversation from '../member/members_conversations';
 import store from '../../../store/store';
+import Video_modal from './video_modal';
+import FileItem from './file_item';
 const { Panel } = Collapse;
 
 const RenameConversationModal = ({ isModalOpen, setIsModalOpen, data }, props) => {
@@ -61,6 +63,21 @@ const RenameConversationModal = ({ isModalOpen, setIsModalOpen, data }, props) =
   );
 };
 
+const _data = [
+  {
+    title: 'Title 1',
+  },
+  {
+    title: 'Title 2',
+  },
+  {
+    title: 'Title 3',
+  },
+  {
+    title: 'Title 4',
+  },
+];
+
 const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
@@ -68,13 +85,19 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
   const [openUpdateAvatarModal, setOpenUpdateAvatarModal] = useState(false);
   const [file, setFile] = useState();
+  const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [visibleVideoModal, setVisibleVideoModal] = useState(false);
+  const [currentItem, setCurrentItem] = useState();
   var friendSelectKey = 0;
 
   useEffect(() => {
     store.subscribe(() => {
       console.log("ConversationInfoModal", store.getState())
       const _isOpen = store.getState().isOpenInfoConversationModal == "true"
-      if (_isOpen != open){
+      console.log("set open to ", _isOpen, open)
+      if (_isOpen != open) {
         setOpen(_isOpen)
       }
     })
@@ -95,6 +118,27 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   const handleCancel = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    console.log("lọc ảnh, video", data)
+    if (data && data.messages) {
+      const _images = []
+      const _videos = []
+      const _files = []
+      data.messages.forEach(msg => {
+        if (msg.type == "IMAGE") {
+          _images.push(msg)
+        } else if (msg.type == "VIDEO") {
+          _videos.push(msg)
+        } else if (msg.type == "FILE") {
+          _files.push(msg)
+        }
+      })
+      setImages(_images)
+      setVideos(_videos)
+      setFiles(_files)
+    }
+  }, [data])
 
   const editConversation = async () => {
     // try{
@@ -190,12 +234,73 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
             </div>
           </div>
 
-          <Collapse defaultActiveKey={['member']} ghost>
+          <Collapse ghost>
             {/* {data?.type ? */}
-              <Panel header="Thành viên nhóm" key="member">
-                <MemberConversation data={data} />
-              </Panel>
-              {/* : null
+            <Panel header="Thành viên" key="member">
+              <MemberConversation data={data} />
+            </Panel>
+            <Panel header="Ảnh" key="photo">
+              <List
+                grid={{
+                  gutter: 16,
+                  column: 3,
+                }}
+                dataSource={images}
+                renderItem={(item) => (
+                  <List.Item>
+                    <Image src={item.content} style={{ width: '100%', height: '100%' }}></Image>
+                  </List.Item>
+                )}
+              />
+            </Panel>
+            <Panel header="Video" key="video">
+              <List
+                grid={{
+                  gutter: 16,
+                  column: 2,
+                }}
+                dataSource={videos}
+                renderItem={(item) => (
+                  <List.Item>
+                    <Button 
+                      onClick={() => {
+                        setCurrentItem(item)
+                        setVisibleVideoModal(true)
+                      }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        padding: '0'
+                      }}>
+                      <video src={item.content} style={{
+                        width: '100%'
+                      }}></video>
+                    </Button>
+                  </List.Item>
+                )}
+              />
+            </Panel>
+            <Panel header="File" key="file">
+            <List
+                dataSource={files}
+                renderItem={(item) => (
+                  <List.Item>
+                    <FileItem item={item}/>
+                  </List.Item>
+                )}
+              />
+            </Panel>
+            <Panel header="Bảo mật" key="security">
+              <Space direction='vertical' style={{ width: '100%' }}>
+                <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}>
+                  <DeleteOutlined /> Xóa lịch sử trò chuyện
+                </Button>
+                <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}>
+                  <ArrowLeftOutlined /> Rời nhóm
+                </Button>
+              </Space>
+            </Panel>
+            {/* : null
             }  */}
 
           </Collapse>
@@ -207,6 +312,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
         setOpenUpdateAvatarModal={setOpenUpdateAvatarModal}
         file={file}
         conversationId={data?._id} />
+      <Video_modal visible={visibleVideoModal} setVisible={setVisibleVideoModal} item={currentItem} />
     </>
   );
 };
