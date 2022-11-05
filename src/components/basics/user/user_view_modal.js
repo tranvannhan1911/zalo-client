@@ -60,7 +60,7 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
 
   const description = (
     <>
-      {user._id == Cookies.get("_id") ? null : (
+      {/* {user._id == Cookies.get("_id") ? null : (
         <Space>
           <Button
             type="primary"
@@ -76,7 +76,7 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
             Từ chối
           </Button>
         </Space>
-      )}
+      )} */}
     </>
   );
 
@@ -87,7 +87,7 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
           <Button
             type="primary"
             icon={<MessageOutlined />}
-            // onClick={createConversation1vs1}
+          // onClick={createConversation1vs1}
           >
             Nhắn tin
           </Button>
@@ -110,28 +110,40 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
     }
   };
 
+  const footer = () => {
+    const res = []
+    if (user._id == Cookies.get("_id")) {
+      res.push(
+        <Button key="back" onClick={() => {
+          setOpenChangePassModal(true);
+        }}>Đổi mật khẩu</Button>
+      )
+      res.push(
+        <Button
+          key="back"
+          onClick={() => {
+            setOpenEditModal(true);
+          }}
+        >
+          Cập nhập thông tin
+        </Button>
+      )
+    }
+    res.push(
+      <Button key="back" onClick={handleCancel}>
+        Đóng
+      </Button>
+    )
+    return res
+  }
+
   return (
     <>
       <Modal
         open={openUserModal}
         title="Xem thông tin"
         onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={() => {
-            setOpenChangePassModal(true);
-          }}>Đổi mật khẩu</Button>,
-          <Button
-            key="back"
-            onClick={() => {
-              setOpenEditModal(true);
-            }}
-          >
-            Cập nhập thông tin
-          </Button>,
-          <Button key="back" onClick={handleCancel}>
-            Đóng
-          </Button>,
-        ]}
+        footer={footer()}
         style={{
           padding: "0px",
           justifyContent: "center",
@@ -141,7 +153,7 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
         <div
           style={
             {
-              display:'flex'
+              display: 'flex'
             }
           }
         >
@@ -163,33 +175,35 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
                         ? user.avatar
                         : "https://i.imgur.com/TV0vz0r.png"
                     }
-                    // style={{
-                    //     width: 32,
-                    // }}
+                  // style={{
+                  //     width: 32,
+                  // }}
                   />
                 </>
               }
             />
-            <ImgCrop rotate>
-              <Upload
-                name="avatar"
-                accept="image/jpeg,image/png"
-                showUploadList={false}
-                customRequest={(options) => {
-                  console.log(options);
-                  options.onSuccess(options);
-                }}
-                style={{
-                  position: "absolute",
-                  marginLeft: "-24px",
-                  marginTop: "50px",
-                }}
-                // beforeUpload={beforeUpload}
-                onChange={handleChangeUploadAvatar}
-              >
-                <Button type="text" icon={<CameraOutlined />}></Button>
-              </Upload>
-            </ImgCrop>
+            {user._id != Cookies.get("_id") ? null :
+              <ImgCrop rotate>
+                <Upload
+                  name="avatar"
+                  accept="image/jpeg,image/png"
+                  showUploadList={false}
+                  customRequest={(options) => {
+                    console.log(options);
+                    options.onSuccess(options);
+                  }}
+                  style={{
+                    position: "absolute",
+                    marginLeft: "-24px",
+                    marginTop: "50px",
+                  }}
+                  // beforeUpload={beforeUpload}
+                  onChange={handleChangeUploadAvatar}
+                >
+                  <Button type="text" icon={<CameraOutlined />}></Button>
+                </Upload>
+              </ImgCrop>
+            }
           </div>
           <br></br>
           <div
@@ -204,48 +218,48 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
                 color: "#8B95A0",
                 fontSize: 15,
                 fontWeight: "bolder",
-                
+
               }}
             >
               Họ và tên{" "}
             </span>
-            <span style={{marginLeft:15}}>{user?.name}</span>
+            <span style={{ marginLeft: 15 }}>{user?.name}</span>
             <br></br>
             <span
               style={{
                 color: "#8B95A0",
                 fontSize: 15,
                 fontWeight: "bolder",
-               
+
               }}
             >
               Điện thoại{" "}
             </span>
-            <span style={{marginLeft:10}}>{user?.phoneNumber}</span>
+            <span style={{ marginLeft: 10 }}>{user?.phoneNumber}</span>
             <br></br>
             <span
               style={{
                 color: "#8B95A0",
                 fontSize: 15,
                 fontWeight: "bolder",
-                
+
               }}
             >
               Ngày sinh
-            </span>{" "}
-            <span style={{marginLeft:15}}>{user?.dateOfBirth ? moment(user?.dateOfBirth).format("DD-MM-YYYY") : ''}</span>
+            </span>
+            <span style={{ marginLeft: 15 }}>{user?.dateOfBirth ? moment(user?.dateOfBirth).format("DD-MM-YYYY") : ''}</span>
             <br></br>
             <span
               style={{
                 color: "#8B95A0",
                 fontSize: 15,
                 fontWeight: "bolder",
-                
+
               }}
             >
               Giới tính{" "}
             </span>
-            <span style={{marginLeft:20}}>{user?.gender == "true" ? "Nam" : "Nữ"}</span>
+            <span style={{ marginLeft: 20 }}>{user?.gender == "true" ? "Nam" : "Nữ"}</span>
             <div>{description}</div>
           </div>
         </div>

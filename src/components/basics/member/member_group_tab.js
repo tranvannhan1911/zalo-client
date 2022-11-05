@@ -21,7 +21,7 @@ const MemberGroupTab = ({ data }) => {
 
   useEffect(() => {
     handleData();
-  }, []);
+  }, [data]);
 
   const TabMember = () => {
     return (

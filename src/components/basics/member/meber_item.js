@@ -1,5 +1,5 @@
 import { Avatar, Button, Card, Image, List, message, Popover, Space, Typography } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     MessageOutlined, ExclamationCircleOutlined, ArrowLeftOutlined,
     MoreOutlined, UserAddOutlined, CloseOutlined,
@@ -10,10 +10,11 @@ import Cookies from 'js-cookie';
 import { deleteFriend } from '../../../controller/friend';
 import { mess } from '../../../utils/actions';
 import store, { setOpenInfoConversationModal } from '../../../store/store';
+import UserViewModal from "../../basics/user/user_view_modal"
 const { Text, Title } = Typography;
 
 const MemberItem = ({ item, type }) => {
-
+    const [openUserModal, setOpenUserModal] = useState(false);
     const userId = Cookies.get("_id")
     // const [userInfo]
 
@@ -66,6 +67,7 @@ const MemberItem = ({ item, type }) => {
                         icon={<ExclamationCircleOutlined />}
                         onClick={() => {
                             // setOpenModal(true)
+                            setOpenUserModal(true)
                         }}>Xem chi tiết</Button>
                 </div>
                 {!item.userId.friends.includes(userId) ?
@@ -133,6 +135,7 @@ const MemberItem = ({ item, type }) => {
                     </Popover>
                 }
             </div>
+            <UserViewModal openUserModal={openUserModal} setOpenUserModal={setOpenUserModal} info={item.userId}/>
         </div>
     )
 }
