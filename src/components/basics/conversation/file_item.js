@@ -7,7 +7,8 @@ import { truncate_middle } from "../../../utils/utils";
 const FileItem = ({item}) => {
 
     const arr = item?.content.split("/")
-    const name = arr[arr.length-1]
+    const nametmp = arr[arr.length-1]
+    const name = nametmp.substr(23, nametmp.length)
     return (
         <Button
           type="text"
