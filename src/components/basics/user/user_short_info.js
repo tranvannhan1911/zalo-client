@@ -128,7 +128,7 @@ const UserShortInfo = ({item, type}) => {
                 <Avatar
                     src={
                         <Image
-                        src="https://joeschmoe.io/api/v1/random"
+                        src={item.avatar?item.avatar:"https://joeschmoe.io/api/v1/random"}
                         style={{
                             width: 32,
                         }}
