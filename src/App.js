@@ -20,7 +20,7 @@ function App() {
           <Route path="dang-nhap" element={<Login />} />
           <Route path="dang-ky" element={<Register />} />
           <Route path="quen-mat-khau" element={<ForgotPassword />} />
-          <Route path="doi-mat-khau" element={<ChangePassword />} />
+          <Route path="doi-mat-khau/phoneNumber=:phoneNumber" element={<ChangePassword />} />
           <Route path="" element={<MainPage />} />
           {/* <Route path="ban-be" element={<FriendPage />} /> */}
       </Routes>

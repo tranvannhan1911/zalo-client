@@ -125,6 +125,10 @@ const api = {
         getUserByPhoneNumber:(phoneNumber, params) =>{
             const url = `/user/phonenumber/${phoneNumber}`
             return axiosApi.get(url, params);
+        },
+        update_password:(user_id, params)=>{
+            const url = `/user/password/${user_id}`
+            return axiosApi.put(url, params);
         }
     }),
 
