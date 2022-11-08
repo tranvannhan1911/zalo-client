@@ -73,6 +73,7 @@ const Register = () => {
       passwordRef.current.focus();
       return;
     }
+    requestOTP();
 
     // const accountApi = new AccountApi();
     // try {
@@ -110,8 +111,7 @@ const Register = () => {
     );
   };
 
-  const requestOTP = (e) => {
-    e.preventDefault();
+  const requestOTP = () => {
     generateRecaptcha();
     const newPhoneNumber = phoneNumber.replace(regex, countryCode);
     let appVerifier = window.recaptchaVerifier;
@@ -204,7 +204,7 @@ const Register = () => {
         <Title level={2} style={{ marginBottom: "20px" }}>
           Đăng ký
         </Title>
-        <form
+        <Form form={form}
           onSubmit={requestOTP}
           name="normal_register"
           className="register-form"
@@ -304,7 +304,7 @@ const Register = () => {
           <p>
             Đã có tài khoản ? <Link to="/dang-nhap">Đăng nhập tại đây</Link>{" "}
           </p>
-        </form>
+        </Form>
         <div id="recaptcha-container"></div>
         <form
           onSubmit={verifyOTP}
