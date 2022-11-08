@@ -185,6 +185,7 @@ const ChangePassWord = () => {
           <p>
             <Link to="/dang-nhap">Đăng nhập ngay</Link>{" "}
           </p>
+          
         </Form>
       </Col>
     </Row>

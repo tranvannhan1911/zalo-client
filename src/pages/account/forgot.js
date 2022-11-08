@@ -227,6 +227,9 @@ const Register = () => {
           <p>
             <Link to="/dang-nhap">Đăng nhập ngay</Link>{" "}
           </p>
+          <p>
+          Chưa có tài khoản ?<Link to="/dang-ky"> Đăng ký tại đây</Link>{" "}
+        </p>
         </Form>
         <div id="recaptcha-container"></div>
         <form
