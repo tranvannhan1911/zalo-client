@@ -1,19 +1,24 @@
-import { PhoneOutlined, LockOutlined, UserOutlined,CodeOutlined } from "@ant-design/icons";
+import {
+  PhoneOutlined,
+  LockOutlined,
+  UserOutlined,
+  CodeOutlined,
+} from "@ant-design/icons";
 import { Button, Col, Row, Checkbox, Form, Input, message } from "antd";
 import { Typography } from "antd";
 import React, { useState, useRef } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { AccountApi } from "../../utils/apis";
+import api, { AccountApi } from "../../utils/apis";
 import store, { setUser } from "../../store/store";
 // import { setToken } from '../../store/store'
 import { validPhone, validPassword } from "../../utils/regexp";
 
 import { authentication } from "../../firebase/firebaseConfig";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { async } from "@firebase/util";
 
 const { Title } = Typography;
-
 
 const Register = () => {
   // const dispatch = useDispatch();
@@ -53,14 +58,14 @@ const Register = () => {
   const handleCancel = () => {
     setFlag(false);
   };
- 
+
   const onFinish = async (values) => {
-    // if (!validPhone.test(values.phoneNumber)) {
-    //     message.error('Số điện thoại không hợp lệ');
-    //     stopLoading(0);
-    //     phoneRef.current.focus();
-    //     return;
-    // }
+    if (!validPhone.test(values.phoneNumber)) {
+        message.error('Số điện thoại không hợp lệ');
+        stopLoading(0);
+        phoneRef.current.focus();
+        return;
+    }
     if (!validPassword.test(values.password)) {
       message.error("Mật khẩu ít nhất 6 ký tự");
       stopLoading(0);
@@ -111,8 +116,23 @@ const Register = () => {
     );
   };
 
-  const requestOTP = () => {
+  const requestOTP = async () => {
     generateRecaptcha();
+    const res = await api.user.getUserByPhoneNumber(phoneNumber);
+    console.log(res.data);
+    console.log(res.status);
+    if (res.data) {
+      const user = res.data;
+      console.log(user);
+      message.error("Số điện thoại đã được đăng ký");
+      return;
+      // props.setCurrentConv()
+    }
+    // if(user){
+    //   message.error("Số điện thoại đã được đăng ký");
+    //   return;
+    // }
+
     const newPhoneNumber = phoneNumber.replace(regex, countryCode);
     let appVerifier = window.recaptchaVerifier;
     signInWithPhoneNumber(authentication, newPhoneNumber, appVerifier)
@@ -130,12 +150,16 @@ const Register = () => {
 
   const verifyOTP = (e) => {
     e.preventDefault();
-    if (OTP === "" || OTP === null) return;
+    if (OTP === "" || OTP === null) {
+      message.error("Bạn chưa nhập OTP");
+      return;
+    }
     // setOTP(otp);
     console.log(OTP);
-    if (OTP.length === 6) {
+    if (OTP) {
       console.log(OTP);
       let confirmationResult = window.confirmationResult;
+
       confirmationResult
         .confirm(OTP)
         .then(async (result) => {
@@ -167,7 +191,7 @@ const Register = () => {
               message.error("Có lỗi xảy ra");
             }
           } catch (error) {
-            console.log("Failed:", error);
+            console.log("Failed:", error);  
             message.error("Có lỗi xảy ra");
           } finally {
             stopLoading(0);
@@ -204,7 +228,8 @@ const Register = () => {
         <Title level={2} style={{ marginBottom: "20px" }}>
           Đăng ký
         </Title>
-        <Form form={form}
+        <Form
+          form={form}
           onSubmit={requestOTP}
           name="normal_register"
           className="register-form"
@@ -300,7 +325,7 @@ const Register = () => {
             </Button>
           </Form.Item>
           <br></br>
-         
+
           <p>
             Đã có tài khoản ? <Link to="/dang-nhap">Đăng nhập tại đây</Link>{" "}
           </p>
@@ -342,9 +367,9 @@ const Register = () => {
               size="large"
               loading={loadings[0]}
               onClick={handleCancel}
-              style={{marginRight:10, marginTop:10}}
+              style={{ marginRight: 10, marginTop: 10 }}
             >
-            Cancel   
+              Cancel
             </Button>
             <Button
               type="primary"

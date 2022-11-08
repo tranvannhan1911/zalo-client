@@ -1,259 +1,182 @@
 import {
-    PhoneOutlined, LockOutlined
-} from '@ant-design/icons'
-import { Button, Col, Row, Checkbox, Form, Input, message, Space } from 'antd'
-import { Typography } from 'antd'
-import React, { useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
-import { AccountApi } from "../../utils/apis"
-import { validPhone, validPassword } from '../../utils/regexp'
-import zxcvbn from 'zxcvbn';
-
-const { Title } = Typography;
-
-
-const ChangePassword = () => {
+    PhoneOutlined,
+    LockOutlined,
+    UserOutlined,
+    CodeOutlined,
+  } from "@ant-design/icons";
+  import { Button, Col, Row, Checkbox, Form, Input, message } from "antd";
+  import { Typography } from "antd";
+  import React, { useState, useRef } from "react";
+  import { Link, Navigate } from "react-router-dom";
+  import { useNavigate } from "react-router-dom";
+  import api, { AccountApi } from "../../utils/apis";
+  import store, { setUser } from "../../store/store";
+  // import { setToken } from '../../store/store'
+  import { validPhone, validPassword } from "../../utils/regexp";
+  
+  import { authentication } from "../../firebase/firebaseConfig";
+  import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+  import { async } from "@firebase/util";
+  
+  const { Title } = Typography;
+  
+  const ChangePassWord = () => {
+    // const dispatch = useDispatch();
     // let history = useHistory();
+    const passwordRef = useRef();
     const navigate = useNavigate();
     const [loadings, setLoadings] = useState([]);
-    const [password, setPassword]= useState("");
-    // const [mess, setMess]= useState("Vui lòng nhập mật khẩu mới!");
+    const [flag, setFlag] = useState(false);
+    const [password, setPassword] = useState("");
 
-    const testResult = zxcvbn(password);
-    const num = testResult.score * 100 / 4;
-    const createPassLabel = () => {
-        switch (testResult.score) {
-            case 0:
-                return '';
-            case 1:
-                return 'Yếu';
-            case 2:
-                return 'Trung bình';
-            case 3:
-                return 'Mạnh';
-            case 4:
-                return 'Rất mạnh';
-            default:
-                return '';
-        }
-    }
-
-    const funcProgressColor = () => {
-        switch (testResult.score) {
-            case 0:
-                return '#828282';
-            case 1:
-                return '#EA1111';
-            case 2:
-                return '#FFAD00';
-            case 3:
-                return '#9bc158';
-            case 4:
-                return '#00b500';
-            default:
-                return 'none';
-        }
-    }
-
-    const changePasswordColor = () => ({
-        width: `${num}%`,
-        background: funcProgressColor(),
-        height: '7px'
-    })
-
+    const [expandForm, setExpandForm] = useState(true);
+    const [form] = Form.useForm();
+    const regex = /^0/i;
+  
     const enterLoading = (index) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[index] = true;
-            return newLoadings;
-        });
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = true;
+        return newLoadings;
+      });
     };
-
+  
     const stopLoading = (index) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[index] = false;
-            return newLoadings;
-        });
-    }
-
-    const error_msg = () => {
-        message.error('Sai số điện thoại hoặc mật khẩu');
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
     };
-
+  
     const onFinish = async (values) => {
-        values.new_password= password;
-        if (!validPhone.test(values.phone)) {
-            message.error('Số điện thoại không hợp lệ! Số điện thoại bao gồm 10 ký tự số bắt đầu là 84 hoặc 03, 05, 07, 08, 09');
-            stopLoading(0);
-            return;
-        }
-
-        if (!validPassword.test(values.old_password)) {
-            message.error('Mật khẩu ít nhất 6 ký tự');
-            stopLoading(0);
-            return;
-        }
-
-        if (values.new_password == "") {
-
-            message.error('Vui lòng nhập mật khẩu mới!');
-            stopLoading(0);
-            return;
-        }
-
-        if (values.new_password != values.repeat_password) {
-
-            message.error('Mật khẩu mới và lặp lại mật khẩu không trùng');
-            stopLoading(0);
-            return;
-        }
-
-        if (testResult.score == 1 || testResult.score==0) {
-
-            message.error('Vui lòng chọn mật khẩu an toàn hơn');
-            stopLoading(0);
-            return;
-        }
-
-        const params = {
-            phone: values.phone,
-            password: values.old_password,
-            new_password: values.new_password,
-        };
-        console.log(params)
-        const accountApi = new AccountApi();
-        try {
-            const response = await accountApi.change_password(params);
-            console.log(response)
-            if (response.data.code == 1) {
-                message.success("Đổi mật khẩu thành công")
-                navigate('/dang-nhap');
-            } else {
-                message.error('Sai số điện thoại hoặc mật khẩu');
-            }
-        } catch (error) {
-            console.log('Failed:', error);
-            message.error('Sai số điện thoại hoặc mật khẩu');
-        } finally {
-            stopLoading(0)
-        }
+      if (!validPassword.test(values.password)) {
+        message.error("Mật khẩu ít nhất 6 ký tự");
+        stopLoading(0);
+        passwordRef.current.focus();
+        return;
+      }
+      if (values.password != values.repeat_password) {
+        message.error("Mật khẩu không giống nhau");
+        stopLoading(0);
+        passwordRef.current.focus();
+        return;
+      }
+    //   requestOTP();
+  
+      // const accountApi = new AccountApi();
+      // try {
+      //   const response = await accountApi.register(values);
+      //   console.log(response);
+      //   if (response.status == 200) {
+      //     message.success("Đăng ký thành công!");
+      //     navigate("/dang-nhap");
+      //   } else {
+      //     message.error("Có lỗi xảy ra");
+      //   }
+      // } catch (error) {
+      //   console.log("Failed:", error);
+      //   message.error("Có lỗi xảy ra");
+      // } finally {
+      //   stopLoading(0);
+      // }
     };
-
+  
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-        message.error('Có lỗi xảy ra');
-    };
-
+      console.log("Failed:", errorInfo);
+      message.error("Có lỗi xảy ra");
+    };  
+  
     return (
-        <Row justify="space-around" align="middle" style={{
-            height: '100vh',
-            textAlign: 'center'
-        }}>
-            <Col span={8} xs={18} sm={14} md={10} lg={8} style={{ backgroundColor: "white", padding: "50px", borderRadius: "10px" }}>
-                <Title level={2} style={{ marginBottom: '20px' }}>
-                    Đổi mật khẩu
-                </Title>
-                <Form
-                    name="normal_login"
-                    className="login-form"
-                    initialValues={{
-                        remember: true,
-                    }}
-                    onFinish={onFinish}
-                >
-                    <Form.Item
-                        name="phone"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Vui lòng nhập số điện thoại!',
-                            },
-                        ]}
-                    >
-                        <Input
-                            size="large"
-                            prefix={<PhoneOutlined className="site-form-item-icon" />}
-                            placeholder="Số điện thoại"
-                            autoFocus />
-                    </Form.Item>
-                    <Form.Item
-                        name="old_password"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Vui lòng nhập mật khẩu cũ!',
-                            },
-                        ]}
-                    >
-                        <Input.Password
-                            size="large"
-                            prefix={<LockOutlined className="site-form-item-icon" />}
-                            type="password"
-                            placeholder="Mật khẩu cũ"
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        name="new_password"
-                        style={{
-                            marginBottom:'0px'
-                        }}
-                        // rules={[
-                        //     {
-                        //         required: true,
-                        //         message: "Vui lòng nhập mật khẩu mới!",
-                        //     },
-                        // ]}
-                    >
-                        <Input.Password
-                            size="large"
-                            prefix={<LockOutlined className="site-form-item-icon" />}
-                            type="password"
-                            placeholder="Mật khẩu mới"
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <div className="progress" style={{ height: '7px' }}>
-                            <div className="progress-bar" style={changePasswordColor()}></div>
-                        </div>
-                        <p style={{ color: funcProgressColor(), textAlign:'right', marginTop:'0px' }}>{createPassLabel()}</p>
-                    </Form.Item>
-                    
-                    <Form.Item
-                        name="repeat_password"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Vui lòng lặp lại mật khẩu mới!',
-                            },
-                        ]}
-                    >
-                        <Input.Password
-                            size="large"
-                            prefix={<LockOutlined className="site-form-item-icon" />}
-                            type="password"
-                            placeholder="Lặp lại mật khẩu mới"
-                        />
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" className="login-form-button" size="large"
-                            loading={loadings[0]} onClick={() => enterLoading(0)}>
-                            Đổi mật khẩu
-                        </Button>
-                    </Form.Item>
-
-                    <p>
-                        <Space>
-                            <Link to="/dang-nhap">Đăng nhập ngay</Link>
-                            hoặc
-                            <Link to="/quen-mat-khau">Lấy lại mật khẩu</Link>
-                        </Space>
-                    </p>
-                </Form>
-            </Col>
-        </Row >
-    )
-}
-
-export default ChangePassword;
+      <Row
+        justify="space-around"
+        align="middle"
+        style={{
+          height: "100vh",
+          textAlign: "center",
+        }}
+      >
+        <Col
+          span={8}
+          xs={18}
+          sm={14}
+          md={10}
+          lg={8}
+          style={{
+            backgroundColor: "white",
+            padding: "50px",
+            borderRadius: "10px",
+          }}
+        >
+          <Title level={2} style={{ marginBottom: "20px" }}>
+            Lấy lại mật khẩu
+          </Title>
+          <Form
+            form={form}
+            // onSubmit={requestOTP}
+            name="normal_changePass"
+            className="changePass-form"
+            onFinish={onFinish}
+            style={{ display: !flag ? "block" : "none" }}
+          >
+           
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập mật khẩu!",
+                },
+              ]}
+            >
+              <Input.Password
+                size="large"
+                ref={passwordRef}
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mật khẩu mới"
+              />
+            </Form.Item>
+            <Form.Item
+              name="repeat_password"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập lại mật khẩu!",
+                },
+              ]}
+            >
+              <Input.Password
+                size="large"
+                ref={passwordRef}
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Nhập lại mật khẩu"
+              />
+            </Form.Item>
+  
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="changePass-form-button"
+                size="large"
+                loading={loadings[0]}
+              >
+                Đổi mật khẩu
+              </Button>
+            </Form.Item>
+            <br></br>
+            <p>
+              <Link to="/dang-nhap">Đăng nhập ngay</Link>{" "}
+            </p>
+          </Form>
+        </Col>
+      </Row>
+    );
+  };
+  
+  export default ChangePassWord;
+  
