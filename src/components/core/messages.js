@@ -218,6 +218,7 @@ const Messages = (props) => {
                   color: "#a3a3a3",
                 }}
               >
+              <span style={{color:'#a3a3a3'}}>{item.senderId.name}: </span>
                 {item.content}
               </div>
             );
