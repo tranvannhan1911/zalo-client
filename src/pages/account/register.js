@@ -1,4 +1,4 @@
-import { PhoneOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
+import { PhoneOutlined, LockOutlined, UserOutlined,CodeOutlined } from "@ant-design/icons";
 import { Button, Col, Row, Checkbox, Form, Input, message } from "antd";
 import { Typography } from "antd";
 import React, { useState, useRef } from "react";
@@ -14,6 +14,7 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 const { Title } = Typography;
 
+
 const Register = () => {
   // const dispatch = useDispatch();
   // let history = useHistory();
@@ -22,6 +23,8 @@ const Register = () => {
   const nameRef = useRef();
   const navigate = useNavigate();
   const [loadings, setLoadings] = useState([]);
+  const [flag, setFlag] = useState(false);
+  const otpRef = useRef();
 
   const countryCode = "+84";
   const [phoneNumber, setPhoneNumber] = useState(countryCode);
@@ -29,6 +32,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [expandForm, setExpandForm] = useState(true);
+  const [form] = Form.useForm();
   const regex = /^0/i;
 
   const enterLoading = (index) => {
@@ -46,7 +50,10 @@ const Register = () => {
       return newLoadings;
     });
   };
-
+  const handleCancel = () => {
+    setFlag(false);
+  };
+ 
   const onFinish = async (values) => {
     // if (!validPhone.test(values.phoneNumber)) {
     //     message.error('Số điện thoại không hợp lệ');
@@ -113,6 +120,7 @@ const Register = () => {
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
         window.confirmationResult = confirmationResult;
+        setFlag(true);
       })
       .catch((error) => {
         // Error; SMS not sent
@@ -121,13 +129,15 @@ const Register = () => {
   };
 
   const verifyOTP = (e) => {
-    let otp = e.target.value;
-    setOTP(otp);
-    if (otp.length === 6) {
-      console.log(otp);
+    e.preventDefault();
+    if (OTP === "" || OTP === null) return;
+    // setOTP(otp);
+    console.log(OTP);
+    if (OTP.length === 6) {
+      console.log(OTP);
       let confirmationResult = window.confirmationResult;
       confirmationResult
-        .confirm(otp)
+        .confirm(OTP)
         .then(async (result) => {
           // User signed in successfully.
           const user = result.user;
@@ -165,7 +175,7 @@ const Register = () => {
         })
         .catch((error) => {
           // User couldn't sign in (bad verification code?)
-          console.log(error);
+          message.error("Mã OTP không hợp lệ!");
         });
     }
   };
@@ -196,12 +206,10 @@ const Register = () => {
         </Title>
         <form
           onSubmit={requestOTP}
-          name="normal_login"
-          className="login-form"
-          initialValues={{
-            remember: true,
-          }}
+          name="normal_register"
+          className="register-form"
           onFinish={onFinish}
+          style={{ display: !flag ? "block" : "none" }}
         >
           <Form.Item
             name="name"
@@ -291,31 +299,64 @@ const Register = () => {
               Đăng ký
             </Button>
           </Form.Item>
-          {expandForm === true ? (
-            <>
-              <div>
-                <label htmlFor="inputOTP" className="form-label">
-                  Nhấn đăng ký, nhập OTP được gửi đến số điện thoại của bạn: {""}
-                </label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="inputOTP"
-                  value={OTP}
-                  onChange={verifyOTP}
-                />
-              </div>
-            </>
-          ) : null}
           <br></br>
-          <p>
-            Quên mật khẩu ? <Link to="/quen-mat-khau">Lấy lại mật khẩu</Link>{" "}
-          </p>
+         
           <p>
             Đã có tài khoản ? <Link to="/dang-nhap">Đăng nhập tại đây</Link>{" "}
           </p>
         </form>
         <div id="recaptcha-container"></div>
+        <form
+          onSubmit={verifyOTP}
+          name="otp"
+          className="otp-form"
+          initialValues={{
+            remember: true,
+          }}
+          style={{ display: flag ? "block" : "none" }}
+        >
+          <Form.Item
+            name="otp"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập mã OTP!",
+              },
+            ]}
+          >
+            <p>Nhập mã OTP được gửi đến {phoneNumber}</p>
+            <Input
+              size="large"
+              ref={otpRef}
+              prefix={<CodeOutlined className="site-form-item-icon" />}
+              placeholder="Nhập mã OTP"
+              autoFocus
+              id="otpInput"
+              value={OTP}
+              onChange={(e) => setOTP(e.target.value)}
+            />
+
+            <Button
+              type="secondary"
+              className="register-form-button"
+              size="large"
+              loading={loadings[0]}
+              onClick={handleCancel}
+              style={{marginRight:10, marginTop:10}}
+            >
+            Cancel   
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="register-form-button"
+              size="large"
+              loading={loadings[0]}
+            >
+              Verify
+            </Button>
+          </Form.Item>
+        </form>
       </Col>
     </Row>
   );

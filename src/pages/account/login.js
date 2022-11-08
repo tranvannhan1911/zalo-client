@@ -18,7 +18,7 @@ const Login = () => {
   const passwordRef = useRef();
   const navigate = useNavigate();
   const [loadings, setLoadings] = useState([]);
-
+  
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
       const newLoadings = [...prevLoadings];
@@ -156,6 +156,9 @@ const Login = () => {
               Đăng nhập
             </Button>
           </Form.Item>
+          <p>
+          Quên mật khẩu ? <Link to="/quen-mat-khau">Lấy lại mật khẩu</Link>{" "}
+        </p>
           <p>
             Chưa có tài khoản ? <Link to="/dang-ky">Đăng ký tại đây</Link>{" "}
           </p>
