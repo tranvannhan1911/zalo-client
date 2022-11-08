@@ -12,7 +12,7 @@ import {
 import ImgCrop from 'antd-img-crop';
 import ConversationUpdateAvatarModal from './conversation_update_avatar_modal';
 import MemberConversation from '../member/members_conversations';
-import store from '../../../store/store';
+import store, { setOpenInfoConversationModal, setStoreCurentConv } from '../../../store/store';
 import Video_modal from './video_modal';
 import FileItem from './file_item';
 import Cookies from 'js-cookie';
@@ -84,7 +84,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   useEffect(() => {
     store.subscribe(() => {
       console.log("ConversationInfoModal", store.getState())
-      const _isOpen = store.getState().isOpenInfoConversationModal == "true"
+      const _isOpen = store.getState().isOpenInfoConversationModal.value == "true"
       console.log("set open to ", _isOpen, open)
       if (_isOpen != open) {
         setOpen(_isOpen)
@@ -106,6 +106,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
 
   const handleCancel = () => {
     setOpen(false);
+    store.dispatch(setOpenInfoConversationModal("false"))
   };
 
   useEffect(() => {
@@ -123,6 +124,9 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
           _files.push(msg)
         }
       })
+      _images.reverse()
+      _videos.reverse()
+      _files.reverse()
       setImages(_images)
       setVideos(_videos)
       setFiles(_files)
@@ -190,6 +194,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
       if (res.status == 204) {
         message.success("Rời nhóm thành công!");
         // props.onLeaveGroup(data);
+        // store.dispatch(setStoreCurentConv(null))
       }
     } catch {
       message.error("Có lỗi xảy ra!");
@@ -329,14 +334,27 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
             </Panel>
             <Panel header="Bảo mật" key="security">
               <Space direction='vertical' style={{ width: '100%' }}>
-                <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}
-                  onClick={deleteConversation}>
-                  <DeleteOutlined /> Xóa lịch sử trò chuyện phía tôi
-                </Button>
-                <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}
-                  onClick={leaveGroup}>
-                  <ArrowLeftOutlined /> Rời nhóm
-                </Button>
+                <Popconfirm
+                  title="Bạn có chắc chắn muốn xóa lịch sử cuộc trò chuyện này?"
+                  onConfirm={deleteConversation}
+                  okText="Đồng ý"
+                  cancelText="Hủy bỏ"
+                >
+                  <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}>
+                    <DeleteOutlined /> Xóa lịch sử trò chuyện phía tôi
+                  </Button>
+                </Popconfirm>
+
+                <Popconfirm
+                  title="Bạn có chắc chắn muốn rời khỏi cuộc trò chuyện này?"
+                  onConfirm={leaveGroup}
+                  okText="Đồng ý"
+                  cancelText="Hủy bỏ"
+                >
+                  <Button type='text' style={{ width: '100%', textAlign: 'left', color: 'red' }}>
+                    <ArrowLeftOutlined /> Rời nhóm
+                  </Button>
+                </Popconfirm>
                 {data?.leaderId == userId ?
                   <Popconfirm
                     title="Bạn đã chắc chắn muốn xóa nhóm?"

@@ -125,6 +125,10 @@ const api = {
     }),
 
     friend: getApi("friends", {
+        cancelFriend: (user_id, params) => {
+            const url = `/friends/${user_id}`
+            return axiosApi.delete(url, params)
+        },
         invite: (user_id, params) => {
             const url = `/friends/invites/me/${user_id}`
             return axiosApi.post(url, params)
@@ -138,7 +142,7 @@ const api = {
             return axiosApi.post(url, params)
         },
         decline: (sender_id, params) => {
-            const url = `/friends/${sender_id}`
+            const url = `/friends/invites/${sender_id}`
             return axiosApi.delete(url, params)
         }
     }),

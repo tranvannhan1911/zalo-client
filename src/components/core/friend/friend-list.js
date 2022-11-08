@@ -12,6 +12,7 @@ const { Text, Title } = Typography;
 
 const FriendList = () => {
     const [data, setData] = useState([])
+    const [showData, setShowData] = useState([])
     var oneTime = true;
     const dataRef = useRef(data)
     
@@ -28,11 +29,22 @@ const FriendList = () => {
               console.log("accept-friend.............", data)
               newFriend(dataRef.current, setData, data)
             })
+      
+            socket.on("deleted-friend", (data) => {
+              console.log("deleted-friend.............", data)
+              handleData()
+            })
+            
         }
     }, [])
 
+    useEffect(() => {
+        setShowData(data)
+    }, [data])
+
     const newFriend = (data, setData, friend) => {
-        console.log("list friend", data)
+        // console.log("list friend", data)
+        handleData()
     }
 
     const handleData = async () => {
@@ -42,7 +54,13 @@ const FriendList = () => {
         if(res.status == 200){
           setData(res.data)
         }
-      
+    }
+
+    const onSearch = (value) => {
+        console.log("on search...", value, data)
+        const _showData = data.filter(item => item.name.toLowerCase().includes(value.toLowerCase()) 
+            || item.phoneNumber.toLowerCase().includes(value.toLowerCase()))
+        setShowData(_showData)
     }
 
     return (
@@ -52,13 +70,14 @@ const FriendList = () => {
             <FriendTitle 
                 title="Danh sách bạn bè" 
                 placeholder="Tìm kiếm bạn bè"
+                onSearch={onSearch}
                 /> 
             <List
                 grid={{
                     gutter: 16,
                     column: 2,
                 }}
-                dataSource={data}
+                dataSource={showData}
                 renderItem={(item) => (
                     <List.Item>
                         <UserCard item={item} type="friend"/>

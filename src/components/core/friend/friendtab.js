@@ -64,7 +64,7 @@ const FriendTab = (props) => {
                     }}>
                         <UserAddOutlined /> Danh sách kết bạn
                 </div>
-                <div
+                {/* <div
                     style={{
                         width: '100%',
                         padding: '10px 20px',
@@ -78,7 +78,7 @@ const FriendTab = (props) => {
                         store.dispatch(setPage("group"))
                     }}>
                         <UsergroupAddOutlined /> Danh sách nhóm
-                </div>
+                </div> */}
             </div>
         </div>
     );

@@ -7,6 +7,7 @@ import { PageHeader, Button, Menu, Dropdown, Input, Space, Avatar, Typography } 
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { truncate } from '../../utils/utils';
+import store, { setOpenInfoConversationModal } from '../../store/store';
 const { Search } = Input;
 
 
@@ -50,25 +51,27 @@ const Header = (props) => {
           label: (
             <a rel="noopener noreferrer" onClick={() => {
               // navigate("/dang-nhap")
+              // setOpenConvInfoModal(true);
+              store.dispatch(setOpenInfoConversationModal("true"))
             }}>
-              Chỉnh sửa cuộc hội thoại
+              Chi tiết cuộc hội thoại
             </a>
           ),
         },
-        {
-          key: 'divider',
-          type: 'divider',
-        },
-        {
-          key: '2',
-          label: (
-            <a rel="noopener noreferrer" onClick={() => {
-              // navigate("/dang-nhap")
-            }}>
-              Thoát khỏi cuộc hội thoại
-            </a>
-          ),
-        },
+        // {
+        //   key: 'divider',
+        //   type: 'divider',
+        // },
+        // {
+        //   key: '2',
+        //   label: (
+        //     <a rel="noopener noreferrer" onClick={() => {
+        //       // navigate("/dang-nhap")
+        //     }}>
+        //       Thoát khỏi cuộc hội thoại
+        //     </a>
+        //   ),
+        // },
       ]}
     />
   );

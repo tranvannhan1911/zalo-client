@@ -159,7 +159,7 @@ const Conversations = (props) => {
                           </Button>
                         </div>
 
-                        {item.type ? (
+                        {/* {item.type ? (
                           <>
                             <hr
                               style={{
@@ -178,7 +178,7 @@ const Conversations = (props) => {
 
                             </div>
                           </>
-                        ) : null}
+                        ) : null} */}
                         {/* <div>
                                                 <Button type="text" icon={<DeleteOutlined />} danger>Xóa phía tôi</Button>
                                             </div> */}
@@ -192,6 +192,7 @@ const Conversations = (props) => {
                 onClick={(e) => {
                   console.log("onclick", item, e);
                   props.setCurrentConv(item);
+                  props.updateCountSeen(props.conversations, props.setConversations, item._id, 0)
 
                   // store.dispatch(setStoreCurentConv(item))
                 }}

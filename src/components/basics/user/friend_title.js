@@ -1,6 +1,6 @@
 import { Input, Typography } from "antd";
 
-const FriendTitle = ({title, placeholder}) => {
+const FriendTitle = ({title, placeholder, onSearch}) => {
     return (
         <div style={{
             display: 'flex',
@@ -8,7 +8,7 @@ const FriendTitle = ({title, placeholder}) => {
         }}>
             <Typography.Title level={4} style={{marginBottom: '20px'}}>{title}</Typography.Title>
             <div>
-                <Input placeholder={placeholder} />
+                <Input placeholder={placeholder} onChange={(e) => onSearch(e.target.value)}/>
             </div>
         </div>
     )

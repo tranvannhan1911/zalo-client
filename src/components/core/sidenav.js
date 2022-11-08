@@ -27,7 +27,7 @@ const items = [
 ];
 
 const itemsSetting = [
-  getItem('Cài đặt', 'setting', <SettingOutlined />),
+  // getItem('Cài đặt', 'setting', <SettingOutlined />),
   getItem('Đăng xuất', 'logout', <LogoutOutlined />),
 ];
 

@@ -35,14 +35,10 @@ export const acceptInvite = async (sender_id, on_success, on_error, on_fail) => 
 
 export const declineInvite = async (sender_id, on_success, on_error, on_fail) => {
     try {
-        const res = await api.invite.decline(sender_id)
+        const res = await api.friend.decline(sender_id)
         console.log("declineInvite", res)
-        if(res.status == 201){
-            if(on_success)on_success(res)
-            return true
-        }
-        if(on_fail)on_fail(res)
-        return false
+        if(on_success)on_success(res)
+        return true
     } catch (err) {
         console.log("Failed, ", err)
         if(on_error)on_error(err)

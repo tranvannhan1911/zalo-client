@@ -13,12 +13,17 @@ const { Text } = Typography;
 
 const AddFriend = () => {
     const [data, setData] = useState([])
+    const [showData, setShowData] = useState([])
     var oneTime = true;
     const dataRef = useRef(data)
     
     useEffect(() => {
         dataRef.current = data
     })
+
+    useEffect(() => {
+        setShowData(data)
+    }, [data])
 
     useEffect(() => {
         if(oneTime){
@@ -33,7 +38,7 @@ const AddFriend = () => {
     }, [])
 
     const newFriendInvite = (data, setData, friendInvite) => {
-
+        handleData()
     }
 
     const handleData = async () => {
@@ -46,20 +51,28 @@ const AddFriend = () => {
       
     }
 
+    const onSearch = (value) => {
+        console.log("on search...", value, data)
+        const _showData = data.filter(item => item.senderId.name.toLowerCase().includes(value.toLowerCase()) 
+            || item.senderId.phoneNumber.toLowerCase().includes(value.toLowerCase()))
+        setShowData(_showData)
+    }
+
     return (
         <div style={{
             padding: '20px'
         }}>
-            <FriendTitle title="Danh sách kết bạn" placeholder="Tìm kiếm lời mời kết bạn"/> 
+            <FriendTitle title="Danh sách kết bạn" placeholder="Tìm kiếm lời mời kết bạn"
+                onSearch={onSearch}/> 
             <List
                 grid={{
                     gutter: 16,
                     column: 2,
                 }}
-                dataSource={data}
+                dataSource={showData}
                 renderItem={(item) => (
                     <List.Item>
-                        <FriendInviteCard item={item} />
+                        <FriendInviteCard item={item} handleData={handleData}/>
                     </List.Item>
                 )}
             />

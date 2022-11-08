@@ -7,20 +7,20 @@ import {
 import { acceptInvite, declineInvite } from '../../../controller/friend';
 const { Text, Title } = Typography;
 
-const FriendInviteCard = ({item}) => {
+const FriendInviteCard = ({item, handleData}) => {
     const [isAcepted, setAcepted] = useState(false)
 
     const onAcceptInvite = () => {
         acceptInvite(item.senderId._id, (res) => {
             message.success("Đã chấp nhận lời mời kết bạn!")
-            setAcepted(true)
+            handleData()
         })
     }
 
     const onDeclineInvite = () => {
         declineInvite(item.senderId._id, (res) => {
             message.success("Đã từ chối lời mời kết bạn!")
-            setAcepted(true)
+            handleData()
         })
     }
 

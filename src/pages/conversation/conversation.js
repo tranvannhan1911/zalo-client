@@ -83,7 +83,7 @@ const ConversationPage = (props) => {
 
     store.subscribe(() => {
       console.log("store.subscribe asaasdasad", store.getState().currentConv.info)
-      const _info = { ...store.getState().currentConv.info }
+      const _info = store.getState().currentConv.info
       console.log("_info", _info)
       setCurrentConv(_info)
     })
@@ -172,12 +172,14 @@ const ConversationPage = (props) => {
     console.log("conversations", convRef.current)
 
     var _convs = [...conversations]
-    _convs.map(conv => {
-      if (conv._id == data.message.conversationId) {
-        conv.messages.push(data.message)
-        conv.lastMessageId = data.message;
-        conv.updatedAt = data.message.updatedAt
+    _convs = _convs.map(conv => {
+      const _conv = {...conv}
+      if (_conv._id == data.message.conversationId) {
+        _conv.messages = [..._conv.messages, data.message]
+        _conv.lastMessageId = data.message;
+        _conv.updatedAt = data.message.updatedAt
       }
+      return _conv
     })
     sort(_convs)
     console.log("after sort", _convs)
@@ -236,11 +238,13 @@ const ConversationPage = (props) => {
   }
 
   const renameConversation = async (conversations, setConversations, id, name, saveMessage) => {
-    const _conversations = [...conversations]
-    _conversations.map(conv => {
-      if (conv._id == id) {
-        conv.name = name
+    var _conversations = [...conversations]
+    _conversations = _conversations.map(conv => {
+      var _conv = {...conv}
+      if (_conv._id == id) {
+        _conv = {..._conv, name: name}
       }
+      return _conv
     })
     setConversations(_conversations)
   }
@@ -261,11 +265,12 @@ const ConversationPage = (props) => {
       console.log("conversations change", conversations)
       conversations.forEach(conv => {
         if (conv._id == currentConv._id) {
-          // const _currentConv = {...currentConv}
-          // _currentConv.messages = []
+          const _currentConv = {...conv}
+          _currentConv.messages = conv.messages
           // console.log("_currentConv", _currentConv)
 
-          // setCurrentConv(_currentConv)
+          setCurrentConv(_currentConv)
+          store.dispatch(setStoreCurentConv(_currentConv))
           setMessages(conv.messages)
         }
       })
@@ -299,7 +304,8 @@ const ConversationPage = (props) => {
           setMessages(conv.messages)
         }
       })
-      updateCountSeen(convRef.current, setConversations, currentConv._id, 0)
+      store.dispatch(setStoreCurentConv(currentConv))
+      // updateCountSeen(convRef.current, setConversations, currentConv._id, 0)
     } else {
       setMessages([])
     }
@@ -395,7 +401,9 @@ const ConversationPage = (props) => {
             messages={messages}
             setMessages={setMessages} />
         </div>
-        <MessageSection sendMessage={sendMessage} currentConv={currentConv} />
+        {!currentConv ? null :
+          <MessageSection sendMessage={sendMessage} currentConv={currentConv} />
+        }
       </Col>
     </Row>
   );

@@ -40,11 +40,13 @@ const currentConvSlice = createSlice({
 
 const infoConversationModalSlice = createSlice({
   name: 'isOpenInfoConversationModal',
-  initialState: "false",
+  initialState: {
+    value: "false"
+  },
   reducers: {
     setOpenInfoConversationModal: (state, value) => {
       console.log("setOpenInfoConversationModal", state, value)
-      state = value.payload
+      state.value = value.payload
     }
   }
 })
