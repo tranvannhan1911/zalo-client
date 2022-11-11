@@ -35,7 +35,7 @@ const Uploader = () => {
     const [previewImage, setPreviewImage] = useState('');
 
     const handleChange = async (info) => {
-        // console.log(info)
+        // // console.log(info)
         if (info.file.status === 'uploading') {
             // setImageUrl(options.);
             const preview = await _getBase64(info.file.originFileObj);
@@ -72,10 +72,10 @@ const Uploader = () => {
             className="avatar-uploader"
             showUploadList={false}
             //   action={(file) => {
-            //     console.log(file)
+            //     // console.log(file)
             //   }}
             customRequest={(options) => {
-                console.log(options)
+                // console.log(options)
                 options.onSuccess(options)
             }}
             //   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"

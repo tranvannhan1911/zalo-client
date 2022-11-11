@@ -22,7 +22,7 @@ const axiosApi = axios.create({
 // axiosRetry(axiosApi, {
 //     retries: 2, // number of retries
 //     retryDelay: (retryCount) => {
-//         console.log(`retry attempt: ${retryCount}`);
+//         // console.log(`retry attempt: ${retryCount}`);
 //         return retryCount * 1000; // time interval between retries
 //     },
 //     retryCondition: (error) => {
@@ -40,11 +40,11 @@ axiosApi.interceptors.request.use(async (config) => {
 
 // axiosApi.interceptors.response.use(
 //     (response) => {
-//         console.log("d1", response)
+//         // console.log("d1", response)
 //         return response;
 //     },
 //     async (error) => {
-//         console.log(error)
+//         // console.log(error)
         
 //         if (!validRefresh.test(error.request.responseURL)){
 //             let refresh_token = Cookies.get("refresh");
@@ -56,23 +56,23 @@ axiosApi.interceptors.request.use(async (config) => {
 //                 axiosApi
 //                     .post("/account/token/refresh/", params)
 //                     .then((res) => {
-//                         console.log(res)
+//                         // console.log(res)
 //                         if (res.data.code === 1) {
 //                             Cookies.set("access", res.data.data.access);
 //                             axios.defaults.headers.common[
 //                                 "Authorization"
 //                             ] = `Bearer ${Cookies.get("access")}`;
-//                             console.log("update")
+//                             // console.log("update")
 //                         } else {
                             
 //                             throw error;
 //                         }
 //                     })
 //                     .catch(err => {
-//                         console.log("aaaaaaaa")
+//                         // console.log("aaaaaaaa")
 //                         Cookies.remove("access");
 //                         Cookies.remove("refresh");
-//                         console.log("bug", err)
+//                         // console.log("bug", err)
 //                     });
 //             }
 //         }

@@ -9,13 +9,13 @@ const UserSelect = ({placeholder, value, setValue}) => {
   const [dataOption, setdataOption] = useState([])
 
   useEffect(() => {
-    console.log("value", value);
+    // console.log("value", value);
   }, [value])
 
   const handleData = async () => {
      
     const res = await api.user.list()
-    console.log(res)
+    // console.log(res)
     if(res.status == 200){
       setdata(res.data)
       

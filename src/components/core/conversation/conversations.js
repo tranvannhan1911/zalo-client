@@ -47,10 +47,10 @@ const Conversations = (props) => {
   const [openConvInfoModal, setOpenConvInfoModal] = useState(false);
 
   // useEffect(() => {
-  //     console.log("getUser", getUser())
+  //     // console.log("getUser", getUser())
   //     store.subscribe(() => {
   //         const state = store.getState()
-  //         console.log("store.subscribe", state)
+  //         // console.log("store.subscribe", state)
   //     })
   // }, [])
 
@@ -83,7 +83,7 @@ const Conversations = (props) => {
   const leaveGroup = async (item) => {
     try {
       const res = await api.conversation.leave_group(item._id);
-      console.log("leaveGroup", res);
+      // console.log("leaveGroup", res);
       if (res.status == 204) {
         message.success("Rời nhóm thành công!");
         props.onLeaveGroup(item);
@@ -151,7 +151,7 @@ const Conversations = (props) => {
                             icon={<ExclamationCircleOutlined />}
                             onClick={() => {
                               setOpenConvInfoModal(true);
-                              console.log("setOpenInfoConversationModal(true)", setOpenInfoConversationModal("true"))
+                              // console.log("setOpenInfoConversationModal(true)", setOpenInfoConversationModal("true"))
                               // store.dispatch(setOpenInfoConversationModal(true))
                             }}
                           >
@@ -190,7 +190,7 @@ const Conversations = (props) => {
                   </Popover>
                 }
                 onClick={(e) => {
-                  console.log("onclick", item, e);
+                  // console.log("onclick", item, e);
                   props.setCurrentConv(item);
                   props.updateCountSeen(props.conversations, props.setConversations, item._id, 0)
 

@@ -83,9 +83,9 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
 
   useEffect(() => {
     store.subscribe(() => {
-      console.log("ConversationInfoModal", store.getState())
+      // console.log("ConversationInfoModal", store.getState())
       const _isOpen = store.getState().isOpenInfoConversationModal.value == "true"
-      console.log("set open to ", _isOpen, open)
+      // console.log("set open to ", _isOpen, open)
       if (_isOpen != open) {
         setOpen(_isOpen)
       }
@@ -110,7 +110,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   };
 
   useEffect(() => {
-    console.log("lọc ảnh, video", data)
+    // console.log("lọc ảnh, video", data)
     if (data && data.messages) {
       const _images = []
       const _videos = []
@@ -152,34 +152,34 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
     //   const values = form.getFieldsValue()
     //   values.userIds = users
     //   const res = await api.conversation.create_group(values)
-    //   console.log("createConversation", res)
+    //   // console.log("createConversation", res)
     //   if(res.status == 201){
     //     message.success("Tạo nhóm thành công")
     //     setOpen(false)
     //     // props.setCurrentConv()
     //   }
     // }catch(err){
-    //   console.log("Failed, ", err)
+    //   // console.log("Failed, ", err)
     // }
 
   }
 
   const handleChangeUploadAvatar = async (info) => {
     if (info.file.status === 'done') {
-      console.log("handleChangeUploadAvatar", info)
+      // console.log("handleChangeUploadAvatar", info)
       setFile(info)
       setOpenUpdateAvatarModal(true)
     }
   };
 
   useEffect(() => {
-    console.log("props.data", data)
+    // console.log("ConversationInfoModal", data)
   }, [data])
 
   const deleteConversation = async () => {
     try {
       const res = await api.conversation.delete_all_message(data._id);
-      console.log("deleteConversation", res);
+      // // console.log("deleteConversation", res);
       message.success("Xóa tất cả tin nhắn thành công!");
       props.onDeleteConversation()
     } catch {
@@ -190,7 +190,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   const leaveGroup = async () => {
     try {
       const res = await api.conversation.leave_group(data._id);
-      console.log("leaveGroup", res);
+      // console.log("leaveGroup", res);
       if (res.status == 204) {
         message.success("Rời nhóm thành công!");
         // props.onLeaveGroup(data);
@@ -204,7 +204,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
   const deleteGroup = async () => {
     try {
       const res = await api.conversation.delete_group(data._id);
-      console.log("deleteGroup", res);
+      // console.log("deleteGroup", res);
       message.success("Xóa nhóm thành công!");
     } catch {
       message.error("Có lỗi xảy ra!");
@@ -252,7 +252,7 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
                 accept='image/jpeg,image/png'
                 showUploadList={false}
                 customRequest={(options) => {
-                  console.log(options)
+                  // console.log(options)
                   options.onSuccess(options)
                 }}
                 style={{
@@ -278,7 +278,9 @@ const ConversationInfoModal = ({ open, setOpen, data }, props) => {
 
           <Collapse ghost>
             {/* {data?.type ? */}
-            <Panel header="Thành viên" key="member">
+            <Panel header="Thành viên" key="member" style={{
+              display: `${data && data.type ? 'block': 'none'}`
+            }}>
               <MemberConversation data={data} />
             </Panel>
             <Panel header="Ảnh" key="photo">

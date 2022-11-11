@@ -57,7 +57,7 @@ const UserUpdatePassword = ({
     const initData = {
       password: Cookies.get("password"),
     };
-    console.log("initData", initData);
+    // console.log("initData", initData);
     form.setFieldsValue(initData);
   }, []);
 

@@ -7,7 +7,7 @@
 //         on_fail ? on_fail(res) : null
 //         return false
 //     } catch (err) {
-//         console.log("Failed, ", err)
+//         // console.log("Failed, ", err)
 //         on_error ? on_error(err) : null
 //     }
 // }

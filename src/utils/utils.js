@@ -69,3 +69,7 @@ export const toTimeLastMessage = async (dateMess) => {
 
   return date;
 };
+
+export const checkManager = (data, user) => {
+  return data.managerIds.includes(user._id)
+}

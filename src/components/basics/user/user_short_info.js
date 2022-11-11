@@ -43,12 +43,12 @@ const UserShortInfo = ({item, type}) => {
     const AddFriend = async () => {
         try{
             const res = await api.friend.invite(item._id)
-            console.log("AddFriend", item, res)
+            // console.log("AddFriend", item, res)
             if(res.status == 201){
                 message.success("Gửi lời mời kết bạn thành công!")
             }
         }catch(err){
-            console.log("Failed, ", err)
+            // console.log("Failed, ", err)
             if(err.response.status == 400){
                 message.error("Không thể gửi lại lời mời kết bạn!")
             }

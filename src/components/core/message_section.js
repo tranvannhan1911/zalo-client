@@ -29,7 +29,7 @@ const MessageSection = (props) => {
             var data = new FormData();
             data.append('file', info.file.originFileObj);
             setShowProgress(true)
-            console.log(info)
+            // console.log(info)
             var TYPE = "IMAGE"
             if(info.file.type == "video/mp3" || info.file.type == "video/mp4"){
                 TYPE = "VIDEO"
@@ -37,7 +37,7 @@ const MessageSection = (props) => {
             try{
                 const res = await api.message.addMessageMedia(TYPE, props.currentConv._id, data, event => {
                     const percent = Math.floor((event.loaded / event.total) * 100);
-                    console.log(percent)
+                    // console.log(percent)
                     setProgressPercent(percent)
                     if(percent == 100){
                         setTimeout(() => {
@@ -56,14 +56,14 @@ const MessageSection = (props) => {
 
     const handleChangeFile = async (info) => {
         if (info.file.status === 'done') {
-            console.log("handleChangeFile", info)
+            // console.log("handleChangeFile", info)
             var data = new FormData();
             data.append('file', info.file.originFileObj);
             setShowProgress(true)
             try{
                 const res = await api.message.addMessageMedia("FILE", props.currentConv._id, data, event => {
                     const percent = Math.floor((event.loaded / event.total) * 100);
-                    console.log(percent)
+                    // console.log(percent)
                     setProgressPercent(percent)
                     if(percent == 100){
                         setTimeout(() => {
@@ -72,7 +72,7 @@ const MessageSection = (props) => {
                         }, 500)
                     }
                 })
-                console.log(res)
+                // console.log(res)
             }catch{
                 message.error("Có lỗi xảy ra!")
                 setShowProgress(false)
@@ -136,7 +136,7 @@ const MessageSection = (props) => {
                             accept='image/jpeg,image/png,video/mp3,video/mp4'
                             showUploadList={false}
                             customRequest={(options) => {
-                                console.log(options)
+                                // console.log(options)
                                 options.onSuccess(options)
                             }}
                             beforeUpload={beforeUpload}
@@ -148,7 +148,7 @@ const MessageSection = (props) => {
                             accept='application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.rar,application/zip'
                             showUploadList={false}
                             customRequest={(options) => {
-                                console.log(options)
+                                // console.log(options)
                                 options.onSuccess(options)
                             }}
                             // beforeUpload={beforeUpload}

@@ -33,7 +33,7 @@ const Messages = (props) => {
   const userId = Cookies.get("_id");
 
   useEffect(() => {
-    // console.log("props.messages", props.messages)
+    // // console.log("props.messages", props.messages)
     // refMessages.current?.scrollToBottom({ behavior: 'smooth' })
   }, [props.messages]);
 
@@ -51,7 +51,7 @@ const Messages = (props) => {
           maxWidth: "600px",
         }}
         onMouseEnter={(e) => {
-          // console.log(ref)
+          // // console.log(ref)
           // ref.current.style.display = 'block'
         }}
       >
@@ -200,7 +200,7 @@ const Messages = (props) => {
         itemLayout="horizontal"
         dataSource={props.messages}
         renderItem={(item) => {
-          // console.log(
+          // // console.log(
           //   "message item",
           //   item,
           //   userId,

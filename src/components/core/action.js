@@ -9,7 +9,7 @@ const { Text } = Typography;
 const ActionBar = (props) => {
     const [openModal, setOpenModal] = useState(false);
 
-    const onSearch = (value) => console.log(value);
+    const onSearch = (value) =>  console.log(value);
     
 
     return (

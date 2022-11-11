@@ -191,6 +191,22 @@ const api = {
         delete_group: (id, params) => {
             const url = `/conversation/${id}`
             return axiosApi.delete(url, params)
+        },
+        kick_member: (id, user_id, params) => {
+            const url = `/conversation/${id}/members/${user_id}`
+            return axiosApi.delete(url, params)
+        },
+        add_manager: (id, params) => {
+            const url = `/conversation/${id}/managers`
+            return axiosApi.post(url, params)
+        },
+        delete_manager: (id, params) => {
+            const url = `/conversation/${id}/managers/leave`
+            return axiosApi.delete(url, params)
+        },
+        add_member: (id, params) => {
+            const url = `/conversation/${id}/members`
+            return axiosApi.post(url, params)
         }
     }),
 

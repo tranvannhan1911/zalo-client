@@ -36,14 +36,14 @@ const ConversationUpdateAvatarModal = ({ openUpdateAvatarModal, setOpenUpdateAva
     }, [info])
 
     useEffect(() => {
-        console.log("useEffect", file)
+        // console.log("useEffect", file)
         if(file)
             onPreview(file.file)
     }, [file])
 
     // useEffect(() => {
     //     store.subscribe(() => {
-    //         console.log("on change user", store.getState().user.info)
+    //         // console.log("on change user", store.getState().user.info)
     //         if(user.name == undefined){
     //             setUser(store.getState().user.info)
     //         }
@@ -54,10 +54,10 @@ const ConversationUpdateAvatarModal = ({ openUpdateAvatarModal, setOpenUpdateAva
         var data = new FormData();
         data.append('file', file.file.originFileObj);
         // setShowProgress(true)
-        // console.log(info)
+        // // console.log(info)
         try{
             const res = await api.conversation.update_avatar(conversationId, data)
-            console.log(res)
+            // console.log(res)
             message.success("Cập nhật ảnh nhóm thành công!")
             setOpenUpdateAvatarModal(false)
             // Cookies.set("avatar", res.data.avatarUrl);

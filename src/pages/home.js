@@ -33,18 +33,18 @@ const HomePage = () => {
   const socketRef = useRef();
 
   useEffect(() => {
-    console.log("info", userId)
+    // console.log("info", userId)
     if (oneTime) {
       oneTime = false
       socketRef.current = socketIOClient.connect(host, { query: `access=${Cookies.get("access")}` })
       // 
 
       socketRef.current.on('connect', function () {
-        console.log("socketRef.current", socketRef.current, socketRef.current.id)
+        // console.log("socketRef.current", socketRef.current, socketRef.current.id)
 
         // listen response all
         socketRef.current.on(socketRef.current.id, data => {
-          console.log("response", data)
+          // console.log("response", data)
 
           if (data.conversations) {
             setConversations(data.conversations)
@@ -63,7 +63,7 @@ const HomePage = () => {
     const _convs = [...conversations]
     _convs.map(conv => {
       if (conv._id == data.message.conversationId) {
-        console.log("add")
+        // console.log("add")
         conv.messages.push(data.message)
         conv.lastMessage = {
           _doc: data.message
@@ -77,10 +77,10 @@ const HomePage = () => {
     if (conversations) {
       const _hasListen = { ...hasListen }
       conversations.forEach(conv => {
-        console.log("listen", conv._id, hasListen, hasListen[conv._id])
+        // console.log("listen", conv._id, hasListen, hasListen[conv._id])
         if (!_hasListen[conv._id]) {
           socketRef.current.on(conv._id, data => {
-            console.log("conversations", data)
+            // console.log("conversations", data)
             if (data.type == "new-message") {
               newMessage(data)
             }
@@ -93,12 +93,12 @@ const HomePage = () => {
   }, [conversations])
 
   useEffect(() => {
-    console.log("currentConv", currentConv)
+    // console.log("currentConv", currentConv)
     if (currentConv) {
       conversations.forEach(conv => {
         if (conv._id == currentConv._id) {
           setMessages(conv.messages)
-          console.log("setMessage")
+          // console.log("setMessage")
         }
       })
     }
@@ -115,7 +115,7 @@ const HomePage = () => {
 
     // try{
     //   const response = await accountApi.get_info()
-    //   console.log("account", response)
+    //   // console.log("account", response)
     //   if(response.data.code!=1 || !response.data.data.is_superuser){
     //     navigate('/dang-nhap')
     //   }else{
@@ -134,7 +134,7 @@ const HomePage = () => {
   }, []);
 
   const sendMessage = (message) => {
-    console.log("sending", message)
+    // console.log("sending", message)
     socketRef.current.emit('send-message', {
       message: {
         content: message,

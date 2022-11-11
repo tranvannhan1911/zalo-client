@@ -24,7 +24,7 @@ const MainPage = () => {
 
   useEffect(() => {
     store.subscribe(() => {
-      console.log("set page", store.getState().page.info)
+      // console.log("set page", store.getState().page.info)
       setLocalPage(store.getState().page.info)
     })
   }, [])
@@ -49,7 +49,7 @@ const MainPage = () => {
     try {
       const res = await api.user.get_profile()
       if (res.status == 200) {
-        console.log("Authenticated", res.data)
+        // console.log("Authenticated", res.data)
         const action = setUser(res.data)
         store.dispatch(action)
       } else {

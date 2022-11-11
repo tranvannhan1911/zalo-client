@@ -38,7 +38,7 @@ const UserEditModal = ({ openEditModal, setOpenEditModal, type, info }) => {
             dateOfBirth: moment(Cookies.get("dateOfBirth")),
             gender: Cookies.get("gender") == "true"
         }
-        console.log("initData", initData)
+        // console.log("initData", initData)
         form.setFieldsValue(initData)
     }, [])
 

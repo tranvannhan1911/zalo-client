@@ -33,7 +33,7 @@ const ChangePassWord = () => {
   const [form] = Form.useForm();
   const regex = /^0/i;
   let { phoneNumber } = useParams();
-  console.log(phoneNumber);
+  // console.log(phoneNumber);
 
   const enterLoading = (index) => {
     setLoadings((prevLoadings) => {
@@ -68,7 +68,7 @@ const ChangePassWord = () => {
     try {
       const res = await api.user.getUserByPhoneNumber(phoneNumber);
       const user = res.data;
-      console.log(user);
+      // console.log(user);
       await api.user.update_password(user._id, { password: password });
       message.success("Lấy lại mật khẩu thành công!");
       navigate("/dang-nhap");
@@ -81,7 +81,7 @@ const ChangePassWord = () => {
     // const accountApi = new AccountApi();
     // try {
     //   const response = await accountApi.register(values);
-    //   console.log(response);
+    //   // console.log(response);
     //   if (response.status == 200) {
     //     message.success("Đăng ký thành công!");
     //     navigate("/dang-nhap");
@@ -89,7 +89,7 @@ const ChangePassWord = () => {
     //     message.error("Có lỗi xảy ra");
     //   }
     // } catch (error) {
-    //   console.log("Failed:", error);
+    //   // console.log("Failed:", error);
     //   message.error("Có lỗi xảy ra");
     // } finally {
     //   stopLoading(0);
@@ -97,7 +97,7 @@ const ChangePassWord = () => {
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    // console.log("Failed:", errorInfo);
     message.error("Có lỗi xảy ra");
   };
 

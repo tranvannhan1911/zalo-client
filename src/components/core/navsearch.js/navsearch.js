@@ -38,7 +38,7 @@ const NavSearch = (props) => {
 
     const handleData = async () => {
         const res = await api.user.list()
-        console.log(res)
+        // console.log(res)
         if (res.status == 200) {
             setDataUser(res.data)
         }
@@ -48,7 +48,7 @@ const NavSearch = (props) => {
         handleData()
     }, [])
 
-    const onSearch = (value) => console.log(value);
+    const onSearch = (value) =>  console.log(value);
 
     return (
         <div style={{

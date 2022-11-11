@@ -51,7 +51,7 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
 
   // useEffect(() => {
   //     store.subscribe(() => {
-  //         console.log("on change user", store.getState().user.info)
+  //         // console.log("on change user", store.getState().user.info)
   //         if(user.name == undefined){
   //             setUser(store.getState().user.info)
   //         }
@@ -104,7 +104,7 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
 
   const handleChangeUploadAvatar = async (info) => {
     if (info.file.status === "done") {
-      console.log("handleChangeUploadAvatar", info);
+      // console.log("handleChangeUploadAvatar", info);
       setFile(info);
       setOpenUpdateAvatarModal(true);
     }
@@ -189,7 +189,7 @@ const UserViewModal = ({ openUserModal, setOpenUserModal, info }) => {
                   accept="image/jpeg,image/png"
                   showUploadList={false}
                   customRequest={(options) => {
-                    console.log(options);
+                    // console.log(options);
                     options.onSuccess(options);
                   }}
                   style={{

@@ -14,10 +14,10 @@ const UserCard = ({item, type}) => {
 
     const createConversation1vs1 = async () => {
         const res = await api.conversation.create_1vs1({userId: item._id})
-        console.log("createConversation1vs1", res)
+        // console.log("createConversation1vs1", res)
         if(res.data.isExists){
             const res2 = await api.conversation.get(res.data._id)
-            console.log("createConversation1vs1 2222222222222", res2.data)
+            // console.log("createConversation1vs1 2222222222222", res2.data)
 
             store.dispatch(setPage("conversation"))
             store.dispatch(setStoreCurentConv(res2.data))

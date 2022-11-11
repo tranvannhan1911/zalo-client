@@ -53,15 +53,15 @@ const Login = () => {
     const accountApi = new AccountApi();
     try {
       const response = await accountApi.login(values);
-      console.log("login", response);
+      // console.log("login", response);
       accountApi.save_token(response);
       accountApi.save_info(response);
 
       const action = setUser(response.data);
       store.dispatch(action);
-      // console.log("action", action)
+      // // console.log("action", action)
       // store.subscribe(() => {
-      //     console.log("store.subscribe", store.getState())
+      //     // console.log("store.subscribe", store.getState())
       // })
 
       navigate("/");
@@ -73,7 +73,7 @@ const Login = () => {
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    // console.log("Failed:", errorInfo);
     message.error("Có lỗi xảy ra");
     stopLoading(0);
   };

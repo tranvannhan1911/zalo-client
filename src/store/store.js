@@ -45,7 +45,7 @@ const infoConversationModalSlice = createSlice({
   },
   reducers: {
     setOpenInfoConversationModal: (state, value) => {
-      console.log("setOpenInfoConversationModal", state, value)
+      // console.log("setOpenInfoConversationModal", state, value)
       state.value = value.payload
     }
   }

@@ -67,13 +67,13 @@ const Register = () => {
       phoneRef.current.focus();
       return;
     }
-    //   console.log(values.phoneNumber);
+    //   // console.log(values.phoneNumber);
     requestOTP();
 
     // const accountApi = new AccountApi();
     // try {
     //   const response = await accountApi.register(values);
-    //   console.log(response);
+    //   // console.log(response);
     //   if (response.status == 200) {
     //     message.success("Đăng ký thành công!");
     //     navigate("/dang-nhap");
@@ -81,7 +81,7 @@ const Register = () => {
     //     message.error("Có lỗi xảy ra");
     //   }
     // } catch (error) {
-    //   console.log("Failed:", error);
+    //   // console.log("Failed:", error);
     //   message.error("Có lỗi xảy ra");
     // } finally {
     //   stopLoading(0);
@@ -89,7 +89,7 @@ const Register = () => {
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    // console.log("Failed:", errorInfo);
     message.error("Có lỗi xảy ra");
   };
 
@@ -109,11 +109,11 @@ const Register = () => {
   const requestOTP = async () => {
     generateRecaptcha();
     const res = await api.user.getUserByPhoneNumber(phoneNumber);
-    console.log(res.data);
-    console.log(res.status);
+    // console.log(res.data);
+    // console.log(res.status);
     if (!res.data) {
       const user = res.data;
-      console.log(user);
+      // console.log(user);
       message.error("Số điện thoại chưa đăng ký tài khoản");
       return;
       // props.setCurrentConv()
@@ -130,7 +130,7 @@ const Register = () => {
       })
       .catch((error) => {
         // Error; SMS not sent
-        console.log(error);
+        // console.log(error);
       });
   };
 
@@ -141,9 +141,9 @@ const Register = () => {
       return;
     }
     // setOTP(otp);
-    console.log(OTP);
+    // console.log(OTP);
     if (OTP) {
-      console.log(OTP);
+      // console.log(OTP);
       let confirmationResult = window.confirmationResult;
 
       confirmationResult

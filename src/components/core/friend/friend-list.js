@@ -26,12 +26,12 @@ const FriendList = () => {
             handleData()
       
             socket.on("accept-friend", (data) => {
-              console.log("accept-friend.............", data)
+              // console.log("accept-friend.............", data)
               newFriend(dataRef.current, setData, data)
             })
       
             socket.on("deleted-friend", (data) => {
-              console.log("deleted-friend.............", data)
+              // console.log("deleted-friend.............", data)
               handleData()
             })
             
@@ -43,21 +43,21 @@ const FriendList = () => {
     }, [data])
 
     const newFriend = (data, setData, friend) => {
-        // console.log("list friend", data)
+        // // console.log("list friend", data)
         handleData()
     }
 
     const handleData = async () => {
      
         const res = await api.friend.list()
-        console.log(res)
+        // console.log(res)
         if(res.status == 200){
           setData(res.data)
         }
     }
 
     const onSearch = (value) => {
-        console.log("on search...", value, data)
+        // console.log("on search...", value, data)
         const _showData = data.filter(item => item.name.toLowerCase().includes(value.toLowerCase()) 
             || item.phoneNumber.toLowerCase().includes(value.toLowerCase()))
         setShowData(_showData)

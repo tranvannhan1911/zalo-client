@@ -31,7 +31,7 @@ const AddFriend = () => {
             handleData()
       
             socket.on("send-friend-invite", (data) => {
-              console.log("accept-friend.............", data)
+              // console.log("accept-friend.............", data)
               newFriendInvite(dataRef.current, setData, data)
             })
         }
@@ -44,7 +44,7 @@ const AddFriend = () => {
     const handleData = async () => {
      
         const res = await api.friend.get_invites()
-        console.log(res)
+        // console.log(res)
         if(res.status == 200){
           setData(res.data)
         }
@@ -52,7 +52,7 @@ const AddFriend = () => {
     }
 
     const onSearch = (value) => {
-        console.log("on search...", value, data)
+        // console.log("on search...", value, data)
         const _showData = data.filter(item => item.senderId.name.toLowerCase().includes(value.toLowerCase()) 
             || item.senderId.phoneNumber.toLowerCase().includes(value.toLowerCase()))
         setShowData(_showData)

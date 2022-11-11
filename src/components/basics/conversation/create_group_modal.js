@@ -32,14 +32,14 @@ const ConversationModal = ({open, setOpen}, props) => {
       const values = form.getFieldsValue()
       values.userIds = users
       const res = await api.conversation.create_group(values)
-      console.log("createConversation", res)
+      // console.log("createConversation", res)
       if(res.status == 201){
         message.success("Tạo nhóm thành công")
         setOpen(false)
         // props.setCurrentConv()
       }
     }catch(err){
-      console.log("Failed, ", err)
+      // console.log("Failed, ", err)
     }
     
   }
@@ -86,7 +86,7 @@ const ConversationModal = ({open, setOpen}, props) => {
                 </div>
             </Form.Item>
             <Form.Item label="Thêm thành viên vào nhóm" name="users">
-                <FriendSelect key={++friendSelectKey} {...props} open={open} value={users} setValue={setUsers}/>
+                <FriendSelect multiple={true} key={++friendSelectKey} {...props} open={open} value={users} setValue={setUsers}/>
             </Form.Item>
             {/* <div>
                 <UserSelect />

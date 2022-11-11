@@ -45,7 +45,7 @@ const ConversationPage = (props) => {
       getListConversation()
 
       socket.on("new-message", (message) => {
-        // console.log("new-message.............", message)
+        // // console.log("new-message.............", message)
         newMessage(convRef.current, setConversations, message)
       })
 
@@ -54,44 +54,44 @@ const ConversationPage = (props) => {
       })
 
       socket.on("delete-message", data => {
-        // console.log("delete-message", data)
+        // // console.log("delete-message", data)
         deleteMessage(convRef.current, setConversations, data);
       })
 
       socket.on("rename-conversation", (id, name, saveMessage) => {
-        // console.log("delete-message", data)
+        // // console.log("delete-message", data)
         renameConversation(convRef.current, setConversations, id, name, saveMessage);
       })
 
       socket.on("update-avatar-conversation", (id, avatarUrl, saveMessage) => {
-        // console.log("delete-message", data)
+        // // console.log("delete-message", data)
         updateAvatarConversation(convRef.current, setConversations, id, avatarUrl, saveMessage);
       })
 
       socket.on("delete-all-message", (id) => {
-        // console.log("delete-message", data)
+        // // console.log("delete-message", data)
         deleteAllMessage(convRef.current, setConversations, id);
       })
 
 
       socket.on("delete-conversation", (id) => {
-        // console.log("delete-message", data)
+        // // console.log("delete-message", data)
         deleteConversation(convRef.current, setConversations, id);
       })
       
     }
 
     store.subscribe(() => {
-      console.log("store.subscribe asaasdasad", store.getState().currentConv.info)
+      // console.log("store.subscribe asaasdasad", store.getState().currentConv.info)
       const _info = store.getState().currentConv.info
-      console.log("_info", _info)
+      // console.log("_info", _info)
       setCurrentConv(_info)
     })
   }, [])
 
   const getListConversation = async () => {
     const res = await api.conversation.list()
-    console.log("getListConversation", res)
+    // console.log("getListConversation", res)
     const _convs = [...res.data]
     _convs.map(conv => {
       conv.key = conv._id
@@ -107,7 +107,7 @@ const ConversationPage = (props) => {
   //   if(socketRef.current){
 
   //     socketRef.current.on("delete-message", data => {
-  //       console.log("delete-message", data)
+  //       // console.log("delete-message", data)
   //       deleteMessage(data);
   //     })
   //   }
@@ -144,7 +144,7 @@ const ConversationPage = (props) => {
   const newConversation = async (conversations, setConversations, conversationId) => {
     try {
       const res = await api.conversation.get(conversationId)
-      // console.log("new conversation", res)
+      // // console.log("new conversation", res)
       const conv = res.data
       conv.key = conv._id
       conv.count_seen = 1
@@ -154,7 +154,7 @@ const ConversationPage = (props) => {
         }
       })
 
-      console.log("conversations", conversations)
+      // console.log("conversations", conversations)
       var _convs = [...conversations]
       _convs.push(conv)
       _convs = sort(_convs)
@@ -168,8 +168,8 @@ const ConversationPage = (props) => {
 
   const newMessage = async (conversations, setConversations, data) => {
     // if(data.message.userId == info.user)
-    console.log("newMessage", data, userId)
-    console.log("conversations", convRef.current)
+    // console.log("newMessage", data, userId)
+    // console.log("conversations", convRef.current)
 
     var _convs = [...conversations]
     _convs = _convs.map(conv => {
@@ -182,14 +182,14 @@ const ConversationPage = (props) => {
       return _conv
     })
     sort(_convs)
-    console.log("after sort", _convs)
+    // console.log("after sort", _convs)
     setConversations(_convs)
     if (data.message.senderId._id != userId)
       plusCountSeen(_convs, setConversations, data.message.conversationId)
   }
 
   const deleteAllMessage = (conversations, setConversations, id) => {
-    console.log("deleteAllMessage", id)
+    // console.log("deleteAllMessage", id)
 
     var _convs = [...conversations]
     _convs.map(conv => {
@@ -202,7 +202,7 @@ const ConversationPage = (props) => {
   }
 
   const deleteConversation = (conversations, setConversations, id) => {
-    console.log("deleteAllMessage", id)
+    // console.log("deleteAllMessage", id)
 
     var _convs = [...conversations]
     for(var i=0; i<_convs.length; i++){
@@ -217,8 +217,8 @@ const ConversationPage = (props) => {
 
   const deleteMessage = (conversations, setConversations, data) => {
     // if(data.message.userId == info.user)
-    console.log("deleteMessage", data, userId)
-    console.log("conversations", conversations)
+    // console.log("deleteMessage", data, userId)
+    // console.log("conversations", conversations)
 
     var _convs = [...conversations]
     _convs.map(conv => {
@@ -262,12 +262,12 @@ const ConversationPage = (props) => {
   useEffect(() => {
     if (conversations && currentConv) {
 
-      console.log("conversations change", conversations)
+      // console.log("conversations change", conversations)
       conversations.forEach(conv => {
         if (conv._id == currentConv._id) {
           const _currentConv = {...conv}
           _currentConv.messages = conv.messages
-          // console.log("_currentConv", _currentConv)
+          // // console.log("_currentConv", _currentConv)
 
           setCurrentConv(_currentConv)
           store.dispatch(setStoreCurentConv(_currentConv))
@@ -278,8 +278,8 @@ const ConversationPage = (props) => {
       // conversations.forEach(conv => {
       //   if (!_hasListen[conv._id]) {
       //     _hasListen[conv._id] = true
-      //     console.log("listen conversation", conv._id, conv.name)
-      //     console.log(conversations)
+      //     // console.log("listen conversation", conv._id, conv.name)
+      //     // console.log(conversations)
       //     socketRef.current.on(conv._id, data => {
       //       if (data.type == "new-message") {
       //         newMessage(data)
@@ -287,7 +287,7 @@ const ConversationPage = (props) => {
       //     })
 
       //     // socketRef.current.on("delete-message", data => {
-      //     //   console.log("delete-message", data)
+      //     //   // console.log("delete-message", data)
       //     // })
       //   }
       // })
@@ -296,7 +296,7 @@ const ConversationPage = (props) => {
   }, [conversations])
 
   useEffect(() => {
-    console.log("currentConv", currentConv)
+    // console.log("currentConv", currentConv)
 
     if (currentConv) {
       conversations.forEach(conv => {
@@ -319,7 +319,7 @@ const ConversationPage = (props) => {
       conversationId: currentConv._id
     }
     const res = await api.message.addMessageText(params)
-    // console.log("sendMessage", res)
+    // // console.log("sendMessage", res)
     // // socketRef.current.emit('send-message', {
     // //   message: {
     // //     content: message,
@@ -333,7 +333,7 @@ const ConversationPage = (props) => {
 
   const plusCountSeen = (conversations, setConversations, conversationId) => {
     const conv = getConv(conversations, conversationId)
-    console.log("plusCountSeen", conv, conversations)
+    // console.log("plusCountSeen", conv, conversations)
     updateCountSeen(conversations, setConversations, conversationId, conv.count_seen + 1)
   }
 
@@ -351,7 +351,7 @@ const ConversationPage = (props) => {
   const onLeaveGroup = (conv) => {
     const _convs = [...convRef.current]
     var idx;
-    console.log("onLeaveGroup", _convs)
+    // console.log("onLeaveGroup", _convs)
     for (var i = 0; i < _convs.length; i++) {
       if (_convs[i]._id == conv._id) {
         idx = i

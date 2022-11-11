@@ -36,14 +36,14 @@ const UserUpdateAvatarModal = ({ openUpdateAvatarModal, setOpenUpdateAvatarModal
     }, [info])
 
     useEffect(() => {
-        console.log("useEffect", file)
+        // console.log("useEffect", file)
         if(file)
             onPreview(file.file)
     }, [file])
 
     // useEffect(() => {
     //     store.subscribe(() => {
-    //         console.log("on change user", store.getState().user.info)
+    //         // console.log("on change user", store.getState().user.info)
     //         if(user.name == undefined){
     //             setUser(store.getState().user.info)
     //         }
@@ -54,10 +54,10 @@ const UserUpdateAvatarModal = ({ openUpdateAvatarModal, setOpenUpdateAvatarModal
         var data = new FormData();
         data.append('file', file.file.originFileObj);
         // setShowProgress(true)
-        // console.log(info)
+        // // console.log(info)
         try{
             const res = await api.user.update_avatar(data)
-            console.log(res)
+            // console.log(res)
             message.success("Cập nhật ảnh đại diện thành công!")
             setOpenUpdateAvatarModal(false)
             Cookies.set("avatar", res.data.avatarUrl);

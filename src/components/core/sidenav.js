@@ -71,7 +71,7 @@ const SideNav = ({setOpenUserModal}) => {
         <Avatar
           src={Cookies.get("avatar")}
           onClick={() => {
-            console.log("click")
+            // console.log("click")
             setOpenUserModal(true)
           }}
           style={{
