@@ -1,5 +1,5 @@
 import { Avatar, Button, Card, Image, List, message, Popover, Space, Typography } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import {
     MessageOutlined, ExclamationCircleOutlined, ArrowLeftOutlined,
     MoreOutlined, UserAddOutlined, CloseOutlined,
@@ -8,9 +8,13 @@ import AddFriend from '../../core/friend/add-friend';
 import api from '../../../utils/apis';
 import Cookies from 'js-cookie';
 import { deleteFriend } from '../../../controller/friend';
+import UserViewModal from './user_view_modal';
+import store, { setOpenInfoConversationModal } from '../../../store/store';
+import { mess } from '../../../utils/actions';
 const { Text, Title } = Typography;
 
 const UserShortInfo = ({item, type}) => {
+    const [openUserModal, setOpenUserModal] = useState(false);
 
     const userId = Cookies.get("_id")
     // const [userInfo]
@@ -60,13 +64,21 @@ const UserShortInfo = ({item, type}) => {
             return (
                 <>
                     <div>
-                        <div><Button type="text" icon={<MessageOutlined />} >Nhắn tin</Button></div>
+                        { item.friends.includes(userId) ?
+                            <div>
+                                <Button type="text" icon={<MessageOutlined />} 
+                                    onClick={() => {
+                                        mess(item._id)
+                                        store.dispatch(setOpenInfoConversationModal(false))
+                                    }}>Nhắn tin</Button>
+                            </div>
+                        : null}
                         <div>
                             <Button 
                                 type="text" 
                                 icon={<ExclamationCircleOutlined />} 
                                 onClick={() => {
-                                    // setOpenModal(true)
+                                    setOpenUserModal(true)
                                 }}>Xem chi tiết</Button>
                         </div>
                         { !item.friends.includes(userId) ?
@@ -128,7 +140,7 @@ const UserShortInfo = ({item, type}) => {
                 <Avatar
                     src={
                         <Image
-                        src={item.avatar?item.avatar:"https://joeschmoe.io/api/v1/random"}
+                        src={item.avatar?item.avatar:"https://i.imgur.com/TV0vz0r.png"}
                         style={{
                             width: 32,
                         }}
@@ -155,6 +167,7 @@ const UserShortInfo = ({item, type}) => {
                     <Button type="text" icon={<MoreOutlined />} />
                 </Popover>
             </div>
+            <UserViewModal openUserModal={openUserModal} setOpenUserModal={setOpenUserModal} info={item} />
         </div>
     )
 }

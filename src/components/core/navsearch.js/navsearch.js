@@ -10,19 +10,20 @@ import ActionBar from '../action';
 import { Link } from 'react-router-dom';
 import UserShortInfo from '../../basics/user/user_short_info';
 import api from '../../../utils/apis';
+import Cookies from 'js-cookie';
 const { Search } = Input;
 const { Text } = Typography;
 const count = 3;
 
 const tabs = [
-    {
-        key: "all",
-        label: "Tất cả"
-    },
-    {
-        key: "message",
-        label: "Tin nhắn",
-    },
+    // {
+    //     key: "all",
+    //     label: "Tất cả"
+    // },
+    // {
+    //     key: "message",
+    //     label: "Tin nhắn",
+    // },
     {
         key: "user",
         label: "Người dùng",
@@ -34,13 +35,21 @@ const NavSearch = (props) => {
     const [loading, setLoading] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [dataUser, setDataUser] = useState([]);
+    const userId = Cookies.get("_id");
 
 
     const handleData = async () => {
         const res = await api.user.list()
         // console.log(res)
         if (res.status == 200) {
-            setDataUser(res.data)
+            const _data = [...res.data]
+            for(var i=0; i<_data.length; i++){
+                if(_data[i]._id == userId){
+                    _data.splice(i, 1)
+                    break;
+                }
+            }
+            setDataUser(_data)
         }
     }
 
