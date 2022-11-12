@@ -79,14 +79,24 @@ const ConversationPage = (props) => {
         deleteConversation(convRef.current, setConversations, id);
       })
       
+      socket.on("delete-managers", (data) => {
+        // // console.log("delete-message", data)
+        deleteManager(convRef.current, setConversations, data);
+      })
+
+      
+      socket.on("add-managers", (data) => {
+        // // console.log("delete-message", data)
+        addManager(convRef.current, setConversations, data);
+      })
     }
 
-    store.subscribe(() => {
-      // console.log("store.subscribe asaasdasad", store.getState().currentConv.info)
-      const _info = store.getState().currentConv.info
-      // console.log("_info", _info)
-      setCurrentConv(_info)
-    })
+    // store.subscribe(() => {
+    //   // console.log("store.subscribe asaasdasad", store.getState().currentConv.info)
+    //   const _info = store.getState().currentConv.info
+    //   // console.log("_info", _info)
+    //   setCurrentConv(_info)
+    // })
   }, [])
 
   const getListConversation = async () => {
@@ -99,7 +109,7 @@ const ConversationPage = (props) => {
       return conv;
     })
     setConversations(_convs)
-    setCurrentConv(store.getState().currentConv.info)
+    setCurrentConv({...store.getState().currentConv.info})
     return
   }
 
@@ -259,6 +269,35 @@ const ConversationPage = (props) => {
     setConversations(_conversations)
   }
 
+  const deleteManager = (conversations, setConversations, data) => {
+
+    var _convs = [...conversations]
+    _convs.map(conv => {
+      if (conv._id == data.conversationId) {
+
+        const newManagerIds = [...conv.managerIds]
+        for(var i=newManagerIds.length-1; i>=0; i--){
+          if(data.managerIds.includes(newManagerIds[i])){
+            newManagerIds.splice(i, 1)
+          }
+        }
+        conv.managerIds = newManagerIds
+        return conv
+      }
+    })
+    setConversations(_convs)
+  }
+
+  const addManager = (conversations, setConversations, data) => {
+    var _convs = [...conversations]
+    for(var i=0; i<_convs.length; i++){
+      if (_convs[i]._id == data.conversationId) {
+        _convs[i].managerIds.push(data.managerIds[0])
+      }
+    }
+    setConversations(_convs)
+  }
+
   useEffect(() => {
     if (conversations && currentConv) {
 
@@ -270,7 +309,7 @@ const ConversationPage = (props) => {
           // // console.log("_currentConv", _currentConv)
 
           setCurrentConv(_currentConv)
-          store.dispatch(setStoreCurentConv(_currentConv))
+          // store.dispatch(setStoreCurentConv({..._currentConv}))
           setMessages(conv.messages)
         }
       })
@@ -304,7 +343,7 @@ const ConversationPage = (props) => {
           setMessages(conv.messages)
         }
       })
-      store.dispatch(setStoreCurentConv(currentConv))
+      // store.dispatch(setStoreCurentConv(currentConv))
       // updateCountSeen(convRef.current, setConversations, currentConv._id, 0)
     } else {
       setMessages([])

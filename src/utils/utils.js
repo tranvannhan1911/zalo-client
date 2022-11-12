@@ -71,5 +71,5 @@ export const toTimeLastMessage = async (dateMess) => {
 };
 
 export const checkManager = (data, user) => {
-  return data.managerIds.includes(user._id)
+  return data.managerIds.includes(user.userId._id)
 }

@@ -33,6 +33,7 @@ const MemberConversation = ({ data }, props) => {
         const res = await api.conversation.list_member(data._id);
         if (res.status == 200) {
             setDataMember(res.data);
+            console.log("handleMemberData", data, res.data)
 
             //   var _leader;
             //   for(var i=0; i<res.data.length; i++){

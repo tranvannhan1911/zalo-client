@@ -90,6 +90,7 @@ const MemberItem = ({ item, type, data }) => {
             const res = await api.conversation.add_manager(data._id, {
                 managerId: [item.userId._id]
             })
+            message.success("Thêm quản lý thành công!")
         } catch {
             message.error("Thêm quản lý thất bại!")
         }
@@ -100,6 +101,7 @@ const MemberItem = ({ item, type, data }) => {
             const res = await api.conversation.delete_manager(data._id, {
                 managerId: [item.userId._id]
             })
+            message.success("Xóa quản lý thành công!")
         } catch {
             message.error("Xóa thất bại!")
         }
@@ -160,6 +162,7 @@ const MemberItem = ({ item, type, data }) => {
                             {!isLeader ? null : checkManager(data, item) ?
                                 <div>
                                     <Button type="text" icon={<CloseOutlined />}
+                                        danger
                                         onClick={onDeleteManager}>Xóa quản lý</Button>
                                 </div>
                                 :

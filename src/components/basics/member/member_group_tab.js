@@ -34,7 +34,7 @@ const MemberGroupTab = ({ data }) => {
   useEffect(() => {
     if(dataUser){
       // console.log("dataUser", dataUser)
-      const _dataAdmin = dataUser.filter(user => data.managerIds.includes(user))
+      const _dataAdmin = dataUser.filter(user => data.managerIds.includes(user.userId._id))
       setDataAdmin([leader, ..._dataAdmin])
     }
   }, [dataUser]);

@@ -202,7 +202,7 @@ const api = {
         },
         delete_manager: (id, params) => {
             const url = `/conversation/${id}/managers/leave`
-            return axiosApi.delete(url, params)
+            return axiosApi.post(url, params)
         },
         add_member: (id, params) => {
             const url = `/conversation/${id}/members`
