@@ -5,26 +5,31 @@ import {
     MoreOutlined, CheckOutlined, CloseOutlined,
 } from '@ant-design/icons';
 import { acceptInvite, declineInvite } from '../../../controller/friend';
+import api from '../../../utils/apis';
 import UserViewModal from '../user/user_view_modal';
 const { Text, Title } = Typography;
 
-const FriendInviteCard = ({item, handleData}) => {
-    const [isAcepted, setAcepted] = useState(false)
+const FriendInviteByMeCard = ({item, handleData}) => {
     const [openUserModal, setOpenUserModal] = useState(false);
+    const [isAcepted, setAcepted] = useState(false)
 
-    const onAcceptInvite = () => {
-        acceptInvite(item.senderId._id, (res) => {
-            message.success("Đã chấp nhận lời mời kết bạn!")
+    const onRemoveInvite = async () => {
+        try{
+            const res = await api.friend.remove_invite(item.receiverId._id)
+            // console.log(res)
+            message.success("Xóa lời mời kết bạn thành công!")
             handleData()
-        })
+        }catch{
+            message.error("Có lỗi xảy ra!")
+        }
     }
 
-    const onDeclineInvite = () => {
-        declineInvite(item.senderId._id, (res) => {
-            message.success("Đã từ chối lời mời kết bạn!")
-            handleData()
-        })
-    }
+    // const onDeclineInvite = () => {
+    //     declineInvite(item.receiverId._id, (res) => {
+    //         message.success("Đã từ chối lời mời kết bạn!")
+    //         handleData()
+    //     })
+    // }
 
     return (
         <Card style={{
@@ -41,7 +46,7 @@ const FriendInviteCard = ({item, handleData}) => {
                     <Avatar
                         src={
                             <Image
-                            src={item.senderId.avatar ? item.senderId.avatar : "https://i.imgur.com/TV0vz0r.png"}
+                            src={item.receiverId.avatar ? item.receiverId.avatar : "https://i.imgur.com/TV0vz0r.png"}
                             style={{
                                 width: 32,
                             }}
@@ -60,20 +65,11 @@ const FriendInviteCard = ({item, handleData}) => {
                         <div>
                             <Typography.Title style={{
                                 fontWeight: '500'
-                            }} level={5}>{item.senderId.name}</Typography.Title>
+                            }} level={5}>{item.receiverId.name}</Typography.Title>
                         </div>
-                        <p>Xin chào, hãy kết bạn nhé!</p>
+                        <p>Đã gửi lời mời kết bạn!</p>
                         <Space>
-                            {
-                                isAcepted ? 
-                                <>
-                                    <p>Đã chấp nhận lời mời kết bạn!</p>
-                                </> :
-                                <>
-                                    <Button type="primary" icon={<CheckOutlined />} onClick={onAcceptInvite}>Chấp nhận</Button>
-                                    <Button type="danger" icon={<CloseOutlined />} onClick={onDeclineInvite}>Từ chối</Button>
-                                </>   
-                            }
+                            <Button type="danger" icon={<CloseOutlined />} onClick={onRemoveInvite}>Xóa lời mời kết bạn</Button>
                             
                         </Space>
                     </div>
@@ -100,9 +96,9 @@ const FriendInviteCard = ({item, handleData}) => {
             }}>
                 <Button type="text" icon={<MessageOutlined color='blue'/>}></Button>
             </div> */}
-            <UserViewModal openUserModal={openUserModal} setOpenUserModal={setOpenUserModal} info={item.senderId} />
+            <UserViewModal openUserModal={openUserModal} setOpenUserModal={setOpenUserModal} info={item.receiverId} />
         </Card>
     )
 }
 
-export default FriendInviteCard;
+export default FriendInviteByMeCard;

@@ -82,7 +82,7 @@ const MainPage = () => {
       )
     }
 
-    if (page == "friend" || page == "friend-list" || page == "add-friend" || page == "group") {
+    if (page == "friend" || page == "friend-list" || page == "add-friend" || page == "friend-list-invited") {
       return (
         <FriendPage {..._props} />
       )

@@ -64,21 +64,21 @@ const FriendTab = (props) => {
                     }}>
                         <UserAddOutlined /> Danh sách kết bạn
                 </div>
-                {/* <div
+                <div
                     style={{
                         width: '100%',
                         padding: '10px 20px',
                         cursor: 'pointer',
-                        backgroundColor: `${props.page == "group" ? "#dfdfdf": "white"}`
+                        backgroundColor: `${props.page == "friend-list-invited" ? "#dfdfdf": "white"}`
                     }}
                     onMouseEnter={(e) => {
                         
                     }}
                     onClick={() => {
-                        store.dispatch(setPage("group"))
+                        store.dispatch(setPage("friend-list-invited"))
                     }}>
-                        <UsergroupAddOutlined /> Danh sách nhóm
-                </div> */}
+                        <UsergroupAddOutlined /> Lời mời kết bạn đã gửi
+                </div>
             </div>
         </div>
     );

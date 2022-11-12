@@ -10,13 +10,14 @@ import Cookies from 'js-cookie';
 import { deleteFriend } from '../../../controller/friend';
 import { mess } from '../../../utils/actions';
 import store, { setOpenInfoConversationModal } from '../../../store/store';
-import UserViewModal from "../../basics/user/user_view_modal"
+import UserViewModal from "../user/user_view_modal"
 import { checkManager } from '../../../utils/utils';
 const { Text, Title } = Typography;
 
 const MemberItem = ({ item, type, data }) => {
     const [openUserModal, setOpenUserModal] = useState(false);
     const [isLeader, setIsLeader] = useState(false);
+    const [isManager, setIsManager] = useState(false);
     const userId = Cookies.get("_id")
     // const [userInfo]
 
@@ -29,6 +30,9 @@ const MemberItem = ({ item, type, data }) => {
         if (data) {
             if (data.leaderId == userId) setIsLeader(true)
             else setIsLeader(false)
+            if (data.managerIds && data.managerIds.includes(userId)) setIsManager(true)
+            else setIsManager(false)
+
         }
     }, [data])
 
@@ -171,7 +175,7 @@ const MemberItem = ({ item, type, data }) => {
                                         onClick={onAddManager}>Thêm làm quản lý</Button>
                                 </div>
                             }
-                            {!isLeader ? null :
+                            {(!isLeader && !isManager) || data.leaderId == item.userId._id ? null :
                                 <div>
                                     <Button type="text" icon={<CloseOutlined />}
                                         danger

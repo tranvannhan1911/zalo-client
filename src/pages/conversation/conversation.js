@@ -91,12 +91,9 @@ const ConversationPage = (props) => {
       })
     }
 
-    // store.subscribe(() => {
-    //   // console.log("store.subscribe asaasdasad", store.getState().currentConv.info)
-    //   const _info = store.getState().currentConv.info
-    //   // console.log("_info", _info)
-    //   setCurrentConv(_info)
-    // })
+    store.subscribe(() => {
+      setCurrentConv({...store.getState().currentConv.info})
+    })
   }, [])
 
   const getListConversation = async () => {

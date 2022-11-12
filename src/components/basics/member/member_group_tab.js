@@ -1,7 +1,7 @@
 import { List, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import api from "../../../utils/apis";
-import MemberItem from "./meber_item";
+import MemberItem from "./member_item";
 const onChange = (key) => {
   // console.log(key);
 };

@@ -152,6 +152,14 @@ const api = {
         decline: (sender_id, params) => {
             const url = `/friends/invites/${sender_id}`
             return axiosApi.delete(url, params)
+        },
+        get_invites_by_me: (params) => {
+            const url = `/friends/invites/me`
+            return axiosApi.get(url, params)
+        },
+        remove_invite: (userId, params) => {
+            const url = `/friends/invites/me/${userId}`
+            return axiosApi.delete(url, params)
         }
     }),
 

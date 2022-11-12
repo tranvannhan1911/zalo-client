@@ -1,5 +1,5 @@
 import { Avatar, Button, Card, Image, List, message, Popover, Space, Typography } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     MessageOutlined, ExclamationCircleOutlined, ArrowLeftOutlined,
     MoreOutlined, CheckOutlined, CloseOutlined,
@@ -8,9 +8,11 @@ import api from '../../../utils/apis';
 import store, { setStoreCurentConv, setPage } from '../../../store/store';
 import { deleteFriend } from '../../../controller/friend';
 import { mess } from '../../../utils/actions';
+import UserViewModal from './user_view_modal';
 const { Text, Title } = Typography;
 
 const UserCard = ({item, type}) => {
+    const [openUserModal, setOpenUserModal] = useState(false);
 
     const createConversation1vs1 = async () => {
         const res = await api.conversation.create_1vs1({userId: item._id})
@@ -76,7 +78,7 @@ const UserCard = ({item, type}) => {
                                 type="text" 
                                 icon={<ExclamationCircleOutlined />} 
                                 onClick={() => {
-                                    // setOpenModal(true)
+                                    setOpenUserModal(true)
                                 }}>Xem chi tiết</Button>
                         </div>
                         <hr style={{
@@ -103,7 +105,7 @@ const UserCard = ({item, type}) => {
                                 type="text" 
                                 icon={<ExclamationCircleOutlined />} 
                                 onClick={() => {
-                                    // setOpenModal(true)
+                                    setOpenUserModal(true)
                                 }}>Xem chi tiết</Button>
                         </div>
                         {/* <hr style={{
@@ -126,7 +128,7 @@ const UserCard = ({item, type}) => {
                                 type="text" 
                                 icon={<ExclamationCircleOutlined />} 
                                 onClick={() => {
-                                    // setOpenModal(true)
+                                    setOpenUserModal(true)
                                 }}>Xem chi tiết</Button>
                         </div>
                         {/* <hr style={{
@@ -154,7 +156,7 @@ const UserCard = ({item, type}) => {
                     <Avatar
                         src={
                             <Image
-                            src="https://joeschmoe.io/api/v1/random"
+                            src={item.avatar ? item.avatar : "https://i.imgur.com/TV0vz0r.png"}
                             style={{
                                 width: 32,
                             }}
@@ -188,7 +190,9 @@ const UserCard = ({item, type}) => {
             }}>
                 <Button type="text" icon={<MessageOutlined color='blue'/>}></Button>
             </div> */}
-        </Card>
+            <UserViewModal openUserModal={openUserModal} setOpenUserModal={setOpenUserModal} info={item} />
+
+        </Card>            
     )
 }
 

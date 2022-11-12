@@ -12,8 +12,9 @@ import Cookies from 'js-cookie';
 import FriendTab from '../../components/core/friend/friendtab';
 import FriendList from '../../components/core/friend/friend-list';
 import AddFriend from '../../components/core/friend/add-friend';
-import Group from '../../components/core/friend/group';
+import Group from '../../components/core/friend/friend-list-invited';
 import NavSearch from '../../components/core/navsearch.js/navsearch';
+import FriendListInvited from '../../components/core/friend/friend-list-invited';
 const { Sider } = Layout;
 
 const FriendPage = (props) => {
@@ -42,8 +43,8 @@ const FriendPage = (props) => {
       return <AddFriend />
     }
 
-    if(props.page == "group"){
-      return <Group />
+    if(props.page == "friend-list-invited"){
+      return <FriendListInvited />
     }
   }
 
