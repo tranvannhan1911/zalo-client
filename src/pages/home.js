@@ -6,7 +6,7 @@ import Header from '../components/core/header';
 import SideNav from '../components/core/sidenav';
 import Conversations from '../components/core/conversation/conversations';
 import { Content } from 'antd/lib/layout/layout';
-import Messages from '../components/core/messages';
+import Messages from '../components/core/message/messages';
 import MessageSection from '../components/core/message_section';
 
 import socketIOClient from "socket.io-client";

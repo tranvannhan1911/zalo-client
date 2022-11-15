@@ -31,6 +31,7 @@ import api from "../../../utils/apis";
 import ConversationInfoModal from "../../basics/conversation/info_conversation_modal";
 import moment from 'moment';
 import 'moment/locale/vi';
+import FriendOnlinePane from "../../basics/friend/friends_online";
 moment.locale('vi');
 
 
@@ -101,17 +102,22 @@ const Conversations = (props) => {
     <div
       style={{
         backgroundColor: "white",
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh'
       }}
     >
       <ActionBar {...props} />
       <Divider
         style={{
           marginTop: "3px",
+          marginBottom: "3px",
         }}
       />
+      <FriendOnlinePane />
       <div
         style={{
-          height: "80vh",
+          flex: 1,
           overflow: "auto",
         }}
       >

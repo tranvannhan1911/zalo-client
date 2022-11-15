@@ -105,7 +105,7 @@ const MainPage = () => {
             height: "100vh",
           }}>
           <Content style={{
-            height: "90vh",
+            height: "100vh",
           }}>
             {content()}
             <UserViewModal {..._props}/>

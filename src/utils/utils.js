@@ -73,3 +73,24 @@ export const toTimeLastMessage = async (dateMess) => {
 export const checkManager = (data, user) => {
   return data.managerIds.includes(user.userId._id)
 }
+
+
+
+export const reactionMap = (type) => {
+  const imgs = ["like.png", "love.png", "haha.png", "wow.png", "sad.png", "angry.png"]
+  return imgs[type-1]
+}
+
+export const previewReaction = (reacts) => {
+  const check = [];
+  const elms = []
+  for(var i=reacts.length-1; i>=0; i--){
+    const react = reacts[i];
+    if(!check.includes(react.type)){
+      check.push(react.type)
+      elms.push(<img style={{ width: '15px', marginRight: '3px' }} src={require(`../assets/${reactionMap(react.type)}`)} />)
+    }
+    if(elms.length >= 3)break;
+  }
+  return elms
+}

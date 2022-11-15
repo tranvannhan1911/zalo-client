@@ -6,7 +6,7 @@ import Header from '../../components/core/header';
 import SideNav from '../../components/core/sidenav';
 import Conversations from '../../components/core/conversation/conversations';
 import { Content } from 'antd/lib/layout/layout';
-import Messages from '../../components/core/messages';
+import Messages from '../../components/core/message/messages';
 import MessageSection from '../../components/core/message_section';
 
 
@@ -88,6 +88,11 @@ const ConversationPage = (props) => {
       socket.on("add-managers", (data) => {
         // // console.log("delete-message", data)
         addManager(convRef.current, setConversations, data);
+      })
+
+      socket.on("add-reaction", (data) => {
+        // // console.log("delete-message", data)
+        addReaction(convRef.current, setConversations, data);
       })
     }
 
@@ -295,6 +300,31 @@ const ConversationPage = (props) => {
     setConversations(_convs)
   }
 
+  const addReaction = (conversations, setConversations, data) => {
+    var _convs = [...conversations]
+    for(var i=0; i<_convs.length; i++){
+      if (_convs[i]._id == data.conversationId) {
+        for(var j=0; j<_convs[i].messages.length; j++){
+          if(_convs[i].messages[j]._id == data.messageId){
+            for(var h=0; h<_convs[i].messages[j].reacts.length; h++){
+              if(_convs[i].messages[j].reacts[h].userId == data.user.id){
+                _convs[i].messages[j].reacts.splice(h, 1);
+                break
+              }
+            }
+            _convs[i].messages[j].reacts.push({
+              _id: 1,
+              userId: data.user.id,
+              type: Number(data.type)
+            })
+            // console.log("addReaction", _convs[i].messages[j].reacts)
+          }
+        }
+      }
+    }
+    setConversations(_convs)
+  }
+
   useEffect(() => {
     if (conversations && currentConv) {
 
@@ -302,12 +332,12 @@ const ConversationPage = (props) => {
       conversations.forEach(conv => {
         if (conv._id == currentConv._id) {
           const _currentConv = {...conv}
-          _currentConv.messages = conv.messages
-          // // console.log("_currentConv", _currentConv)
+          _currentConv.messages = [...conv.messages]
+          // console.log("_currentConv", _currentConv)
 
           setCurrentConv(_currentConv)
           // store.dispatch(setStoreCurentConv({..._currentConv}))
-          setMessages(conv.messages)
+          setMessages([...conv.messages])
         }
       })
       // const _hasListen = { ...hasListen }
@@ -435,6 +465,7 @@ const ConversationPage = (props) => {
           <Header currentConv={currentConv} />
           <Messages
             messages={messages}
+            currentConv={currentConv}
             setMessages={setMessages} />
         </div>
         {!currentConv ? null :

@@ -55,7 +55,9 @@ const FriendListInvited = () => {
 
     return (
         <div style={{
-            padding: '20px'
+            padding: '20px',
+            flex: 1,
+            overflow: 'scroll'
         }}>
             <FriendTitle title="Lời mời kết bạn đã gửi" placeholder="Tìm kiếm lời mời kết bạn" 
                 onSearch={onSearch}/>

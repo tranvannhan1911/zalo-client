@@ -6,7 +6,7 @@ import Header from '../../components/core/header';
 import SideNav from '../../components/core/sidenav';
 import Conversations from '../../components/core/conversation/conversations';
 import { Content } from 'antd/lib/layout/layout';
-import Messages from '../../components/core/messages';
+import Messages from '../../components/core/message/messages';
 import MessageSection from '../../components/core/message_section';
 import Cookies from 'js-cookie';
 import FriendTab from '../../components/core/friend/friendtab';
@@ -49,10 +49,10 @@ const FriendPage = (props) => {
   }
 
   return (
-    <Row style={{ height: "90vh" }}>
+    <Row style={{ height: "100vh" }}>
       <Col span={6} style={{
         borderRight: '1px solid #ddd',
-        height: "90vh"
+        height: "100vh"
       }}>
         
       {
@@ -70,10 +70,12 @@ const FriendPage = (props) => {
       <Col span={18} style={{
         height: '100vh',
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
       }}>
-        <div>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%'
+        }}>
           <Header />
           {content()}
         </div>

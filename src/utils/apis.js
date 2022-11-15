@@ -236,6 +236,10 @@ const api = {
         deleteMessage: (message_id, params) => {
             const url = `/message/${message_id}/only`
             return axiosApi.delete(url, params)
+        },
+        addReact: (message_id, type, params) => {
+            const url = `/message/${message_id}/reacts/${type}`
+            return axiosApi.post(url, params)
         }
     })
 }
